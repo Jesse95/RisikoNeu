@@ -55,11 +55,8 @@ import local.valueobjects.ServerRemote;
 import local.valueobjects.Spieler;
 import net.miginfocom.swing.MigLayout;
 
-<<<<<<< HEAD
-public class RisikoClientGUI extends JFrame implements MapClickHandler, ButtonClickHandler, StartButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler, LoadHandler {
-=======
-public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHandler, ButtonClickHandler, StartButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler, GameEventListener {
->>>>>>> 7c2daccc477af8a9a37edb703ebee3c5fad7bc78
+
+public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHandler, ButtonClickHandler, StartButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler, GameEventListener, LoadHandler {
 	
 	Spielfeld sp = new Spielfeld();
 	int anzahlSpieler;
@@ -312,14 +309,14 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		
 			aktiverSpieler = sp.getAktiverSpieler();
 			//Spieler erstellen
-			this.remove(startPanel);
-			this.setTitle("Risiko");
-			this.setSize(1250, 817);
-			this.setLocationRelativeTo(null);
-			this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+			frame.remove(startPanel);
+			frame.setTitle("Risiko");
+			frame.setSize(1250, 817);
+			frame.setLocationRelativeTo(null);
+//			frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 			//Fenster mit Layout und Paneln füllen
-			this.setLayout(new MigLayout("debug, wrap2", "[1050][]", "[][][]"));
+			frame.setLayout(new MigLayout("debug, wrap2", "[1050][]", "[][][]"));
 			spielfeld = new MapPanel(this, schrift,1050, 550);
 			spielerListPanel = new SpielerPanel(schrift, uberschrift);
 			missionPanel = new MissionPanel(uberschrift, schrift,this);
@@ -352,19 +349,19 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			speichern.addActionListener(save -> spielSpeichern());
 			schliessen.addActionListener(close -> System.exit(0));
 			menu.setFont(schrift);
-			this.setMenuBar(menu);
+			frame.setMenuBar(menu);
 
 			//Layout anpassen
-			this.add(spielfeld, "left,spany 3,grow");
-			this.add(infoPanel, "left,growx");
-			this.add(spielerListPanel, "growx");
-			this.add(statistikPanel, "left,top,growx,spany 2");
-			this.add(missionPanel, "left,top,split3");
-			this.add(consolePanel, "left, top");
-			this.add(buttonPanel, "right,growy");
-			this.setResizable(false);
-			this.setVisible(true);
-			this.pack();
+			frame.add(spielfeld, "left,spany 3,grow");
+			frame.add(infoPanel, "left,growx");
+			frame.add(spielerListPanel, "growx");
+			frame.add(statistikPanel, "left,top,growx,spany 2");
+			frame.add(missionPanel, "left,top,split3");
+			frame.add(consolePanel, "left, top");
+			frame.add(buttonPanel, "right,growy");
+			frame.setResizable(false);
+			frame.setVisible(true);
+			frame.pack();
 			
 			missionPanel.kartenAusgeben(aktiverSpieler);
 			//Rahmen auf aktiven Spieler
