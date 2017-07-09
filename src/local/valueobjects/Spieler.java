@@ -1,9 +1,10 @@
 package local.valueobjects;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
 
-public class Spieler {
+public class Spieler implements Serializable{
 	
 	private String farbe;
 	private String name;

@@ -14,6 +14,11 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.Vector;
 
@@ -43,11 +48,14 @@ import local.domain.exceptions.NichtGenugEinheitenException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.valueobjects.Angriff;
 import local.valueobjects.AngriffRueckgabe;
+import local.valueobjects.GameEvent;
+import local.valueobjects.GameEventListener;
 import local.valueobjects.Land;
+import local.valueobjects.ServerRemote;
 import local.valueobjects.Spieler;
 import net.miginfocom.swing.MigLayout;
 
-public class RisikoClientGUI extends JFrame implements MapClickHandler, ButtonClickHandler, StartButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler {
+public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHandler, ButtonClickHandler, StartButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler, GameEventListener {
 	
 	Spielfeld sp = new Spielfeld();
 	int anzahlSpieler;
@@ -67,72 +75,93 @@ public class RisikoClientGUI extends JFrame implements MapClickHandler, ButtonCl
 	private Land land2 = null;
 	private int anzahlSetzbareEinheiten;
 	private Spieler aktiverSpieler;
+	private ServerRemote server;
 
 	private JFrame frame;
 
 
-	private RisikoClientGUI() {
-		this.start();
+	private RisikoClientGUI()throws RemoteException {
+		start();
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args)throws RemoteException{
 		new RisikoClientGUI();
 	}
 
 	private void start() {
 		//Schriften für alle Panel
+		frame = new JFrame();
 		uberschrift = new Font(Font.SERIF, Font.BOLD, 25);
 		schrift = new Font(Font.SANS_SERIF, Font.PLAIN, 17);
 
 		//Spielmenu Fenster erstellen
-		this.setTitle("Spiel starten");
-		this.setSize(330, 350);
-		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		frame.setTitle("Spiel starten");
+		frame.setSize(330, 350);
+		frame.setLocationRelativeTo(null);
+//		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		startPanel = new StartPanel(this);
-		this.add(startPanel);
-		this.setResizable(true);
-		this.setVisible(true);
+		frame.add(startPanel);
+		frame.setResizable(true);
+		frame.setVisible(true);
 	}
 
 	private void spielErstellen() {
 		
 		//Spieler erstellen Fenster erstellen
-		this.setTitle("Spiel erstellen");
-		this.setSize(280, 200);
-		this.setLocationRelativeTo(null);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		frame.setTitle("Spiel erstellen");
+		frame.setSize(280, 200);
+		frame.setLocationRelativeTo(null);
+//		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		erstellenPanel = new ErstellenPanel(this);
-		this.add(erstellenPanel);
-		this.setVisible(true);
-		this.repaint();
-		this.revalidate();
+		frame.add(erstellenPanel);
+		frame.setVisible(true);
+		frame.repaint();
+		frame.revalidate();
 	}
 
 	public void spielErstellen(String name, int anzahl) {
 		//von Spiel erstellen zu Spiel wechseln
-		spiel(name, anzahl);
+		try {
+			spiel(name, anzahl);
+		} catch (SpielerExistiertBereitsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
-	private void spiel(String name, int anzahlSpieler) {
+	private void spiel(String name, int anzahlSpieler) throws SpielerExistiertBereitsException {
 		this.anzahlSpieler = anzahlSpieler;
-		
+		try{
+			String servicename = "GameServer";
+			Registry registry = LocateRegistry.getRegistry("127.0.0.1",1099);
+			server = (ServerRemote)registry.lookup(servicename);
+			
+			server.addGameEventListener(this);
+			server.erstelleSpieler("Yannik");
+			server.erstelleSpieler("Thomas");
+			System.out.println(server.getAktiverSpieler().getName());
+			System.out.println(sp.getSpielerList().get(1).getName());
+		}catch(RemoteException e){
+			
+		} catch (NotBoundException e) {
+			e.printStackTrace();
+		}
 		//Spiel erzeugen
 		try {
 			//Spieler erstellen
 			sp.erstelleSpieler(name);
-			this.remove(erstellenPanel);
+			frame.remove(erstellenPanel);
 			for (int i = 1; i < anzahlSpieler; i++) {
 				neuerSpieler();
 			}
 			aktiverSpieler = sp.getAktiverSpieler();
-			this.setTitle("Risiko");
-			this.setSize(1250, 817);
-			this.setLocationRelativeTo(null);
-			this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+			frame.setTitle("Risiko");
+			frame.setSize(1250, 817);
+			frame.setLocationRelativeTo(null);
+//			frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 			
 			//Fenster mit Layout und Paneln füllen
-			this.setLayout(new MigLayout("debug, wrap2", "[1050][]", "[][][]"));
+			frame.setLayout(new MigLayout("debug, wrap2", "[1050][]", "[][][]"));
 			spielfeld = new MapPanel(this, schrift,1050, 550);
 			spielerListPanel = new SpielerPanel(schrift, uberschrift);
 			missionPanel = new MissionPanel(uberschrift, schrift,this);
@@ -167,21 +196,21 @@ public class RisikoClientGUI extends JFrame implements MapClickHandler, ButtonCl
 			speichern.addActionListener(save -> spielSpeichern());
 			schliessen.addActionListener(close -> System.exit(0));
 			menu.setFont(schrift);
-			this.setMenuBar(menu);
+			frame.setMenuBar(menu);
 
 			//Layout anpassen
-			this.add(spielfeld, "left,spany 3,grow");
-			this.add(infoPanel, "left,growx");
-			this.add(spielerListPanel, "growx");
-			this.add(statistikPanel, "left,top,growx,spany 2");
-//			this.add(missionPanel, "left,top,split3,wmin 300, wmax 300");
-			this.add(missionPanel, "left,top,split3");
-			this.add(consolePanel, "left, top");
-//			this.add(buttonPanel, "right,growy, wmin 180, wmax 180");
-			this.add(buttonPanel, "right,growy");
-			this.setResizable(false);
-			this.setVisible(true);
-			this.pack();
+			frame.add(spielfeld, "left,spany 3,grow");
+			frame.add(infoPanel, "left,growx");
+			frame.add(spielerListPanel, "growx");
+			frame.add(statistikPanel, "left,top,growx,spany 2");
+//			frame.add(missionPanel, "left,top,split3,wmin 300, wmax 300");
+			frame.add(missionPanel, "left,top,split3");
+			frame.add(consolePanel, "left, top");
+//			frame.add(buttonPanel, "right,growy, wmin 180, wmax 180");
+			frame.add(buttonPanel, "right,growy");
+			frame.setResizable(false);
+			frame.setVisible(true);
+			frame.pack();
 			//Spiel beginnen
 			sp.setTurn("STARTPHASE");
 			anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
@@ -196,12 +225,12 @@ public class RisikoClientGUI extends JFrame implements MapClickHandler, ButtonCl
 	public void aufloesungAendern(int breite, int hoehe) {
 		
 		
-		this.setSize(breite, hoehe);
+		frame.setSize(breite, hoehe);
 		spielfeld.neuMalen(1000, 600);
-		this.repaint();
-		this.revalidate();
+		frame.repaint();
+		frame.revalidate();
 		
-		this.setLocationRelativeTo(null);
+		frame.setLocationRelativeTo(null);
 	}
 
 	public void neuerSpieler() {
@@ -478,13 +507,13 @@ public class RisikoClientGUI extends JFrame implements MapClickHandler, ButtonCl
 
 		//alle Panels entfernen und Gewonnen Screen zeigen
 	public void gewonnen(){
-		this.remove(spielfeld);
-		this.remove(spielerListPanel);
-		this.remove(missionPanel);
-		this.remove(infoPanel);
-		this.remove(statistikPanel);
-		this.remove(consolePanel);
-		this.remove(buttonPanel);
+		frame.remove(spielfeld);
+		frame.remove(spielerListPanel);
+		frame.remove(missionPanel);
+		frame.remove(infoPanel);
+		frame.remove(statistikPanel);
+		frame.remove(consolePanel);
+		frame.remove(buttonPanel);
 		frame.setLayout(new MigLayout("wrap1","[]","[][]"));
 		frame.setForeground(Color.black);
 
@@ -492,11 +521,11 @@ public class RisikoClientGUI extends JFrame implements MapClickHandler, ButtonCl
 		gewinner.setFont(uberschrift);
 		gewinner.setForeground(Color.white);
 		JLabel firework = new JLabel(new ImageIcon("./firework.gif"));
-		this.add(gewinner, "center");
-		this.add(firework, "center");
-		this.setBackground(Color.BLACK);
-		this.repaint();
-		this.revalidate();
+		frame.add(gewinner, "center");
+		frame.add(firework, "center");
+		frame.setBackground(Color.BLACK);
+		frame.repaint();
+		frame.revalidate();
 	}
 	
 	public void karteEintauschen(List<String> tauschKarten) {
@@ -519,7 +548,7 @@ public class RisikoClientGUI extends JFrame implements MapClickHandler, ButtonCl
 
 	public void startButtonClicked() {
 		//von Anfangsmenü zu Spieler erstellen wechseln
-		this.remove(startPanel);
+		frame.remove(startPanel);
 		spielErstellen();
 	}
 
@@ -630,5 +659,11 @@ public class RisikoClientGUI extends JFrame implements MapClickHandler, ButtonCl
 	    }catch(Exception e){ 
 	    	e.printStackTrace(); 
 	    }
+	}
+
+	@Override
+	public void handleGameEvent(GameEvent event) throws RemoteException {
+		// TODO Auto-generated method stub
+		
 	}
 }	
