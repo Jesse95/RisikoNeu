@@ -480,10 +480,7 @@ private int startphaseZaehler = 1;
 		String land = "";
 		String kuerzel = "";
 		String karte = "";
-		int id = 0;
-		boolean istSpielerMission = false;
 		int einheiten = 0;
-		
 		switch(phase){
 		case "ANGRIFF":
 			Phase = phasen.ANGRIFF;
@@ -519,10 +516,10 @@ private int startphaseZaehler = 1;
 		int spielerNummer = Integer.parseInt(pm.spielstandLaden());
 		spielerVw.setAktiverSpieler(spielerNummer);
 
-		do{
+		for(Spieler anzSp: spielerVw.getSpielerList()) {
 			spieler = pm.spielstandLaden();
-			istSpielerMission = Boolean.parseBoolean(pm.spielstandLaden());
-			if(istSpielerMission)
+			String istSpielerMission = pm.spielstandLaden();
+			if(istSpielerMission.equals("spieler"))
 			{
 				spieler2 = pm.spielstandLaden();
 				for(Spieler s : spielerVw.getSpielerList()){
@@ -531,14 +528,15 @@ private int startphaseZaehler = 1;
 					}
 				}
 			}
-			id = Integer.parseInt(pm.spielstandLaden());
+			int id = Integer.parseInt(pm.spielstandLaden());
 			for(Spieler s : spielerVw.getSpielerList()){
 				if(s.getName().equals(spieler)){
+					//TODO kann hier Spielermissionen und Kontinentmissionen nicht laden
 					missionVw.missionLaden(weltVw.getLaenderListe(), weltVw.getKontinentenListe(), spielerVw.getSpielerList(),s,spielerS2,id);
 				}
 			}
-		}while(spieler.length() != 0);
-		
+		}
+
 		for(Spieler s: spielerVw.getSpielerList()) {
 			do{
 				karte = pm.spielstandLaden();

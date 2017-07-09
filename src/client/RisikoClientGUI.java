@@ -1,8 +1,7 @@
 //TODO Angriffsphase erweitern (Yannik)
-//TODO Karten ausgeben
-//TODO Backend aufraeumen
-//TODO Angreifen mit nur einer Einheit funtkioniert nicht
+//TODO verschieben nach angriff mit nur einer einheit
 //TODO Javadoc
+//TODO Laden eines Spiels
 //TODO Speichern erweitern (Idee: Jeder Spieler bekommt beim ersten Onlinespiel eine eindeutige ID)
 //TODO mit ostafrika kann man Nordafrika nicht angreifen?
 package client;
@@ -29,6 +28,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import client.StartPanel.LoadHandler;
 import client.ButtonPanel.ButtonClickHandler;
 import client.ErstellenPanel.ErstellenButtonClicked;
 import client.MapPanel.MapClickHandler;
@@ -47,7 +47,7 @@ import local.valueobjects.Land;
 import local.valueobjects.Spieler;
 import net.miginfocom.swing.MigLayout;
 
-public class RisikoClientGUI extends JFrame implements MapClickHandler, ButtonClickHandler, StartButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler {
+public class RisikoClientGUI extends JFrame implements MapClickHandler, ButtonClickHandler, StartButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler, LoadHandler {
 	
 	Spielfeld sp = new Spielfeld();
 	int anzahlSpieler;
@@ -148,14 +148,12 @@ public class RisikoClientGUI extends JFrame implements MapClickHandler, ButtonCl
 			menu.add(datei);
 			menu.add(grafik);
 			MenuItem speichern = new MenuItem("Speichern");
-			MenuItem laden = new MenuItem("Laden");
 			MenuItem schliessen = new MenuItem("Schließen");
 			Menu aufloesung = new Menu("Aufloesung");
 			MenuItem aufloesung1 = new MenuItem("1920x1080");
 			MenuItem aufloesung2 = new MenuItem("1280x800");
 			MenuItem aufloesung3 = new MenuItem("3.Auflösung");
 			datei.add(speichern);
-			datei.add(laden);
 			datei.add(schliessen);
 			grafik.add(aufloesung);
 			aufloesung.add(aufloesung1);
@@ -163,7 +161,6 @@ public class RisikoClientGUI extends JFrame implements MapClickHandler, ButtonCl
 			aufloesung.add(aufloesung3);
 			aufloesung1.addActionListener(ausfuehren -> aufloesungAendern(1920, 1080));
 			aufloesung2.addActionListener(ausfuehren -> aufloesungAendern(1280, 800));
-			laden.addActionListener(load -> spielLaden());
 			speichern.addActionListener(save -> spielSpeichern());
 			schliessen.addActionListener(close -> System.exit(0));
 			menu.setFont(schrift);
@@ -269,12 +266,113 @@ public class RisikoClientGUI extends JFrame implements MapClickHandler, ButtonCl
 	}
 
 
-	private void spielLaden(){
+	public void spielLaden(){
 			try{
 			sp.spielLaden("Game2.txt");
+			geladenesSpielErstellen();
 			} catch(Exception e) {
-				consolePanel.textSetzen("Kann nicht geladen werden");
+				System.out.println("Kann nicht geladen werden");
 			}
+	}
+	
+	private void geladenesSpielErstellen() {
+		
+			aktiverSpieler = sp.getAktiverSpieler();
+			//Spieler erstellen
+			this.remove(startPanel);
+			this.setTitle("Risiko");
+			this.setSize(1250, 817);
+			this.setLocationRelativeTo(null);
+			this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+			//Fenster mit Layout und Paneln füllen
+			this.setLayout(new MigLayout("debug, wrap2", "[1050][]", "[][][]"));
+			spielfeld = new MapPanel(this, schrift,1050, 550);
+			spielerListPanel = new SpielerPanel(schrift, uberschrift);
+			missionPanel = new MissionPanel(uberschrift, schrift,this);
+			infoPanel = new InfoPanel(sp.getTurn() + "",  aktiverSpieler.getName(), schrift, uberschrift);
+			buttonPanel = new ButtonPanel(this, uberschrift);
+			statistikPanel = new StatistikPanel(sp.getSpielerList(), sp.getLaenderListe(), schrift, uberschrift);
+			consolePanel = new ConsolePanel(schrift);
+
+			
+			//Menuleiste erstellen
+			menu = new MenuBar();
+			Menu datei = new Menu("Datei");
+			Menu grafik = new Menu("Grafik");
+			menu.add(datei);
+			menu.add(grafik);
+			MenuItem speichern = new MenuItem("Speichern");
+			MenuItem schliessen = new MenuItem("Schließen");
+			Menu aufloesung = new Menu("Aufloesung");
+			MenuItem aufloesung1 = new MenuItem("1920x1080");
+			MenuItem aufloesung2 = new MenuItem("1280x800");
+			MenuItem aufloesung3 = new MenuItem("3.Auflösung");
+			datei.add(speichern);
+			datei.add(schliessen);
+			grafik.add(aufloesung);
+			aufloesung.add(aufloesung1);
+			aufloesung.add(aufloesung2);
+			aufloesung.add(aufloesung3);
+			aufloesung1.addActionListener(ausfuehren -> aufloesungAendern(1920, 1080));
+			aufloesung2.addActionListener(ausfuehren -> aufloesungAendern(1280, 800));
+			speichern.addActionListener(save -> spielSpeichern());
+			schliessen.addActionListener(close -> System.exit(0));
+			menu.setFont(schrift);
+			this.setMenuBar(menu);
+
+			//Layout anpassen
+			this.add(spielfeld, "left,spany 3,grow");
+			this.add(infoPanel, "left,growx");
+			this.add(spielerListPanel, "growx");
+			this.add(statistikPanel, "left,top,growx,spany 2");
+			this.add(missionPanel, "left,top,split3");
+			this.add(consolePanel, "left, top");
+			this.add(buttonPanel, "right,growy");
+			this.setResizable(false);
+			this.setVisible(true);
+			this.pack();
+			
+			missionPanel.kartenAusgeben(aktiverSpieler);
+			//Rahmen auf aktiven Spieler
+			spielerListPanel.setAktiverSpieler(sp.getSpielerList().indexOf(aktiverSpieler));
+			System.out.println(sp.getTurn());
+			switch (sp.getTurn()) {
+			case STARTPHASE:
+				buttonPanel.phaseDisable();
+				anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
+				buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
+				consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
+				missionPanel.setMBeschreibung(sp.getMissionVonAktivemSpieler().getBeschreibung());
+				break;
+			case ANGRIFF:
+				missionPanel.klickDisablen();
+				consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun angreifen.");
+				buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
+				break;
+			case VERTEILEN:
+				missionPanel.kartenAusgeben(aktiverSpieler);
+				missionPanel.klickEnablen();
+				buttonPanel.phaseDisable();
+				anzahlSetzbareEinheiten = sp.bekommtEinheiten(aktiverSpieler);
+				consolePanel.textSetzen(
+				aktiverSpieler.getName() + " du kannst " + anzahlSetzbareEinheiten + " Einheiten setzen.");
+				buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
+				missionPanel.setMBeschreibung(sp.getMissionVonAktivemSpieler().getBeschreibung());
+				break;
+			case VERSCHIEBEN:
+				istSpielerRaus();
+				spielfeld.wuerfelEntfernen();
+				consolePanel.textSetzen(aktiverSpieler.getName() + " verschiebe nun deine Einheiten.");
+				buttonPanel.verschiebenAktiv("erstes Land", "zweites Land");
+				if(aktiverSpieler.getEinheitenkarten().size() < 5){
+					sp.einheitenKarteZiehen(aktiverSpieler);			
+				}
+				missionPanel.kartenAusgeben(aktiverSpieler);
+				break;
+			}
+			infoPanel.changePanel(sp.getTurn() + "");
+			spielfeld.fahnenVerteilen(sp.getLaenderListe());
 	}
 	
 	private void spielSpeichern() {

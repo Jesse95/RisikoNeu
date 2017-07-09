@@ -15,13 +15,20 @@ import net.miginfocom.swing.MigLayout;
 
 public class StartPanel extends JPanel{
 	private StartButtonClickHandler handler = null;
+	private LoadHandler loadHandler = null;
 	
 	public StartPanel(StartButtonClickHandler handler){
 		this.handler = handler;
+		this.loadHandler = (LoadHandler) handler;
 		initialize();
 	}
+	
 	public interface StartButtonClickHandler {
 		public void startButtonClicked();
+	}
+	
+	public interface LoadHandler {
+		public void spielLaden();
 	}
 	
 	public void initialize() {
@@ -43,6 +50,7 @@ public class StartPanel extends JPanel{
 		JButton beendenBtn = new JButton("Beenden");
 		
 		startBtn.addActionListener(start -> handler.startButtonClicked());
+		ladenBtn.addActionListener(load -> loadHandler.spielLaden());
 		beendenBtn.addActionListener(close -> System.exit(0));
 		
 		this.add(logo,"center");

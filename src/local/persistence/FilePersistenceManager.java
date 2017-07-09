@@ -63,14 +63,14 @@ public class FilePersistenceManager {
 		for(Land l : welt){
 			schreibeZeile(l.getName());
 			schreibeZeile(l.getBesitzer().getName());
-			schreibeZeile(l.getEinheiten()+"");
+			schreibeZeile(l.getEinheiten() + "");
 			schreibeZeile(l.getKuerzel());
+			schreibeZeile(l.getFahneX() + "");
+			schreibeZeile(l.getFahneY() + "");
 		}
 		schreibeZeile("");
 		
 		schreibeZeile(aktiverSpieler+"");
-		
-		schreibeZeile("");
 
 		for(Spieler s: spielerListe){
 			for(Mission m: missionsListe){
@@ -85,12 +85,14 @@ public class FilePersistenceManager {
 				}
 			}
 		}
-		schreibeZeile("");
+		
+//		schreibeZeile("");
 		
 		for(Spieler s: spielerListe) {
 			for(Einheitenkarten k:s.getEinheitenkarten()){
 				schreibeZeile(k.getKartenwert());
 			}
+			schreibeZeile("");
 		}
 		
 		return true;

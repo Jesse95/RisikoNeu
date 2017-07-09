@@ -174,7 +174,9 @@ public class Missionsverwaltung {
 			missionsListe.add(new LaenderMission(6,spieler, 18, 2, laenderListe));
 		} else if(id == 7) {
 			//Befreien Sie alle Länder von den roten Armeen
+			System.out.println("1");
 			missionsListe.add(new SpielerMission(7,spieler,spieler2,spielerListe));
+			System.out.println("2");
 		} else if(id == 8) {
 			missionsListe.add(new SpielerMission(8,spieler,spieler2,spielerListe));
 		}
