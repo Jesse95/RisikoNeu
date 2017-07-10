@@ -445,7 +445,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				break;
 			}
 		}
-		statistikPanel.statistikPanelAktualisieren();
+		statistikPanel.statistikPanelAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
 	}
 
 
@@ -461,7 +461,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				anzahlSetzbareEinheiten--;
 				spielfeld.labelsSetzen("", land.getEinheiten(), "");
 //				spielfeld.fahneEinheit(land.getEinheitenLab());
-				statistikPanel.statistikPanelAktualisieren();
+				statistikPanel.statistikPanelAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
 				buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
 			}
 			if(anzahlSetzbareEinheiten == 0){
@@ -849,7 +849,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						spielerListPanel.setLabel(spielerNr, s.getName(), s.getFarbe());
 						spielerNr++;
 					}
-					statistikPanel.statistikAktualisieren();
+					statistikPanel.statistikAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 					break;
 				}
@@ -890,7 +890,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						break;
 				}
 			}	
-			statistikPanel.statistikAktualisieren();
+			statistikPanel.statistikAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
 			infoPanel.changePanel(sp.getTurn() + "");
 		}else{
 			GameActionEvent gae = (GameActionEvent)event;
