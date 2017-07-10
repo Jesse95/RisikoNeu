@@ -845,13 +845,15 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				System.out.println("aktiver SPieler " + sp.getTurn());//!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!
 				switch (gce.getTurn()) {
 				case STARTPHASE:
-					//buttonPanel.phaseDisable();
+					System.out.println("gce " + gce.getTurn());
+					buttonPanel.phaseDisable();
 					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
 					buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
 					consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 					break;
 				case ANGRIFF:
+					System.out.println("gce " + gce.getTurn());
 					missionPanel.klickDisablen();
 					consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun angreifen.");
 					buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
@@ -904,6 +906,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 				switch (gce.getTurn()) {
 				case STARTPHASE:
+					System.out.println("I - gce " + gce.getTurn());
 					//buttonPanel.phaseDisable();
 					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
 					buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
@@ -911,6 +914,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 					break;
 				case ANGRIFF:
+					System.out.println("I - gce " + gce.getTurn());
 					buttonPanel.removeAll();
 					consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun angreifen.");
 					break;
