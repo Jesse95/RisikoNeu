@@ -106,10 +106,18 @@ private int startphaseZaehler = 1;
 	 * @throws KeinNachbarlandException
 	 */
 	public AngriffRueckgabe befreiungsAktion(Angriff angriff) throws KeinNachbarlandException {
+		Land angreifendesLand = null;
+		Land verteidigendesLand = null;
 		istNachbar(angriff.getAngriffsland(), angriff.getVerteidigungsland(), null);
+		for(Land l : weltVw.getLaenderListe()){
+			if(angriff.getAngriffsland().getName().equals(l.getName())){
+				angreifendesLand = l;
+			}
+			if(angriff.getVerteidigungsland().getName().equals(l.getName())){
+				verteidigendesLand = l;
+			}
+		}
 		
-		Land angreifendesLand = angriff.getAngriffsland();
-		Land verteidigendesLand = angriff.getVerteidigungsland();
 		int angreiferEinheiten = angreifendesLand.getEinheiten();
 		int verteidigerEinheiten = verteidigendesLand.getEinheiten();
 		int angreifendeEinheiten;

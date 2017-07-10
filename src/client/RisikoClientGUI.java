@@ -597,6 +597,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			} else {
 				consolePanel.textSetzen("Ihr habt unentschieden gespielt, beide verlieren eine Einheit.");
 			}
+		
 			//Einheiten auf Fahne setzen
 			spielfeld.fahneEinheit(sp.getLaenderListe());
 			land1 = null;
@@ -794,7 +795,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		try {
 			sp.checkEinheiten(land1.getName(), einheiten);
 			sp.eroberungBesetzen(land1, land2, einheiten);
-			spielfeld.fahneEinheit(sp.getLaenderListe());
 			land1 = null;
 			land2 = null;
 			buttonPanel.angreifenAktiv("erstes Land", "zweites Land");
@@ -882,7 +882,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						laenderListe.add(sp.getLandVonIndex(i));
 					}
 
-					spielfeld.fahnenVerteilen(laenderListe);
+					spielfeld.fahnenVerteilen(sp.getLaenderListe());
 
 					int spielerNr = 1;
 					for (Spieler s : sp.getSpielerList()) {
@@ -955,6 +955,13 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				for(Spieler s : sp.getSpielerList()){
 					System.out.println(s.getName());
 				}
+				break;
+			case EROBERT:
+				
+				spielfeld.fahnenVerteilen(sp.getLaenderListe());
+				spielfeld.fahneEinheit(sp.getLaenderListe());
+				statistikPanel.statistikPanelAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
+				consolePanel.textSetzen(gae.getText());
 				break;
 			}
 

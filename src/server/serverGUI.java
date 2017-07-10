@@ -220,7 +220,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		for(Land l : weltVw.getLaenderListe()){
 			System.out.println(l.getName() + l.getEinheiten()+"");
 		}
-		listenerBenachrichtigen(new GameActionEvent(spielerVw.getAktiverSpieler(), GameActionEvent.GameActionEventType.VERTEILEN));
+		listenerBenachrichtigen(new GameActionEvent("", spielerVw.getAktiverSpieler(), GameActionEvent.GameActionEventType.VERTEILEN));
 	}
 
 	/**
@@ -250,8 +250,12 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		return kriegsVw.istNachbar(wahlLand ,landZiel, spieler);
 	}
 
-	public void eroberungBesetzen(Land aLand, Land vLand, int einheiten){
-		kriegsVw.eroberungBesetzen(aLand,vLand, einheiten);
+	public void eroberungBesetzen(Land aLand, Land vLand, int einheiten)throws RemoteException{
+		kriegsVw.eroberungBesetzen(weltVw.stringToLand(aLand.getName()),weltVw.stringToLand(vLand.getName()), einheiten);
+		String text = "Der Spieler " + spielerVw.getAktiverSpieler() + " hat das Land " + vLand.getName() + " erobert.";
+		listenerBenachrichtigen(new GameActionEvent(text, spielerVw.getAktiverSpieler(), GameActionEvent.GameActionEventType.EROBERT));
+		
+	
 	}
 
 	public boolean landWaehlen(String land, Spieler spieler) throws KannLandNichtBenutzenException{

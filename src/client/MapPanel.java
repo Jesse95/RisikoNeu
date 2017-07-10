@@ -152,9 +152,7 @@ public class MapPanel extends JLayeredPane {
 		for(JLabel lab : fahnenLabs) {
 			this.remove(lab);
 		}
-		for(JLabel lab : einheitenLabs){
-			this.remove(lab);
-		}
+
 		
 		
 		List<Land>laenderKopie = new Vector();
