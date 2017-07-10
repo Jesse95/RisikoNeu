@@ -192,15 +192,15 @@ public class MapPanel extends JLayeredPane {
 	}
 	
 	public void fahneEinheit(ArrayList<Land> laender) {
-		for(int i = 0; i < laender.size(); i++){
-			einheitenLabs.get(i).setText(laender.get(i).getEinheiten()+"");
-			System.out.println(einheitenLabs.get(i).getText());
+		int a = 0;
+		for(JLabel l : einheitenLabs){
+			l.setText(laender.get(a).getEinheiten()+"");
+			a++;
 		}
-//		for(JLabel l : einheitenLabs) {
-//			if(l.equals(einheitenNeu)) {
-//				l = einheitenNeu;
-//			}
+//		for(int i = 0; i < laender.size(); i++){
+//			einheitenLabs.get(i).setText(laender.get(i).getEinheiten()+"");
 //		}
+
 	}
 	
 	public List<JLabel> getFahnenList() {
