@@ -14,7 +14,7 @@ public class InfoPanel extends JPanel {
 	private Font schrift;
 	private Font uberschrift;
 	
-	public InfoPanel(String phase, String spieler,Font schrift,Font uberschrift){
+	public InfoPanel(String phase, Font schrift,Font uberschrift){
 		this.phaseString = phase;
 		this.schrift = schrift;
 		this.uberschrift = uberschrift;

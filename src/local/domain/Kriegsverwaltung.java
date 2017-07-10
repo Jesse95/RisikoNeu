@@ -1,7 +1,6 @@
 package local.domain;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,7 +22,7 @@ import local.valueobjects.Land;
 import local.valueobjects.Mission;
 import local.valueobjects.Spieler;
 
-public class Kriegsverwaltung implements Serializable{
+public class Kriegsverwaltung{
 
 private Spielerverwaltung spielerVw;
 private Weltverwaltung weltVw;

@@ -6,6 +6,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -20,8 +21,8 @@ import net.miginfocom.swing.MigLayout;
 
 public class StatistikPanel extends JPanel{
 
-	private List<Land> laenderListe;
-	private List<Spieler> spielerListe;
+	private ArrayList<Land> laenderListe;
+	private ArrayList<Spieler> spielerListe;
 	private BufferedImage iconLand;
 	private BufferedImage iconEinheiten;
 	private BufferedImage iconKarten;
@@ -34,7 +35,7 @@ public class StatistikPanel extends JPanel{
 	private Font schrift;
 	private Font uberschrift;
 	
-	public StatistikPanel(List<Spieler> spielerListe, List<Land> laenderListe,Font schrift,Font uberschrift){
+	public StatistikPanel(ArrayList<Spieler> spielerListe, ArrayList<Land> laenderListe,Font schrift,Font uberschrift){
 		this.laenderListe = laenderListe;
 		this.spielerListe = spielerListe;
 		this.schrift = schrift;

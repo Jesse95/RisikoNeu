@@ -25,7 +25,7 @@ import local.valueobjects.Einheitenkarten;
 import local.valueobjects.Spieler;
 import net.miginfocom.swing.MigLayout;
 
-public class MissionPanel extends JPanel{
+public class MissionPanel extends JPanel {
 
 	public interface KarteClickedHandler{
 		public void karteEintauschen(List<String> tauschKarten);

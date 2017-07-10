@@ -1,7 +1,6 @@
 package local.domain;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
@@ -13,7 +12,7 @@ import local.valueobjects.Kontinent;
 import local.valueobjects.Land;
 import local.valueobjects.Spieler;
 
-public class Weltverwaltung implements Serializable{
+public class Weltverwaltung{
 
 	private static int laenderAnzahl = 42;
 	private boolean[][] laenderAufteilung;
@@ -67,6 +66,9 @@ public class Weltverwaltung implements Serializable{
 					laenderWahl.remove(random);
 				}
 			}
+		}
+		for(Land l : this.laenderListe){
+			System.out.println("Das Land: " + l.getName() + " hat den Besitzer " + l.getBesitzer().getName() + " bekommen");
 		}
 	}
 
