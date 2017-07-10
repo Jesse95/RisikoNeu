@@ -854,7 +854,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						spielerListPanel.setLabel(spielerNr, s.getName(), s.getFarbe());
 						spielerNr++;
 					}
-					statistikPanel.statistikAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
+//					statistikPanel.statistikAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 					break;
 				}
@@ -893,10 +893,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 							spielerListPanel.setLabel(spielerNr, s.getName(), s.getFarbe());
 							spielerNr++;
 						}
+						statistikPanel.statistikAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
 						break;
 				}
 			}	
-			statistikPanel.statistikAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
+			
+			
 			infoPanel.changePanel(sp.getTurn() + "");
 		}else{
 			GameActionEvent gae = (GameActionEvent)event;
@@ -905,6 +907,10 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			case VERTEILEN:
 				
 				spielfeld.fahneEinheit(sp.getLaenderListe());
+				statistikPanel.statistikPanelAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
+				for(Spieler s : sp.getSpielerList()){
+					System.out.println(s.getName());
+				}
 				break;
 			}
 		

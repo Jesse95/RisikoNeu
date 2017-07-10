@@ -130,6 +130,7 @@ public class StatistikPanel extends JPanel{
 			{
 				if(l.getBesitzer().equals(s))
 				{
+					
 					anzahlLaender++;
 					anzahlEinheiten += l.getEinheiten();
 				}
@@ -139,7 +140,7 @@ public class StatistikPanel extends JPanel{
 			einheitenVonSpieler.add(anzahlEinheiten);
 			kartenVonSpieler.add(3);
 		}
-		
+	
 		for(int i = 0; i < laenderVonSpielerLabel.size(); i++)
 		{
 			laenderVonSpielerLabel.get(i).setText(laenderVonSpieler.get(i) + "");
