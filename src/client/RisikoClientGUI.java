@@ -811,7 +811,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 			if(aktiverSpieler.getName().equals(ownSpieler.getName())) {
 				switch (gce.getTurn()) {
-				
 				case STARTPHASE:
 					buttonPanel.phaseDisable();
 					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
@@ -866,7 +865,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				}
 			} else {
 					missionPanel.klickDisablen();
-					buttonPanel.phaseDisable();
+					buttonPanel.removeAll();
 					missionPanel.kartenAusgeben(ownSpieler);
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 					switch (gce.getTurn()) {
