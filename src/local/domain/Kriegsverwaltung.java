@@ -262,11 +262,7 @@ private int startphaseZaehler = 1;
 	public void nextTurn(){
 		switch(Phase){
 			case STARTPHASE:
-				startphaseZaehler++;
-				if(startphaseZaehler > spielerVw.getSpielerList().size()){
 				Phase = phasen.ANGRIFF;
-				}
-				spielerVw.naechsterSpieler();
 				break;
 			case VERSCHIEBEN:
 				Phase = phasen.VERTEILEN;

@@ -46,7 +46,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	public Missionsverwaltung missionVw;
 	public Einheitenkartenverwaltung einheitenVw;
 	public phasen Phase;
-	private int startphaseZaehler = 1;
 	private List<GameEventListener> listeners;
 	private int bereitZaehler = 0;
 
