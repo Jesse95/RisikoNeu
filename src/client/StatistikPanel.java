@@ -124,7 +124,6 @@ public class StatistikPanel extends JPanel{
 		int anzahlEinheiten;
 		for(Spieler s : spielerListe)
 		{
-			System.out.println(s.getName());
 			anzahlLaender = 0;
 			anzahlEinheiten = 0;
 			for(Land l: laenderListe)
@@ -141,7 +140,7 @@ public class StatistikPanel extends JPanel{
 			einheitenVonSpieler.add(anzahlEinheiten);
 			kartenVonSpieler.add(3);
 		}
-		
+	
 		for(int i = 0; i < laenderVonSpielerLabel.size(); i++)
 		{
 			laenderVonSpielerLabel.get(i).setText(laenderVonSpieler.get(i) + "");
