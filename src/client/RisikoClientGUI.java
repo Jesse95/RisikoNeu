@@ -457,6 +457,28 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 
 	private void verteilen(String landstring, Land land)throws RemoteException {
+		if(sp.getTurn().toString() == "STARTPHASE"){
+			try {
+				sp.landWaehlen(landstring, ownSpieler);
+
+				if (anzahlSetzbareEinheiten > 0) {
+					missionPanel.klickDisablen();
+					consolePanel.textSetzen("Du kannst nun keine Einheitenkarten mehr tauschen");
+					sp.einheitenPositionieren(1, land);
+					anzahlSetzbareEinheiten--;
+					spielfeld.labelsSetzen("", land.getEinheiten(), "");
+					//				spielfeld.fahneEinheit(land.getEinheitenLab());
+					statistikPanel.statistikPanelAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
+					buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
+				}
+				if(anzahlSetzbareEinheiten == 0){
+					consolePanel.textSetzen("Du hast alle Einheiten gesetzt.");
+					sp.spielerBereit();
+				}
+			} catch (KannLandNichtBenutzenException lene) {
+				consolePanel.textSetzen(lene.getMessage());
+			}
+		}else{
 		//eine Einheit verteilen in Startphase oder Verteilen-Phase
 		try {
 			sp.landWaehlen(landstring, aktiverSpieler);
@@ -477,6 +499,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			}
 		} catch (KannLandNichtBenutzenException lene) {
 			consolePanel.textSetzen(lene.getMessage());
+		}
 		}
 	}
 
@@ -658,7 +681,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 	public void processMouseClick(Color color) {
 		try {
-			if(sp.getAktiverSpieler().equals(ownSpieler)){
+			if(sp.getAktiverSpieler().equals(ownSpieler) || sp.getTurn().toString() == "STARTPHASE"){
 				//Farbcode auslesen
 				String landcode = color.getRed() + "" + color.getGreen() + "" + color.getBlue();
 				try {
@@ -826,7 +849,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
 					buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
 					consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
-					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(aktiverSpieler).getBeschreibung());
+					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 					break;
 				case ANGRIFF:
 					missionPanel.klickDisablen();
@@ -868,6 +891,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					}
 					//					statistikPanel.statistikAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
+					break;
+				case ALLE_BEREIT:
+					phaseButtonClicked();
 					break;
 				}
 			} else {
