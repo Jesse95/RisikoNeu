@@ -197,7 +197,7 @@ public class Weltverwaltung{
 	 */
 	public int indexVonLand(Land land) {
 		for(int i = 0;i < laenderListe.size();i++) {
-			if(laenderListe.get(i).equals(land)) {
+			if(laenderListe.get(i).getName().equals(land.getName())) {
 				return i;
 			}
 		}
