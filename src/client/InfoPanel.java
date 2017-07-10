@@ -47,6 +47,8 @@ public class InfoPanel extends JPanel {
 		case "VERSCHIEBEN":
 			this.setInfo("Verschieben");
 			break;
+		case "STARTPHASE":
+			this.setInfo("Startphase");
 		}
 	}
 }

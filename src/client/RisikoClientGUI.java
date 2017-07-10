@@ -170,11 +170,13 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 //				neuerSpieler();
 //			}
 			aktiverSpieler = sp.getAktiverSpieler();
+			
 			for(Spieler s:sp.getSpielerList()) {
 				if(s.getName().equals(name)){
 					ownSpieler = s;
 				}
 			}
+			
 			frame.setTitle("Risiko - Spieler: " + ownSpieler.getName());
 			frame.setSize(1250, 817);
 			frame.setLocationRelativeTo(null);
@@ -229,10 +231,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			frame.setVisible(true);
 			frame.pack();
 			//Spiel beginnen
+			System.out.println("Zu Beginn" + sp.getTurn());//!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!
 			sp.setTurn("STARTPHASE");
 			anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
-			consolePanel.textSetzen(aktiverSpieler.getName()
-					+ " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
+			consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
+			System.out.println("nach setzen von SP" + sp.getTurn());//!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!
+			infoPanel.changePanel(sp.getTurn() + "");
 		} catch (SpielerExistiertBereitsException sebe) {
 			JOptionPane.showMessageDialog(null, sebe.getMessage(), "Name vergeben", JOptionPane.WARNING_MESSAGE);
 		}
@@ -786,6 +790,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 
 	public void handleGameEvent(GameEvent event) throws RemoteException {
+		System.out.println("Beginn hGE " + sp.getTurn());//!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!
 		try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {
@@ -798,11 +803,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			aktiverSpieler = gce.getSpieler();
 			
 			missionPanel.kartenAusgeben(ownSpieler);
-			
+			infoPanel.changePanel(sp.getTurn() + "");
 			//Rahmen auf aktiven Spieler
 			spielerListPanel.setAktiverSpieler(sp.getSpielerList().indexOf(aktiverSpieler) + 1);
-
 			if(aktiverSpieler.getName().equals(ownSpieler.getName())) {
+				System.out.println("aktiver SPieler " + sp.getTurn());//!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!
 				switch (gce.getTurn()) {
 				case STARTPHASE:
 					buttonPanel.phaseDisable();
@@ -854,6 +859,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					break;
 				}
 			} else {
+				System.out.println("inaktiverSpieler " + sp.getTurn());//!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!
 					missionPanel.klickDisablen();
 					buttonPanel.removeAll();
 					missionPanel.kartenAusgeben(ownSpieler);

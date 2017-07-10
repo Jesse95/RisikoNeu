@@ -172,12 +172,11 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			if(startphaseZaehler > spielerVw.getSpielerList().size()){
 				phaseEvent = GameControlEvent.phasen.ANGRIFF;
 			}
-			System.out.println(spielerVw.getAktiverSpieler());
-			spielerVw.naechsterSpieler();
+			naechsterSpieler();
 			break;
 		case VERSCHIEBEN:
 			phaseEvent = GameControlEvent.phasen.VERTEILEN;
-			spielerVw.naechsterSpieler();
+			naechsterSpieler();
 			break;
 		case ANGRIFF:
 			phaseEvent = GameControlEvent.phasen.VERSCHIEBEN;
@@ -186,7 +185,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			phaseEvent = GameControlEvent.phasen.ANGRIFF;
 			break;
 		}
-		System.out.println(spielerVw.getAktiverSpieler());
 		listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), phaseEvent));
 	}
 
