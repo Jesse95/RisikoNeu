@@ -48,6 +48,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	public phasen Phase;
 	private int startphaseZaehler = 1;
 	private List<GameEventListener> listeners;
+	private int bereitZaehler = 0;
 
 	public static void main(String[] args){
 		String serviceName = "GameServer";
@@ -413,6 +414,14 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	@Override
 	public Mission getMissionVonSpieler(Spieler spieler) throws RemoteException {
 		return kriegsVw.getMissionVonSpieler(spieler);
+	}
+	@Override
+	public void spielerBereit() throws RemoteException {
+		bereitZaehler++;
+		if(bereitZaehler == spielerVw.getSpielerList().size()){
+			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.ALLE_BEREIT));
+		}
+		
 	}
 
 
