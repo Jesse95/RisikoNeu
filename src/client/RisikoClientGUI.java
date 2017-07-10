@@ -674,14 +674,13 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		try {
 			if(sp.getSpielerMission(aktiverSpieler).istAbgeschlossen()){
 				gewonnen();
-				sp.nextTurn();
-				aktiverSpieler = sp.getAktiverSpieler();
 			}
 		} catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		sp.nextTurn();
+		aktiverSpieler = sp.getAktiverSpieler();
 //		aktiverSpieler = sp.getAktiverSpieler();
 //		missionPanel.kartenAusgeben(aktiverSpieler);
 //		//Rahmen auf aktiven Spieler

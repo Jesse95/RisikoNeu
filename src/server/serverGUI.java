@@ -46,6 +46,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	public Missionsverwaltung missionVw;
 	public Einheitenkartenverwaltung einheitenVw;
 	public phasen Phase;
+	private int startphaseZaehler = 1;
 	private List<GameEventListener> listeners;
 
 	public static void main(String[] args){
@@ -165,10 +166,15 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		GameControlEvent.phasen phaseEvent = null;
 		switch(kriegsVw.getTurn()){
 		case STARTPHASE:
-			phaseEvent = GameControlEvent.phasen.ANGRIFF;
+			startphaseZaehler++;
+			if(startphaseZaehler > spielerVw.getSpielerList().size()){
+				phaseEvent = GameControlEvent.phasen.ANGRIFF;
+			}
+			spielerVw.naechsterSpieler();
 			break;
 		case VERSCHIEBEN:
 			phaseEvent = GameControlEvent.phasen.VERTEILEN;
+			spielerVw.naechsterSpieler();
 			break;
 		case ANGRIFF:
 			phaseEvent = GameControlEvent.phasen.VERSCHIEBEN;
