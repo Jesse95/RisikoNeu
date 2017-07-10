@@ -101,6 +101,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			t.start();
 		}
 	}
+	
 	public void erstelleSpieler(String name,int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException {
 		spielerVw.neuerSpieler(name);
 		if(spielerVw.getSpielerList().size() == anzahlSpieler){
@@ -164,12 +165,14 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	public void nextTurn() throws RemoteException{
 		kriegsVw.nextTurn();
 		GameControlEvent.phasen phaseEvent = null;
+		
 		switch(kriegsVw.getTurn()){
 		case STARTPHASE:
 			startphaseZaehler++;
 			if(startphaseZaehler > spielerVw.getSpielerList().size()){
 				phaseEvent = GameControlEvent.phasen.ANGRIFF;
 			}
+			System.out.println(spielerVw.getAktiverSpieler());
 			spielerVw.naechsterSpieler();
 			break;
 		case VERSCHIEBEN:
@@ -183,6 +186,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			phaseEvent = GameControlEvent.phasen.ANGRIFF;
 			break;
 		}
+		System.out.println(spielerVw.getAktiverSpieler());
 		listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), phaseEvent));
 	}
 
