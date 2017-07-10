@@ -358,8 +358,8 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		return kriegsVw.checkAnfangseinheiten();
 	}
 
-	public Mission getMissionVonAktivemSpieler()	{
-		return kriegsVw.getMissionVonAktivemSpieler();
+	public Mission getMissionVonSpieler(Spieler spieler)	{
+		return kriegsVw.getMissionVonSpieler(spieler);
 	}
 
 	public int kartenEinloesen(Spieler spieler, ArrayList<String> tauschKarten) throws RemoteException {
