@@ -77,6 +77,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private Land land2 = null;
 	private int anzahlSetzbareEinheiten;
 	private Spieler aktiverSpieler;
+	private Spieler ownSpieler;
 	private ServerRemote server;
 	private ArrayList<Land> laenderListe;
 	private JFrame frame;
@@ -169,7 +170,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 //				neuerSpieler();
 //			}
 			aktiverSpieler = sp.getAktiverSpieler();
-			frame.setTitle("Risiko");
+			for(Spieler s:sp.getSpielerList()) {
+				if(s.getName().equals(name)){
+					ownSpieler = s;
+				}
+			}
+			frame.setTitle("Risiko - Spieler: " + ownSpieler.getName());
 			frame.setSize(1250, 817);
 			frame.setLocationRelativeTo(null);
 //			frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -374,8 +380,8 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				buttonPanel.phaseDisable();
 				anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
 				buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
-				consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
-				missionPanel.setMBeschreibung(sp.getMissionVonAktivemSpieler().getBeschreibung());
+				consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun seine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
+				missionPanel.setMBeschreibung(sp.getMissionVonSpieler(aktiverSpieler).getBeschreibung());
 				break;
 			case ANGRIFF:
 				missionPanel.klickDisablen();
@@ -390,7 +396,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				consolePanel.textSetzen(
 				aktiverSpieler.getName() + " du kannst " + anzahlSetzbareEinheiten + " Einheiten setzen.");
 				buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
-				missionPanel.setMBeschreibung(sp.getMissionVonAktivemSpieler().getBeschreibung());
+				missionPanel.setMBeschreibung(sp.getMissionVonSpieler(aktiverSpieler).getBeschreibung());
 				break;
 			case VERSCHIEBEN:
 				istSpielerRaus();
@@ -797,69 +803,112 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 			GameControlEvent gce = (GameControlEvent)event;
 			aktiverSpieler = gce.getSpieler();
-		
-			missionPanel.kartenAusgeben(aktiverSpieler);
+			
+			missionPanel.kartenAusgeben(ownSpieler);
+			
 			//Rahmen auf aktiven Spieler
 			spielerListPanel.setAktiverSpieler(sp.getSpielerList().indexOf(aktiverSpieler) + 1);
 
-			switch (gce.getTurn()) {
-			
-			case STARTPHASE:
-				buttonPanel.phaseDisable();
-				anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
-				buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
-				consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
-				missionPanel.setMBeschreibung(sp.getMissionVonAktivemSpieler().getBeschreibung());
-				break;
-			case ANGRIFF:
-				
-				missionPanel.klickDisablen();
-				consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun angreifen.");
-				buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
-				break;
-			case VERTEILEN:
-				missionPanel.kartenAusgeben(aktiverSpieler);
-				missionPanel.klickEnablen();
-				buttonPanel.phaseDisable();
-				anzahlSetzbareEinheiten = sp.bekommtEinheiten(aktiverSpieler);
-				consolePanel.textSetzen(
-				aktiverSpieler.getName() + " du kannst " + anzahlSetzbareEinheiten + " Einheiten setzen.");
-				buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
-				missionPanel.setMBeschreibung(sp.getMissionVonAktivemSpieler().getBeschreibung());
-				break;
-			case VERSCHIEBEN:
-				istSpielerRaus();
-				spielfeld.wuerfelEntfernen();
-				consolePanel.textSetzen(aktiverSpieler.getName() + " verschiebe nun deine Einheiten.");
-				buttonPanel.verschiebenAktiv("erstes Land", "zweites Land");
-				if(aktiverSpieler.getEinheitenkarten().size() < 5){
-					sp.einheitenKarteZiehen(aktiverSpieler);			
+			if(aktiverSpieler.getName().equals(ownSpieler.getName())) {
+//				switch (gce.getTurn()) {
+//				
+//				for(Spieler s : sp.getSpielerList()){
+//					System.out.println(s.getFarbe());
+//				}
+//				laenderListe = new ArrayList<>();
+//				for(int i = 0; i < 42; i++){
+//					laenderListe.add(sp.getLandVonIndex(i));
+//
+//				case STARTPHASE:
+//					buttonPanel.phaseDisable();
+//					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
+//					buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
+//					consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
+//					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(aktiverSpieler).getBeschreibung());
+//					break;
+//				case ANGRIFF:
+//					missionPanel.klickDisablen();
+//					consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun angreifen.");
+//					buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
+//					break;
+//				case VERTEILEN:
+//					missionPanel.kartenAusgeben(aktiverSpieler);
+//					missionPanel.klickEnablen();
+//					buttonPanel.phaseDisable();
+//					anzahlSetzbareEinheiten = sp.bekommtEinheiten(aktiverSpieler);
+//					consolePanel.textSetzen(
+//					aktiverSpieler.getName() + " du kannst " + anzahlSetzbareEinheiten + " Einheiten setzen.");
+//					buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
+//					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(aktiverSpieler).getBeschreibung());
+//					break;
+//				case VERSCHIEBEN:
+//					istSpielerRaus();
+//					spielfeld.wuerfelEntfernen();
+//					consolePanel.textSetzen(aktiverSpieler.getName() + " verschiebe nun deine Einheiten.");
+//					buttonPanel.verschiebenAktiv("erstes Land", "zweites Land");
+//					if(aktiverSpieler.getEinheitenkarten().size() < 5){
+//						sp.einheitenKarteZiehen(aktiverSpieler);			
+//					}
+//					missionPanel.kartenAusgeben(aktiverSpieler);
+//					break;
+//				case STARTEN:
+////					for(Spieler s : sp.getSpielerList()){
+////						System.out.println(s.getFarbe());
+////					}
+//					ArrayList<Land> laenderListe = new ArrayList<>();
+//					for(int i = 0; i < 42; i++){
+//						laenderListe.add(sp.getLandVonIndex(i));
+//					}
+//					
+//					spielfeld.fahnenVerteilen(laenderListe);
+//	
+//					int spielerNr = 1;
+//					for (Spieler s : sp.getSpielerList()) {
+//						spielerListPanel.setLabel(spielerNr, s.getName(), s.getFarbe());
+//						spielerNr++;
+//					}
+//					statistikPanel.statistikAktualisieren();
+//					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
+//					break;
+//				}
+//			} else {
+					missionPanel.klickDisablen();
+					buttonPanel.phaseDisable();
+					missionPanel.kartenAusgeben(ownSpieler);
+					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
+					switch (gce.getTurn()) {
+					
+					case STARTPHASE:
+						consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun seine ersten Einheiten setzen.");
+						break;
+					case ANGRIFF:
+						consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun angreifen.");
+						break;
+					case VERTEILEN:
+						consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun Einheiten setzen.");
+						break;
+					case VERSCHIEBEN:
+						istSpielerRaus();
+						spielfeld.wuerfelEntfernen();
+						consolePanel.textSetzen(aktiverSpieler.getName() + " darf nun Einheiten verschieben.");
+						break;
+					case STARTEN:
+						ArrayList<Land> laenderListe = new ArrayList<>();
+						for(int i = 0; i < 42; i++){
+							laenderListe.add(sp.getLandVonIndex(i));
+						}
+						
+						spielfeld.fahnenVerteilen(laenderListe);
+		
+						int spielerNr = 1;
+						for (Spieler s : sp.getSpielerList()) {
+							spielerListPanel.setLabel(spielerNr, s.getName(), s.getFarbe());
+							spielerNr++;
+						}
+						break;
 				}
-				missionPanel.kartenAusgeben(aktiverSpieler);
-				break;
-			case STARTEN:
-
-				
-				for(Spieler s : sp.getSpielerList()){
-					System.out.println(s.getFarbe());
-				}
-				laenderListe = new ArrayList<>();
-				for(int i = 0; i < 42; i++){
-					laenderListe.add(sp.getLandVonIndex(i));
-				}
-				
-				spielfeld.fahnenVerteilen(laenderListe);
-
-				int spielerNr = 1;
-				for (Spieler s : sp.getSpielerList()) {
-					spielerListPanel.setLabel(spielerNr, s.getName(), s.getFarbe());
-					spielerNr++;
-				}
-				statistikPanel.statistikAktualisieren();
-				missionPanel.setMBeschreibung(sp.getMissionVonAktivemSpieler().getBeschreibung());
-
-				break;
-			}
+			}	
+			statistikPanel.statistikAktualisieren();
 			infoPanel.changePanel(sp.getTurn() + "");
 		}else{
 			GameActionEvent gae = (GameActionEvent)event;

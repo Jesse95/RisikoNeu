@@ -572,13 +572,13 @@ private int startphaseZaehler = 1;
 	 * 
 	 * @return
 	 */
-	public Mission getMissionVonAktivemSpieler()
+	public Mission getMissionVonSpieler(Spieler spieler)
 	{
 		for(Mission m: missionVw.getMissionsListe()) {
-			if(m.getSpieler().equals(spielerVw.getAktiverSpieler())) {
+			if(m.getSpieler().equals(spieler)) {
 				return m;
 			}
 		}
-		return null;
+	return null;
 	}
 }

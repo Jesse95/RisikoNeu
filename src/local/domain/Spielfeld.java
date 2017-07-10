@@ -267,7 +267,7 @@ public class Spielfeld{
 		return kriegsVw.checkAnfangseinheiten();
 	}
 	
-	public Mission getMissionVonAktivemSpieler()	{
-		return kriegsVw.getMissionVonAktivemSpieler();
+	public Mission getMissionVonSpieler(Spieler spieler)	{
+		return kriegsVw.getMissionVonSpieler(spieler);
 	}
 }

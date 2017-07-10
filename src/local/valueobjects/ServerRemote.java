@@ -156,7 +156,7 @@ public interface ServerRemote extends Remote{
 	
 	public int checkAnfangsEinheiten()throws RemoteException;
 	
-	public Mission getMissionVonAktivemSpieler()throws RemoteException;
+	public Mission getMissionVonSpieler(Spieler spieler)throws RemoteException;
 	
 	public Spieler getSpielerVonIndex(int index)throws RemoteException;
 	

@@ -366,9 +366,9 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		return kriegsVw.checkAnfangseinheiten();
 	}
 
-	public Mission getMissionVonAktivemSpieler()	{
-		return kriegsVw.getMissionVonAktivemSpieler();
-	}
+//	public Mission getMissionVonAktivemSpieler()throws RemoteException	{
+//		return kriegsVw.getMissionVonAktivemSpieler();
+//	}
 
 	public int kartenEinloesen(Spieler spieler, ArrayList<String> tauschKarten) throws RemoteException {
 		return 0;
@@ -401,6 +401,10 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		}
 		
 		
+	}
+	@Override
+	public Mission getMissionVonSpieler(Spieler spieler) throws RemoteException {
+		return kriegsVw.getMissionVonSpieler(spieler);
 	}
 
 
