@@ -891,6 +891,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					}
 					//					statistikPanel.statistikAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
+					statistikPanel.statistikAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
 					break;
 				case ALLE_BEREIT:
 					phaseButtonClicked();
