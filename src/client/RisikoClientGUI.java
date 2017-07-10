@@ -845,7 +845,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				System.out.println("aktiver SPieler " + sp.getTurn());//!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!
 				switch (gce.getTurn()) {
 				case STARTPHASE:
-					buttonPanel.phaseDisable();
+					//buttonPanel.phaseDisable();
 					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
 					buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
 					consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
@@ -899,21 +899,26 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			} else {
 				System.out.println("inaktiverSpieler " + sp.getTurn());//!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!
 				missionPanel.klickDisablen();
-				buttonPanel.removeAll();
 				missionPanel.kartenAusgeben(ownSpieler);
 				missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 				switch (gce.getTurn()) {
-
 				case STARTPHASE:
-					consolePanel.textSetzen(" kannst nun seine ersten Einheiten setzen.");
+					//buttonPanel.phaseDisable();
+					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
+					buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
+					consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
+					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 					break;
 				case ANGRIFF:
+					buttonPanel.removeAll();
 					consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun angreifen.");
 					break;
 				case VERTEILEN:
+					buttonPanel.removeAll();
 					consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun Einheiten setzen.");
 					break;
 				case VERSCHIEBEN:
+					buttonPanel.removeAll();
 					istSpielerRaus();
 					spielfeld.wuerfelEntfernen();
 					consolePanel.textSetzen(aktiverSpieler.getName() + " darf nun Einheiten verschieben.");
