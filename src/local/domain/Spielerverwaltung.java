@@ -1,13 +1,13 @@
 package local.domain;
-import java.util.List;
-import java.util.Vector;
+import java.io.Serializable;
+import java.util.ArrayList;
 
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.persistence.FilePersistenceManager;
 import local.valueobjects.Spieler;
 
-public class Spielerverwaltung {
-	private List<Spieler> spielerListe = new Vector<Spieler>();
+public class Spielerverwaltung implements Serializable{
+	private ArrayList<Spieler> spielerListe = new ArrayList<Spieler>();
 	private int spielerNummer = 0;
 	private FilePersistenceManager pm = new FilePersistenceManager();
 	
@@ -64,7 +64,7 @@ public class Spielerverwaltung {
 	 * Gibt die SPielerliste zurück
 	 * @return List<Spieler>
 	 */
-	public List<Spieler> getSpielerList() {
+	public ArrayList<Spieler> getSpielerList() {
 		return spielerListe;
 	}
 	

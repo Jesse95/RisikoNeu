@@ -1,6 +1,8 @@
 package local.domain;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -21,13 +23,13 @@ import local.valueobjects.Land;
 import local.valueobjects.Mission;
 import local.valueobjects.Spieler;
 
-public class Kriegsverwaltung {
+public class Kriegsverwaltung implements Serializable{
 
 private Spielerverwaltung spielerVw;
 private Weltverwaltung weltVw;
 private Missionsverwaltung missionVw;
 private phasen Phase;
-private List<Land> benutzteLaender = new Vector<Land>();
+private ArrayList<Land> benutzteLaender = new ArrayList<Land>();
 private FilePersistenceManager pm = new FilePersistenceManager();
 private int startphaseZaehler = 1;
 	
@@ -49,10 +51,10 @@ private int startphaseZaehler = 1;
 	 * @param spieler
 	 * @return Vector<Land>
 	 */
-	public List<Land> moeglicheAngriffsziele(Land land) {
-		List<Land> nachbarLaender = this.weltVw.getNachbarLaender(land);	
+	public ArrayList<Land> moeglicheAngriffsziele(Land land) {
+		ArrayList<Land> nachbarLaender = this.weltVw.getNachbarLaender(land);	
 		Spieler spieler = land.getBesitzer();
-		List<Land> rueckgabe = new Vector<Land>();
+		ArrayList<Land> rueckgabe = new ArrayList<Land>();
 		for(Land l : nachbarLaender){
 			if(!l.getBesitzer().equals(spieler)){
 				rueckgabe.add(l);
@@ -373,9 +375,9 @@ private int startphaseZaehler = 1;
 	 * @param spieler
 	 * @return String
 	 */
-	public List<Land> moeglicheVerschiebeZiele(Land land, Spieler spieler) {
-		List<Land> nachbarLaender = this.weltVw.getNachbarLaender(land);
-		List<Land> rueckgabe = new Vector<Land>();
+	public ArrayList<Land> moeglicheVerschiebeZiele(Land land, Spieler spieler) {
+		ArrayList<Land> nachbarLaender = this.weltVw.getNachbarLaender(land);
+		ArrayList<Land> rueckgabe = new ArrayList<Land>();
 		
 		for(Land l : nachbarLaender) {
 			if(spieler.equals(l.getBesitzer())) {
@@ -418,7 +420,7 @@ private int startphaseZaehler = 1;
 	 * Gibt die Liste der Länder zurück, die für einen Angriff benutzt wurden
 	 * @return List<Land>
 	 */
-	public List<Land> getBenutzteLaenderListe() {
+	public ArrayList<Land> getBenutzteLaenderListe() {
 		return benutzteLaender;
 	}
 	

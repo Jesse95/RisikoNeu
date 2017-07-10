@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -120,7 +121,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	 * @param spieler
 	 * @return List<Land>
 	 */
-	public List<Land> besitztLaender(Spieler spieler) {
+	public ArrayList<Land> besitztLaender(Spieler spieler) {
 		return weltVw.besitztLaender(spieler);
 	}
 
@@ -175,7 +176,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	 * @param land
 	 * @return
 	 */
-	public List<Land> moeglicheAngriffsziele(Land land) {
+	public ArrayList<Land> moeglicheAngriffsziele(Land land) {
 		return kriegsVw.moeglicheAngriffsziele(land);
 	}
 
@@ -189,7 +190,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		return kriegsVw.befreiungsAktion(angriff);
 	}
 
-	public List<Spieler> getSpielerList() {
+	public ArrayList<Spieler> getSpielerList() {
 		return spielerVw.getSpielerList();
 	}
 
@@ -209,7 +210,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		return kriegsVw.checkEinheiten(land,einheiten);
 	}
 
-	public List<Land> eigeneAngriffsLaender(Spieler spieler){
+	public ArrayList<Land> eigeneAngriffsLaender(Spieler spieler){
 		return weltVw.eigeneAngriffsLaender(spieler);
 	}
 
@@ -221,7 +222,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		return weltVw.istGegner(land, spieler);
 	}
 
-	public List<Land> moeglicheVerschiebeZiele(Land land, Spieler spieler){
+	public ArrayList<Land> moeglicheVerschiebeZiele(Land land, Spieler spieler){
 		return kriegsVw.moeglicheVerschiebeZiele(land, spieler);
 	}
 
@@ -237,7 +238,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		kriegsVw.benutzteLaenderLoeschen();
 	}
 
-	public List<Land> eigeneVerschiebeLaender(Spieler spieler){
+	public ArrayList<Land> eigeneVerschiebeLaender(Spieler spieler){
 		return weltVw.eigeneVerschiebeLaender(spieler, kriegsVw.getBenutzteLaenderListe());
 	}
 
@@ -261,7 +262,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		missionVw.missionsListeErstellen(weltVw.getLaenderListe(), weltVw.getKontinentenListe(), spielerVw.getSpielerList());
 	}
 
-	public List<Land> getLaenderListe(){
+	public ArrayList<Land> getLaenderListe(){
 		return weltVw.getLaenderListe();
 	}
 
@@ -301,7 +302,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		return missionVw.getSpielerMission(spieler);
 	}
 
-	public List<Mission> getMissionsListe(){
+	public ArrayList<Mission> getMissionsListe(){
 		return missionVw.getMissionsListe();
 	}
 
@@ -320,4 +321,12 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	public Mission getMissionVonAktivemSpieler()	{
 		return kriegsVw.getMissionVonAktivemSpieler();
 	}
+
+	public int kartenEinloesen(Spieler spieler, ArrayList<String> tauschKarten) throws RemoteException {
+		return 0;
+	}
+
+
+
+	
 }

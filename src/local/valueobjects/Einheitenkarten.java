@@ -1,6 +1,8 @@
 package local.valueobjects;
 
-public class Einheitenkarten {
+import java.io.Serializable;
+
+public class Einheitenkarten implements Serializable{
 	private String kartenwert;
 
 	public Einheitenkarten(String kartenwert) {

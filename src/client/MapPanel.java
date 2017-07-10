@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -130,7 +131,7 @@ public class MapPanel extends JLayeredPane {
         this.setPreferredSize(new Dimension(breite, hoehe));   
 	}
 	
-	public void fahnenVerteilen(List<Land> laender) {
+	public void fahnenVerteilen(ArrayList<Land> laender) {
 		JLabel fahne = null;
 		JLabel einheiten = null;
 		

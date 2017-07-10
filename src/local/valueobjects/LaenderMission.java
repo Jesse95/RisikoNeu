@@ -1,8 +1,9 @@
 package local.valueobjects;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class LaenderMission extends Mission {
+public class LaenderMission extends Mission implements Serializable{
 
 	private int anzahlLaender = 0;
 	private int anzahlEinheiten = 0;	

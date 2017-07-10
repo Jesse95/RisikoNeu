@@ -1,6 +1,8 @@
 package local.domain;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -11,12 +13,12 @@ import local.valueobjects.Kontinent;
 import local.valueobjects.Land;
 import local.valueobjects.Spieler;
 
-public class Weltverwaltung {
+public class Weltverwaltung implements Serializable{
 
 	private static int laenderAnzahl = 42;
 	private boolean[][] laenderAufteilung;
-	private List<Land> laenderListe = new Vector<Land>();
-	private List<Kontinent> kontinentenListe = new Vector<Kontinent>();
+	private ArrayList<Land> laenderListe = new ArrayList<Land>();
+	private ArrayList<Kontinent> kontinentenListe = new ArrayList<Kontinent>();
 	private FilePersistenceManager pm = new FilePersistenceManager();
 
 	/**
@@ -212,9 +214,9 @@ public class Weltverwaltung {
 	 * @param land
 	 * @return
 	 */
-	public List<Land> getNachbarLaender(Land land) {
+	public ArrayList<Land> getNachbarLaender(Land land) {
 		int index = indexVonLand(land);
-		List<Land> nachbarLaender = new Vector<Land>();
+		ArrayList<Land> nachbarLaender = new ArrayList<Land>();
 		
 		for (int i = 0;i < laenderAufteilung[index].length;i++) {
 			if(laenderAufteilung[index][i] == true) {
@@ -239,14 +241,14 @@ public class Weltverwaltung {
 	/**
 	 * @return List<Land>
 	 */
-	public List<Land> getLaenderListe() {
+	public ArrayList<Land> getLaenderListe() {
 		return laenderListe;
 	}
 
 	/**
 	 * @param laenderListe
 	 */
-	public void setLaenderListe(List<Land> laenderListe) {
+	public void setLaenderListe(ArrayList<Land> laenderListe) {
 		this.laenderListe = laenderListe;
 	}
 
@@ -288,8 +290,8 @@ public class Weltverwaltung {
 	 * @param spieler
 	 * @return List<Land>
 	 */
-	public List<Land> besitztLaender(Spieler spieler) {
-		List<Land> laender = new Vector<Land>();
+	public ArrayList<Land> besitztLaender(Spieler spieler) {
+		ArrayList<Land> laender = new ArrayList<Land>();
 		
 		for(Land land : this.getLaenderListe()) {
 			if(spieler.equals(land.getBesitzer())) {
@@ -304,8 +306,8 @@ public class Weltverwaltung {
 	 * @param spieler
 	 * @return String
 	 */
-	public List<Land> eigeneAngriffsLaender(Spieler spieler){
-		List<Land> rueckgabeLaender = new Vector<Land>();
+	public ArrayList<Land> eigeneAngriffsLaender(Spieler spieler){
+		ArrayList<Land> rueckgabeLaender = new ArrayList<Land>();
 		for(Land land : this.getLaenderListe()) {
 			if(spieler.equals(land.getBesitzer()) && land.getEinheiten() > 1) {
 				rueckgabeLaender.add(land);
@@ -350,8 +352,8 @@ public class Weltverwaltung {
 	 * @param land
 	 * @return String
 	 */
-	public List<Land> eigeneVerschiebeLaender(Spieler spieler, List<Land> land){
-		List<Land> rueckgabeLaender = new Vector<Land>();
+	public ArrayList<Land> eigeneVerschiebeLaender(Spieler spieler, ArrayList<Land> land){
+		ArrayList<Land> rueckgabeLaender = new ArrayList<Land>();
 					
 		for(Land l : this.getLaenderListe()) {
 			if(spieler.equals(l.getBesitzer()) && l.getEinheiten() > 1 && !land.contains(l)) {
@@ -370,6 +372,10 @@ public class Weltverwaltung {
 	public String einheitenAusgabe(Land erstesLand, Land zweitesLand){
 		String ausgabe = "Das Land " + erstesLand.getName() + " hat " + erstesLand.getEinheiten() + " Einheiten \n Das Land " + zweitesLand.getName() + " hat " + zweitesLand.getEinheiten() + " Einheiten";
 		return ausgabe;
+	}
+	
+	public Land getLandVonIndex(int index){
+		return laenderListe.get(index);
 	}
 	
 	/**

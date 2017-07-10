@@ -3,7 +3,7 @@ package local.valueobjects;
 import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.List;
+import java.util.ArrayList;
 
 import local.domain.Kriegsverwaltung.phasen;
 import local.domain.exceptions.KannEinheitenNichtVerschiebenException;
@@ -39,7 +39,7 @@ public interface ServerRemote extends Remote{
 	 * @param spieler
 	 * @return List<Land>
 	 */
-	public List<Land> besitztLaender(Spieler spieler)throws RemoteException;
+	public ArrayList<Land> besitztLaender(Spieler spieler)throws RemoteException;
 	
 	/**
 	 * Leitet die Phase aus der Kriegsverwaltung weiter
@@ -80,7 +80,7 @@ public interface ServerRemote extends Remote{
 	 * @param land
 	 * @return
 	 */
-	public List<Land> moeglicheAngriffsziele(Land land)throws RemoteException;
+	public ArrayList<Land> moeglicheAngriffsziele(Land land)throws RemoteException;
 	
 	/**
 	 * 
@@ -90,7 +90,7 @@ public interface ServerRemote extends Remote{
 	 */
 	public AngriffRueckgabe befreiungsAktion(Angriff angriff) throws KeinNachbarlandException, RemoteException;
 	
-	public List<Spieler> getSpielerList() throws RemoteException;
+	public ArrayList<Spieler> getSpielerList() throws RemoteException;
 	
 	public boolean istNachbar(Land wahlLand, Land landZiel, Spieler spieler) throws KeinNachbarlandException, RemoteException;
 	
@@ -100,13 +100,13 @@ public interface ServerRemote extends Remote{
 	
 	public boolean checkEinheiten(String land, int einheiten) throws NichtGenugEinheitenException, RemoteException;
 	
-	public List<Land> eigeneAngriffsLaender(Spieler spieler)throws RemoteException;
+	public ArrayList<Land> eigeneAngriffsLaender(Spieler spieler)throws RemoteException;
 	
 	public boolean landExistiert(String land) throws LandExistiertNichtException, RemoteException;
 	
 	public boolean istGegner(String land,Spieler spieler) throws KeinGegnerException, RemoteException;
 	
-	public List<Land> moeglicheVerschiebeZiele(Land land, Spieler spieler)throws RemoteException;
+	public ArrayList<Land> moeglicheVerschiebeZiele(Land land, Spieler spieler)throws RemoteException;
 	
 	public boolean benutzeLaender(Land land) throws LandBereitsBenutztException, RemoteException;
 	
@@ -114,7 +114,7 @@ public interface ServerRemote extends Remote{
 	
 	public void benutzteLaenderLoeschen()throws RemoteException;
 	
-	public List<Land> eigeneVerschiebeLaender(Spieler spieler)throws RemoteException;
+	public ArrayList<Land> eigeneVerschiebeLaender(Spieler spieler)throws RemoteException;
 	
 	public boolean checkEinheitenVerteilen(int einheiten,int veinheiten, Spieler spieler) throws KannEinheitenNichtVerschiebenException, RemoteException;
 	
@@ -126,7 +126,7 @@ public interface ServerRemote extends Remote{
 	
 	public void missionsListeErstellen() throws IOException, RemoteException;
 	
-	public List<Land> getLaenderListe()throws RemoteException;
+	public ArrayList<Land> getLaenderListe()throws RemoteException;
 	
 	public void spielSpeichern(String datei) throws IOException, RemoteException;
 	
@@ -138,7 +138,7 @@ public interface ServerRemote extends Remote{
 	
 	public boolean spielerRaus(Spieler spieler)throws RemoteException;
 
-	public int kartenEinloesen(Spieler spieler, List<String> tauschKarten)throws RemoteException;
+	public int kartenEinloesen(Spieler spieler, ArrayList<String> tauschKarten)throws RemoteException;
 	
 	public void laenderErstellen() throws IOException, RemoteException;
 	
@@ -146,7 +146,7 @@ public interface ServerRemote extends Remote{
 	
 	public Mission getSpielerMission(Spieler spieler)throws RemoteException;
 	
-	public List<Mission> getMissionsListe()throws RemoteException;
+	public ArrayList<Mission> getMissionsListe()throws RemoteException;
 	
 	public String getLandVonFarbcode(String farbe)throws RemoteException;
 	
@@ -155,5 +155,7 @@ public interface ServerRemote extends Remote{
 	public int checkAnfangsEinheiten()throws RemoteException;
 	
 	public Mission getMissionVonAktivemSpieler()throws RemoteException;
+	
+
 
 }

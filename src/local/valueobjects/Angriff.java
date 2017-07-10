@@ -1,6 +1,8 @@
 package local.valueobjects;
 
-public class Angriff {
+import java.io.Serializable;
+
+public class Angriff implements Serializable{
 	Land angriffsland;
 	Land verteidigungsland;
 	

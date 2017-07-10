@@ -1,8 +1,9 @@
 package local.valueobjects;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class SpielerMission extends Mission {
+public class SpielerMission extends Mission implements Serializable{
 
 	List<Spieler> spielerliste;
 

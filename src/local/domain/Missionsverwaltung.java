@@ -1,6 +1,8 @@
 package local.domain;
 
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -12,8 +14,8 @@ import local.valueobjects.Mission;
 import local.valueobjects.Spieler;
 import local.valueobjects.SpielerMission;
 
-public class Missionsverwaltung {
-	public List<Mission> missionsListe = new Vector<Mission>();
+public class Missionsverwaltung implements Serializable{
+	public ArrayList<Mission> missionsListe = new ArrayList<Mission>();
 	
 	/**
 	 * Erstellt die Missionsliste
@@ -114,7 +116,7 @@ public class Missionsverwaltung {
 	 * 
 	 * @return
 	 */
-	public List<Mission> getMissionsListe(){
+	public ArrayList<Mission> getMissionsListe(){
 		return this.missionsListe;
 	}
 	

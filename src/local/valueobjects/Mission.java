@@ -1,6 +1,8 @@
 package local.valueobjects;
 
-public abstract class Mission{
+import java.io.Serializable;
+
+public abstract class Mission implements Serializable{
 
 	protected String beschreibung;
 	protected Spieler spieler;

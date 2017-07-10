@@ -1,8 +1,9 @@
 package local.valueobjects;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Kontinent {
+public class Kontinent implements Serializable{
 
 	private List<Land> laender;
 	private String name;

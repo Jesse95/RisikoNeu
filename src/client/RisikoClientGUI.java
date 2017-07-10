@@ -18,6 +18,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -279,6 +280,14 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			sp.laenderAufteilen();
 			
 			farbenVerteilen();
+//			ArrayList<Spieler> spielerListe = new ArrayList<>();
+//			for(int i = 1; i <= anzahlSpieler; i++){
+//				spielerListe.add(sp.getSpielerVonIndex(i));
+//			}
+//			ArrayList<Land> laenderListe = new ArrayList<>();
+//			for(int i = 0; i < 42; i++){
+//				laenderListe.add(sp.getLandVonIndex());
+//			}
 			spielfeld.fahnenVerteilen(sp.getLaenderListe());
 			int spielerNr = 1;
 			for (Spieler s : sp.getSpielerList()) {
@@ -637,7 +646,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.revalidate();
 	}
 	
-	public void karteEintauschen(List<String> tauschKarten) {
+	public void karteEintauschen(ArrayList<String> tauschKarten) {
 		//Karten eintauschen
 		try {
 			anzahlSetzbareEinheiten += sp.kartenEinloesen(aktiverSpieler, tauschKarten);
@@ -797,4 +806,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void karteEintauschen(List<String> tauschKarten) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 }	

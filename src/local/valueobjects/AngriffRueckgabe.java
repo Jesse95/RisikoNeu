@@ -1,8 +1,9 @@
 package local.valueobjects;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class AngriffRueckgabe {
+public class AngriffRueckgabe implements Serializable{
 	private int verlusteVerteidiger;
 	private int verlusteAngreifer;
 	private List<Integer> wuerfelVerteidiger;
