@@ -169,11 +169,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		
 		switch(kriegsVw.getTurn()){
 		case STARTPHASE:
-			startphaseZaehler++;
-			if(startphaseZaehler > spielerVw.getSpielerList().size()){
 				phaseEvent = GameControlEvent.phasen.ANGRIFF;
-			}
-			naechsterSpieler();
 			break;
 		case VERSCHIEBEN:
 			phaseEvent = GameControlEvent.phasen.VERTEILEN;

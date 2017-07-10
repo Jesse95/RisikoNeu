@@ -905,7 +905,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				switch (gce.getTurn()) {
 
 				case STARTPHASE:
-					consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun seine ersten Einheiten setzen.");
+					consolePanel.textSetzen(" kannst nun seine ersten Einheiten setzen.");
 					break;
 				case ANGRIFF:
 					consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun angreifen.");
