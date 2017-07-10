@@ -120,11 +120,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.revalidate();
 	}
 
-	public void spielErstellen(String name, int anzahl) {
+	public void spielErstellen(String name, int anzahl, String host, int port) {
 		//von Spiel erstellen zu Spiel wechseln
 		try {
 			try {
-				spiel(name, anzahl);
+				spiel(name, anzahl, host, port);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -135,11 +135,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	private void spiel(String name, int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException {
+	private void spiel(String name, int anzahlSpieler,String host, int port) throws SpielerExistiertBereitsException, RemoteException {
 		this.anzahlSpieler = anzahlSpieler;
 		try{
 			String servicename = "GameServer";
-			Registry registry = LocateRegistry.getRegistry("127.0.0.1",1099);
+			Registry registry = LocateRegistry.getRegistry(host,port);
 			sp = (ServerRemote)registry.lookup(servicename);
 			
 			sp.addGameEventListener(this);

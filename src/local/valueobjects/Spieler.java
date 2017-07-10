@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
 
-public class Spieler implements SpielerRemote, Serializable{
+public class Spieler implements Serializable{
 	
 	private String farbe;
 	private String name;
