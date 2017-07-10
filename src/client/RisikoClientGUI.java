@@ -915,11 +915,8 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			aktiverSpieler = gae.getSpieler();
 			switch(gae.getType()){
 			case VERTEILEN:
-				ArrayList<Land> laenderListe2 = new ArrayList<>();
-				for(int i = 0; i < 42; i++){
-					laenderListe2.add(sp.getLandVonIndex(i));
-				}
-				spielfeld.fahneEinheit(laenderListe2);
+				
+				spielfeld.fahneEinheit(sp.getLaenderListe());
 				break;
 			}
 		

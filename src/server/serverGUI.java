@@ -211,7 +211,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	 */
 	public void einheitenPositionieren(int anzahl, Land land) throws RemoteException {
 		System.out.println(land.getName() + "<-------------------------------");
-		kriegsVw.einheitenPositionieren(anzahl, land);
+		kriegsVw.einheitenPositionieren(1, weltVw.stringToLand(land.getName()));
 		System.out.println(land.getEinheiten());
 		for(Land l : weltVw.getLaenderListe()){
 			System.out.println(l.getName() + l.getEinheiten()+"");
