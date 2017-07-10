@@ -28,6 +28,7 @@ import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.valueobjects.Angriff;
 import local.valueobjects.AngriffRueckgabe;
 import local.valueobjects.Einheitenkarten;
+import local.valueobjects.GameActionEvent;
 import local.valueobjects.GameControlEvent;
 import local.valueobjects.GameEvent;
 import local.valueobjects.GameEventListener;
@@ -206,9 +207,16 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	 * 
 	 * @param anzahl
 	 * @param land
+	 * @throws RemoteException 
 	 */
-	public void einheitenPositionieren(int anzahl, Land land) {
+	public void einheitenPositionieren(int anzahl, Land land) throws RemoteException {
+		System.out.println(land.getName() + "<-------------------------------");
 		kriegsVw.einheitenPositionieren(anzahl, land);
+		System.out.println(land.getEinheiten());
+		for(Land l : weltVw.getLaenderListe()){
+			System.out.println(l.getName() + l.getEinheiten()+"");
+		}
+		listenerBenachrichtigen(new GameActionEvent(spielerVw.getAktiverSpieler(), GameActionEvent.GameActionEventType.VERTEILEN));
 	}
 
 	/**
@@ -358,9 +366,9 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		return kriegsVw.checkAnfangseinheiten();
 	}
 
-	public Mission getMissionVonSpieler(Spieler spieler)	{
-		return kriegsVw.getMissionVonSpieler(spieler);
-	}
+//	public Mission getMissionVonAktivemSpieler()throws RemoteException	{
+//		return kriegsVw.getMissionVonAktivemSpieler();
+//	}
 
 	public int kartenEinloesen(Spieler spieler, ArrayList<String> tauschKarten) throws RemoteException {
 		return 0;
@@ -393,6 +401,10 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		}
 		
 		
+	}
+	@Override
+	public Mission getMissionVonSpieler(Spieler spieler) throws RemoteException {
+		return kriegsVw.getMissionVonSpieler(spieler);
 	}
 
 
