@@ -53,10 +53,10 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			ServerRemote server = new serverGUI();
 			Registry registry;
 			try{
-				registry = LocateRegistry.createRegistry(1099);
+				registry = LocateRegistry.createRegistry(4711);
 //				registry = LocateRegistry.getRegistry();
 			}catch(RemoteException re){
-				registry = LocateRegistry.createRegistry(1099);
+				registry = LocateRegistry.createRegistry(4711);
 			}
 			registry.rebind(serviceName, server);
 			System.out.println("Server gestartet");

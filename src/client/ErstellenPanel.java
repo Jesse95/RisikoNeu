@@ -11,7 +11,7 @@ import net.miginfocom.swing.MigLayout;
 public class ErstellenPanel extends JPanel {
 	private ErstellenButtonClicked handler = null;
 	public interface ErstellenButtonClicked{
-		public void spielErstellen(String name, int anzahl, String host, int port);
+		public void spielErstellen(String name, int anzahl);
 	}
 	
 	public ErstellenPanel(ErstellenButtonClicked handler) {
@@ -33,7 +33,7 @@ public class ErstellenPanel extends JPanel {
 		JComboBox<String> anzahlCBox = new JComboBox<String>(zahlen);
 		JButton startBtn = new JButton("Spiel starten");
 		//Actionlistener
-		startBtn.addActionListener(start -> handler.spielErstellen(nameText.getText(),Integer.parseInt((String)anzahlCBox.getSelectedItem()),ipText.getText(),Integer.parseInt((String)portText.getText())));
+		startBtn.addActionListener(start -> handler.spielErstellen(nameText.getText(),Integer.parseInt((String)anzahlCBox.getSelectedItem())));
 		this.add(nameLab,"right");
 		this.add(nameText,"left,growx");
 		this.add(ipLab,"right");

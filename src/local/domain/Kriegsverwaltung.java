@@ -27,7 +27,7 @@ public class Kriegsverwaltung{
 private Spielerverwaltung spielerVw;
 private Weltverwaltung weltVw;
 private Missionsverwaltung missionVw;
-private phasen Phase;
+private phasen Phase = phasen.STARTPHASE;
 private ArrayList<Land> benutzteLaender = new ArrayList<Land>();
 private FilePersistenceManager pm = new FilePersistenceManager();
 private int startphaseZaehler = 1;

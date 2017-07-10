@@ -47,6 +47,7 @@ import local.domain.exceptions.NichtGenugEinheitenException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.valueobjects.Angriff;
 import local.valueobjects.AngriffRueckgabe;
+import local.valueobjects.GameActionEvent;
 import local.valueobjects.GameControlEvent;
 import local.valueobjects.GameEvent;
 import local.valueobjects.GameEventListener;
@@ -120,11 +121,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.revalidate();
 	}
 
-	public void spielErstellen(String name, int anzahl, String host, int port) {
+	public void spielErstellen(String name, int anzahl) {
 		//von Spiel erstellen zu Spiel wechseln
 		try {
 			try {
-				spiel(name, anzahl, host, port);
+				spiel(name, anzahl);
 			} catch (RemoteException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -135,11 +136,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	private void spiel(String name, int anzahlSpieler,String host, int port) throws SpielerExistiertBereitsException, RemoteException {
+	private void spiel(String name, int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException {
 		this.anzahlSpieler = anzahlSpieler;
 		try{
 			String servicename = "GameServer";
-			Registry registry = LocateRegistry.getRegistry(host,port);
+			Registry registry = LocateRegistry.getRegistry("127.0.0.1",4711);
 			sp = (ServerRemote)registry.lookup(servicename);
 			
 			sp.addGameEventListener(this);
@@ -796,6 +797,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 			GameControlEvent gce = (GameControlEvent)event;
 			aktiverSpieler = gce.getSpieler();
+		
 			missionPanel.kartenAusgeben(aktiverSpieler);
 			//Rahmen auf aktiven Spieler
 			spielerListPanel.setAktiverSpieler(sp.getSpielerList().indexOf(aktiverSpieler) + 1);
@@ -859,6 +861,14 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				break;
 			}
 			infoPanel.changePanel(sp.getTurn() + "");
+		}else{
+			GameActionEvent gae = (GameActionEvent)event;
+			aktiverSpieler = gae.getSpieler();
+			switch(gae.getType()){
+			case VERTEILEN:
+				break;
+			}
+		
 		}
 		
 	}
