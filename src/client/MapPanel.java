@@ -152,6 +152,9 @@ public class MapPanel extends JLayeredPane {
 		for(JLabel lab : fahnenLabs) {
 			this.remove(lab);
 		}
+		for(JLabel lab : einheitenLabs){
+			this.remove(lab);
+		}
 		
 		
 		List<Land>laenderKopie = new Vector();
@@ -183,15 +186,21 @@ public class MapPanel extends JLayeredPane {
 			einheitenLabs.add(einheiten);
 			this.add(fahne, new Integer(2), 0);
 			this.add(einheiten, new Integer(2),0);
+			this.repaint();
+			this.revalidate();
 		}
 	}
 	
-	public void fahneEinheit(JLabel einheitenNeu) {
-		for(JLabel l : einheitenLabs) {
-			if(l.equals(einheitenNeu)) {
-				l = einheitenNeu;
-			}
+	public void fahneEinheit(ArrayList<Land> laender) {
+		for(int i = 0; i < laender.size(); i++){
+			einheitenLabs.get(i).setText(laender.get(i).getEinheiten()+"");
+			System.out.println(einheitenLabs.get(i).getText());
 		}
+//		for(JLabel l : einheitenLabs) {
+//			if(l.equals(einheitenNeu)) {
+//				l = einheitenNeu;
+//			}
+//		}
 	}
 	
 	public List<JLabel> getFahnenList() {

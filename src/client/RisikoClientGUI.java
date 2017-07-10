@@ -78,7 +78,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private int anzahlSetzbareEinheiten;
 	private Spieler aktiverSpieler;
 	private ServerRemote server;
-
+	private ArrayList<Land> laenderListe;
 	private JFrame frame;
 
 
@@ -454,7 +454,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				sp.einheitenPositionieren(1, land);
 				anzahlSetzbareEinheiten--;
 				spielfeld.labelsSetzen("", land.getEinheiten(), "");
-				spielfeld.fahneEinheit(land.getEinheitenLab());
+//				spielfeld.fahneEinheit(land.getEinheitenLab());
 				statistikPanel.statistikPanelAktualisieren();
 				buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
 			}
@@ -843,7 +843,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				for(Spieler s : sp.getSpielerList()){
 					System.out.println(s.getFarbe());
 				}
-				ArrayList<Land> laenderListe = new ArrayList<>();
+				laenderListe = new ArrayList<>();
 				for(int i = 0; i < 42; i++){
 					laenderListe.add(sp.getLandVonIndex(i));
 				}
@@ -866,6 +866,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			aktiverSpieler = gae.getSpieler();
 			switch(gae.getType()){
 			case VERTEILEN:
+				ArrayList<Land> laenderListe2 = new ArrayList<>();
+				for(int i = 0; i < 42; i++){
+					laenderListe2.add(sp.getLandVonIndex(i));
+				}
+				spielfeld.fahneEinheit(laenderListe2);
 				break;
 			}
 		

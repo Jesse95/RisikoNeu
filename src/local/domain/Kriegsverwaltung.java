@@ -193,7 +193,12 @@ private int startphaseZaehler = 1;
 	 * @param land
 	 */
 	public void einheitenPositionieren(int anzahl, Land land) {
-		land.setEinheiten(land.getEinheiten() + anzahl);
+		for(Land l : weltVw.getLaenderListe()){
+			if(l.getName() == land.getName()){
+				l.setEinheiten(anzahl);
+			}
+		}
+//		land.setEinheiten(land.getEinheiten() + anzahl);
 	}
 	
 	/**
