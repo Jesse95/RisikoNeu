@@ -793,13 +793,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			e.printStackTrace();
 		}
 		if(event instanceof GameControlEvent){
-			
+
 			GameControlEvent gce = (GameControlEvent)event;
 			aktiverSpieler = gce.getSpieler();
 			missionPanel.kartenAusgeben(aktiverSpieler);
 			//Rahmen auf aktiven Spieler
 			spielerListPanel.setAktiverSpieler(sp.getSpielerList().indexOf(aktiverSpieler) + 1);
-			
 
 			switch (gce.getTurn()) {
 			
@@ -848,7 +847,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				}
 				
 				spielfeld.fahnenVerteilen(laenderListe);
-				
+
 				int spielerNr = 1;
 				for (Spieler s : sp.getSpielerList()) {
 					spielerListPanel.setLabel(spielerNr, s.getName(), s.getFarbe());
@@ -856,7 +855,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				}
 				statistikPanel.statistikAktualisieren();
 				missionPanel.setMBeschreibung(sp.getMissionVonAktivemSpieler().getBeschreibung());
-				
+
 				break;
 			}
 			infoPanel.changePanel(sp.getTurn() + "");
