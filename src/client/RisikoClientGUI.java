@@ -568,8 +568,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				consolePanel.textSetzen("Ihr habt unentschieden gespielt, beide verlieren eine Einheit.");
 			}
 			//Einheiten auf Fahne setzen
-			spielfeld.fahneEinheit(land1.getEinheitenLab());
-			spielfeld.fahneEinheit(land2.getEinheitenLab());
+			spielfeld.fahneEinheit(sp.getLaenderListe());
 			land1 = null;
 			land2 = null;
 			buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
@@ -585,8 +584,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				consolePanel.textSetzen("Eine Einheit wird auf " + vLand.getName() + " gesetzt.");
 				sp.eroberungBesetzen(aLand, vLand, 1);
 				genugEinheiten = true;
-				spielfeld.fahneEinheit(land1.getEinheitenLab());
-				spielfeld.fahneEinheit(land2.getEinheitenLab());
+				spielfeld.fahneEinheit(sp.getLaenderListe());
 				land1 = null;
 				land2 = null;
 				buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
@@ -741,9 +739,8 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			sp.einheitenPositionieren(-einheiten, land1);
 			sp.einheitenPositionieren(einheiten, land2);
 			spielfeld.labelsSetzen("", land1.getEinheiten(), "");
-			spielfeld.fahneEinheit(land1.getEinheitenLab());
 			spielfeld.labelsSetzen("", land2.getEinheiten(), "");
-			spielfeld.fahneEinheit(land2.getEinheitenLab());
+			spielfeld.fahneEinheit(sp.getLaenderListe());
 			land1 = null;
 			land2 = null;
 			buttonPanel.verschiebenAktiv("erstes Land", "zweites Land");
@@ -761,8 +758,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		try {
 			sp.checkEinheiten(land1.getName(), einheiten);
 			sp.eroberungBesetzen(land1, land2, einheiten);
-			spielfeld.fahneEinheit(land1.getEinheitenLab());
-			spielfeld.fahneEinheit(land2.getEinheitenLab());
+			spielfeld.fahneEinheit(sp.getLaenderListe());
 			land1 = null;
 			land2 = null;
 			buttonPanel.angreifenAktiv("erstes Land", "zweites Land");
