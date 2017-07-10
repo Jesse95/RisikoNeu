@@ -141,7 +141,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			server.erstelleSpieler("Yannik");
 			server.erstelleSpieler("Thomas");
 			System.out.println(server.getAktiverSpieler().getName());
-			System.out.println(sp.getSpielerList().get(1).getName());
 		}catch(RemoteException e){
 			
 		} catch (NotBoundException e) {
