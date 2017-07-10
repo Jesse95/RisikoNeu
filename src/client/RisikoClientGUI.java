@@ -58,7 +58,7 @@ import net.miginfocom.swing.MigLayout;
 
 public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHandler, ButtonClickHandler, StartButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler, GameEventListener, LoadHandler {
 	
-	Spielfeld sp = new Spielfeld();
+	ServerRemote sp;
 	int anzahlSpieler;
 	private SpielerPanel spielerListPanel;
 	private MissionPanel missionPanel;
@@ -123,29 +123,33 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	public void spielErstellen(String name, int anzahl) {
 		//von Spiel erstellen zu Spiel wechseln
 		try {
-			spiel(name, anzahl);
+			try {
+				spiel(name, anzahl);
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} catch (SpielerExistiertBereitsException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	private void spiel(String name, int anzahlSpieler) throws SpielerExistiertBereitsException {
+	private void spiel(String name, int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException {
 		this.anzahlSpieler = anzahlSpieler;
 		try{
 			String servicename = "GameServer";
 			Registry registry = LocateRegistry.getRegistry("127.0.0.1",1099);
-			server = (ServerRemote)registry.lookup(servicename);
+			sp = (ServerRemote)registry.lookup(servicename);
 			
-			server.addGameEventListener(this);
-			server.erstelleSpieler("Yannik");
-			server.erstelleSpieler("Thomas");
-			System.out.println(server.getAktiverSpieler().getName());
+			sp.addGameEventListener(this);
+		
 		}catch(RemoteException e){
 			
 		} catch (NotBoundException e) {
 			e.printStackTrace();
 		}
+
 		//Spiel erzeugen
 		try {
 			//Spieler erstellen
@@ -238,7 +242,14 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		JTextField nameText = new JTextField();
 		JButton erstellenBtn = new JButton("Erstellen");
 	
-		erstellenBtn.addActionListener(erstellen -> spielerErstellen(frame, nameText.getText()));
+		erstellenBtn.addActionListener(erstellen -> {
+			try {
+				spielerErstellen(frame, nameText.getText());
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 	
 		frame.add(nameLab, "right");
 		frame.add(nameText, "left,growx");
@@ -246,7 +257,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.setVisible(true);
 	}
 
-	private void spielerErstellen(JFrame frame, String name) {
+	private void spielerErstellen(JFrame frame, String name)throws RemoteException {
 		//Spieler erstellen
 		try {
 			sp.erstelleSpieler(name);
@@ -279,7 +290,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	private void farbenVerteilen() {
+	private void farbenVerteilen()throws RemoteException {
 		List<String> farben = new Vector<String>();
 		farben.add("rot");
 		farben.add("gruen");
@@ -304,7 +315,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			}
 	}
 	
-	private void geladenesSpielErstellen() {
+	private void geladenesSpielErstellen()throws RemoteException {
 		
 			aktiverSpieler = sp.getAktiverSpieler();
 			//Spieler erstellen
@@ -412,7 +423,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	private void landWaehlen(String landcode) {
+	private void landWaehlen(String landcode)throws RemoteException {
 		String landstring = sp.getLandVonFarbcode(landcode);
 		Land land = sp.stringToLand(landstring);
 		
@@ -440,7 +451,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	}
 
 
-	private void verteilen(String landstring, Land land) {
+	private void verteilen(String landstring, Land land)throws RemoteException {
 		//eine Einheit verteilen in Startphase oder Verteilen-Phase
 		try {
 			sp.landWaehlen(landstring, aktiverSpieler);
@@ -464,7 +475,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	private void angreifen(String landstring, Land land, Spieler spieler) {
+	private void angreifen(String landstring, Land land, Spieler spieler)throws RemoteException {
 		if (land1 == null) {
 			//Land wählen mit dem angegriffen werden soll
 			try {
@@ -502,7 +513,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	private void verschieben(String landstring, Land land) {
+	private void verschieben(String landstring, Land land)throws RemoteException {
 		if (land1 == null) {
 			//Land wählen von dem aus verschoben werden soll
 			try {
@@ -541,7 +552,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	private void angriff(boolean genugEinheiten, Spieler aSpieler) throws KeinNachbarlandException {
+	private void angriff(boolean genugEinheiten, Spieler aSpieler) throws KeinNachbarlandException, RemoteException {
 		Land aLand = land1;
 		Land vLand = land2;
 		//Angriff durchführen
@@ -590,7 +601,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	}
 
 	
-	private void istSpielerRaus(){
+	private void istSpielerRaus()throws RemoteException{
 		//Überprüfung ob ein Spieler verloren hat
 		List<Spieler> spielerListe = sp.getSpielerList();
 		for(Spieler s : spielerListe){
@@ -628,7 +639,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	
 	public void karteEintauschen(List<String> tauschKarten) {
 		//Karten eintauschen
-		anzahlSetzbareEinheiten += sp.kartenEinloesen(aktiverSpieler, tauschKarten);
+		try {
+			anzahlSetzbareEinheiten += sp.kartenEinloesen(aktiverSpieler, tauschKarten);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		missionPanel.kartenAusgeben(aktiverSpieler);
 		buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
 	}
@@ -640,7 +656,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	public void processMouseClick(Color color) {
 		//Farbcode auslesen
 		String landcode = color.getRed() + "" + color.getGreen() + "" + color.getBlue();
-		landWaehlen(landcode);
+		try {
+			landWaehlen(landcode);
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	
 	}
 
@@ -650,13 +671,19 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		spielErstellen();
 	}
 
-	public void phaseButtonClicked() {
+	public void phaseButtonClicked() throws RemoteException{
 		//Wenn Mission erfüllt, dann gewonnen aufrufen
-		if(sp.getSpielerMission(aktiverSpieler).istAbgeschlossen()){
-			gewonnen();
+		try {
+			if(sp.getSpielerMission(aktiverSpieler).istAbgeschlossen()){
+				gewonnen();
+				sp.nextTurn();
+				aktiverSpieler = sp.getAktiverSpieler();
+			}
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		sp.nextTurn();
-		aktiverSpieler = sp.getAktiverSpieler();
+		
 		missionPanel.kartenAusgeben(aktiverSpieler);
 		//Rahmen auf aktiven Spieler
 		spielerListPanel.setAktiverSpieler(sp.getSpielerList().indexOf(aktiverSpieler) + 1);
@@ -703,7 +730,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		//Angreifen Button klicken
 		try {
 			angriff(true, aktiverSpieler);
-		} catch (KeinNachbarlandException e) {
+		} catch (KeinNachbarlandException | RemoteException e) {
 			e.printStackTrace();
 		}
 	}
@@ -724,6 +751,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			buttonPanel.verschiebenDisabled();
 		} catch (NichtGenugEinheitenException ngee) {
 			consolePanel.textSetzen(ngee.getMessage());
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -739,6 +769,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			buttonPanel.angreifenAktiv("erstes Land", "zweites Land");
 		} catch (NichtGenugEinheitenException ngee) {
 			consolePanel.textSetzen(ngee.getMessage());
+		} catch (RemoteException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

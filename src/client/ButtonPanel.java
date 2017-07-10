@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.Font;
+import java.rmi.RemoteException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -24,7 +25,7 @@ public class ButtonPanel extends JPanel{
 	private Font font;
 	
 	public interface ButtonClickHandler {
-		public void phaseButtonClicked();
+		public void phaseButtonClicked() throws RemoteException;
 		public void angriffClicked();
 		public void verschiebenClicked(int einheiten);
 		public void verschiebenNAClicked(int einheiten);
@@ -56,7 +57,14 @@ public class ButtonPanel extends JPanel{
 		this.anzahlEinheitenVerteilen.setFont(font);
 		nextTurn = new JButton("Naechster Spieler");
 		
-		nextTurn.addActionListener(next -> handler.phaseButtonClicked());
+		nextTurn.addActionListener(next -> {
+			try {
+				handler.phaseButtonClicked();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
 		angreifen.addActionListener(angriff -> handler.angriffClicked());
 		verschieben.addActionListener(verschieben -> handler.verschiebenClicked(Integer.parseInt(anzahlEinheitenVerschieben.getText())));
 		verschiebenNA.addActionListener(verschiebenNA -> handler.verschiebenNAClicked(Integer.parseInt(anzahlEinheitenVerschieben.getText())));
