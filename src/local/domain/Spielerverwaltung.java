@@ -1,12 +1,11 @@
 package local.domain;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.persistence.FilePersistenceManager;
 import local.valueobjects.Spieler;
 
-public class Spielerverwaltung implements Serializable{
+public class Spielerverwaltung{
 	private ArrayList<Spieler> spielerListe = new ArrayList<Spieler>();
 	private int spielerNummer = 0;
 	private FilePersistenceManager pm = new FilePersistenceManager();
@@ -74,5 +73,9 @@ public class Spielerverwaltung implements Serializable{
 	 */
 	public void setAktiverSpieler(int spieler){
 		this.spielerNummer = spieler;
+	}
+	
+	public void setSpielerList(ArrayList<Spieler> liste){
+		this.spielerListe = liste;
 	}
 }

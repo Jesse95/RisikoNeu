@@ -1,10 +1,9 @@
 package local.valueobjects;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Vector;
 
-public class KontinentenMission extends Mission implements Serializable{
+public class KontinentenMission extends Mission{
 
 	private List<Kontinent> kontinente;
 	

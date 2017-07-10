@@ -1,6 +1,5 @@
 package local.domain;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
@@ -8,7 +7,7 @@ import java.util.Vector;
 import local.valueobjects.Einheitenkarten;
 import local.valueobjects.Spieler;
 
-public class Einheitenkartenverwaltung implements Serializable{
+public class Einheitenkartenverwaltung{
 
 	private List<Einheitenkarten> kartenstapel;
 	private int kartenEingeloest = 1;

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 import local.domain.Kriegsverwaltung.phasen;
 import local.domain.exceptions.KannEinheitenNichtVerschiebenException;
@@ -21,7 +23,7 @@ public interface ServerRemote extends Remote{
 	
 	public void removeGameEventListener(GameEventListener listener) throws RemoteException;
 	
-	public void erstelleSpieler(String name) throws SpielerExistiertBereitsException, RemoteException;
+	public void erstelleSpieler(String name, int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException;
 	
 
 	/**
@@ -156,6 +158,13 @@ public interface ServerRemote extends Remote{
 	
 	public Mission getMissionVonAktivemSpieler()throws RemoteException;
 	
+	public Spieler getSpielerVonIndex(int index)throws RemoteException;
+	
+	public Land getLandVonIndex(int index)throws RemoteException;
+	
+	public void setPlayerList(ArrayList<Spieler> liste)throws RemoteException;
+	
+	public void farbenVerteilen()throws RemoteException;
 
 
 }

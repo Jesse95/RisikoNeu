@@ -1,7 +1,6 @@
 package local.domain;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.List;
 
 import local.domain.Kriegsverwaltung.phasen;
@@ -20,7 +19,7 @@ import local.valueobjects.Land;
 import local.valueobjects.Mission;
 import local.valueobjects.Spieler;
 
-public class Spielfeld implements Serializable{
+public class Spielfeld{
 	
 	public Spielerverwaltung spielerVw;
 	public Weltverwaltung weltVw;

@@ -58,6 +58,13 @@ public class MapPanel extends JLayeredPane {
 	private int breite;
 	private int hoehe;
 	private  BufferedImage myPicture;
+	private BufferedImage fahneRotImg;
+	private BufferedImage fahneBlauImg;
+	private BufferedImage fahneGruenImg;
+	private BufferedImage fahneGelbImg;
+	private BufferedImage fahneOrangeImg;
+	private BufferedImage fahneCyanImg;
+
 	
 	
 	
@@ -90,7 +97,14 @@ public class MapPanel extends JLayeredPane {
 	}
 
 	public void initialize() {
-
+		try{
+			fahneRotImg = ImageIO.read(new File("./Fahne_Rot.png"));
+			fahneGruenImg = ImageIO.read(new File("./Fahne_Gruen.png"));
+			fahneBlauImg = ImageIO.read(new File("./Fahne_Blau.png"));
+			fahneGelbImg = ImageIO.read(new File("./Fahne_Gelb.png"));
+			fahneOrangeImg = ImageIO.read(new File("./Fahne_Orange.png"));
+			fahneCyanImg = ImageIO.read(new File("./Fahne_Cyan.png"));
+		}catch (IOException e){}
         try {
 			myPicture = ImageIO.read(new File("./weltkarte.jpg"));
 			spielfeld = new JLabel(new ImageIcon(myPicture.getScaledInstance(breite, hoehe, Image.SCALE_FAST)));
@@ -132,16 +146,38 @@ public class MapPanel extends JLayeredPane {
 	}
 	
 	public void fahnenVerteilen(ArrayList<Land> laender) {
-		JLabel fahne = null;
-		JLabel einheiten = null;
+		
+		
 		
 		for(JLabel lab : fahnenLabs) {
 			this.remove(lab);
 		}
 		
-		for(Land l : laender) {
-			l.setFahne(l.getBesitzer().getFarbe());
-			fahne = l.getFahne();	
+		
+		List<Land>laenderKopie = new Vector();
+		for(Land l : laender){
+			laenderKopie.add(l);
+		}
+		for(Land l : laenderKopie) {
+			JLabel fahne = null;
+			JLabel einheiten = null;
+			String farbe = l.getBesitzer().getFarbe();
+			System.out.println(farbe);
+			switch(farbe){
+			case "rot":		fahne = new JLabel(new ImageIcon(fahneRotImg.getScaledInstance(40, 40, Image.SCALE_FAST)));
+			break;
+			case "blau":	fahne = new JLabel(new ImageIcon(fahneBlauImg.getScaledInstance(40, 40, Image.SCALE_FAST)));
+			break;
+			case "gruen":	fahne = new JLabel(new ImageIcon(fahneGruenImg.getScaledInstance(40, 40, Image.SCALE_FAST)));
+			break;
+			case "gelb":	fahne = new JLabel(new ImageIcon(fahneGelbImg.getScaledInstance(40, 40, Image.SCALE_FAST)));
+			break;
+			case "orange":	fahne = new JLabel(new ImageIcon(fahneOrangeImg.getScaledInstance(40, 40, Image.SCALE_FAST)));
+			break;
+			case "cyan":	fahne = new JLabel(new ImageIcon(fahneCyanImg.getScaledInstance(40, 40, Image.SCALE_FAST)));
+			break;
+		}
+			fahne.setBounds(l.getFahneX() + 15, l.getFahneY() -40, 40, 40);
 			fahnenLabs.add(fahne);
 			einheiten = l.getEinheitenLab();
 			einheitenLabs.add(einheiten);

@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.JOptionPane;
+
 import local.domain.Einheitenkartenverwaltung;
 import local.domain.Kriegsverwaltung;
 import local.domain.Kriegsverwaltung.phasen;
@@ -26,6 +28,7 @@ import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.valueobjects.Angriff;
 import local.valueobjects.AngriffRueckgabe;
 import local.valueobjects.Einheitenkarten;
+import local.valueobjects.GameControlEvent;
 import local.valueobjects.GameEvent;
 import local.valueobjects.GameEventListener;
 import local.valueobjects.Land;
@@ -83,7 +86,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		for (GameEventListener listener : listeners) {
 
 			Thread t = new Thread(new Runnable() {
-		
+				
 				public void run() {
 					try {
 						listener.handleGameEvent(event);							
@@ -96,8 +99,28 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			t.start();
 		}
 	}
-	public void erstelleSpieler(String name) throws SpielerExistiertBereitsException {
+	public void erstelleSpieler(String name,int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException {
 		spielerVw.neuerSpieler(name);
+		if(spielerVw.getSpielerList().size() == anzahlSpieler){
+			try {
+				laenderErstellen();
+				laenderverbindungenUndKontinenteErstellen();
+				missionsListeErstellen();
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Fehler", JOptionPane.WARNING_MESSAGE);
+			}
+			missionenVerteilen();
+			laenderAufteilen();
+			
+			try {
+				farbenVerteilen();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));
+		}
 	}
 
 
@@ -134,9 +157,26 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	}
 	/**
 	 * Ruft nextTurn in der KriegsVerwaltung auf
+	 * @throws RemoteException 
 	 */
-	public void nextTurn(){
+	public void nextTurn() throws RemoteException{
 		kriegsVw.nextTurn();
+		GameControlEvent.phasen phaseEvent = null;
+		switch(kriegsVw.getTurn()){
+		case STARTPHASE:
+			phaseEvent = GameControlEvent.phasen.ANGRIFF;
+			break;
+		case VERSCHIEBEN:
+			phaseEvent = GameControlEvent.phasen.VERTEILEN;
+			break;
+		case ANGRIFF:
+			phaseEvent = GameControlEvent.phasen.VERSCHIEBEN;
+			break;
+		case VERTEILEN:
+			phaseEvent = GameControlEvent.phasen.ANGRIFF;
+			break;
+		}
+		listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), phaseEvent));
 	}
 
 	/**
@@ -324,6 +364,35 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 
 	public int kartenEinloesen(Spieler spieler, ArrayList<String> tauschKarten) throws RemoteException {
 		return 0;
+	}
+	@Override
+	public Spieler getSpielerVonIndex(int index) throws RemoteException {
+		return spielerVw.getSpieler(index+1);
+	}
+	@Override
+	public Land getLandVonIndex(int index) throws RemoteException {
+		return weltVw.getLandVonIndex(index);
+	}
+	@Override
+	public void setPlayerList(ArrayList<Spieler> liste) throws RemoteException {
+		spielerVw.setSpielerList(liste);
+		
+	}
+	
+	public void farbenVerteilen()throws RemoteException {
+		List<String> farben = new Vector<String>();
+		farben.add("rot");
+		farben.add("gruen");
+		farben.add("blau");
+		farben.add("gelb");
+		farben.add("orange");
+		farben.add("cyan");
+		for (Spieler s : spielerVw.getSpielerList()) {
+			s.setFarbe(farben.get(0));
+			farben.remove(0);
+		}
+		
+		
 	}
 
 
