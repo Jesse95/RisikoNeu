@@ -184,10 +184,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			//Spieler erstellen
 			if(anzahlSpieler < 7){
 				sp.erstelleSpieler(name, anzahlSpieler);
+				frame.remove(erstellenPanel);
 			}else{
 				sp.erstelleSpieler(name);
+				frame.remove(beitretenPanel);
 			}
-			frame.remove(erstellenPanel);
+			
 			//			for (int i = 1; i < anzahlSpieler; i++) {
 			//				neuerSpieler();
 			//			}
@@ -217,23 +219,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			//Menuleiste erstellen
 			menu = new MenuBar();
 			Menu datei = new Menu("Datei");
-			Menu grafik = new Menu("Grafik");
 			menu.add(datei);
-			menu.add(grafik);
 			MenuItem speichern = new MenuItem("Speichern");
 			MenuItem schliessen = new MenuItem("Schließen");
-			Menu aufloesung = new Menu("Aufloesung");
-			MenuItem aufloesung1 = new MenuItem("1920x1080");
-			MenuItem aufloesung2 = new MenuItem("1280x800");
-			MenuItem aufloesung3 = new MenuItem("3.Auflösung");
 			datei.add(speichern);
 			datei.add(schliessen);
-			grafik.add(aufloesung);
-			aufloesung.add(aufloesung1);
-			aufloesung.add(aufloesung2);
-			aufloesung.add(aufloesung3);
-			aufloesung1.addActionListener(ausfuehren -> aufloesungAendern(1920, 1080));
-			aufloesung2.addActionListener(ausfuehren -> aufloesungAendern(1280, 800));
 			speichern.addActionListener(save -> {
 				try {
 					spielSpeichern();
