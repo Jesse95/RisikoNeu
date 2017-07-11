@@ -48,6 +48,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	public phasen Phase;
 	private List<GameEventListener> listeners;
 	private int bereitZaehler = 0;
+	private int anzahlSpieler = 0;
 
 	public static void main(String[] args){
 		String serviceName = "GameServer";
@@ -104,6 +105,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 
 	public void erstelleSpieler(String name,int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException {
 		spielerVw.neuerSpieler(name);
+		this.anzahlSpieler = anzahlSpieler;
 		if(spielerVw.getSpielerList().size() == anzahlSpieler){
 			try {
 				laenderErstellen();
@@ -251,8 +253,10 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	 * @param angriff
 	 * @return
 	 * @throws KeinNachbarlandException
+	 * @throws RemoteException 
 	 */
-	public AngriffRueckgabe befreiungsAktion(Angriff angriff) throws KeinNachbarlandException {
+	public AngriffRueckgabe befreiungsAktion(Angriff angriff) throws KeinNachbarlandException, RemoteException {
+		listenerBenachrichtigen(new GameActionEvent(angriff.getAngriffsland().getBesitzer().getName() + " hat " + angriff.getVerteidigungsland().getBesitzer().getName() + " angegriffen.", spielerVw.getAktiverSpieler(), GameActionEvent.GameActionEventType.ANGRIFF));
 		return kriegsVw.befreiungsAktion(angriff);
 	}
 
@@ -466,6 +470,32 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		spielerVw.setAktiverSpieler(nummer);
 		
 	}
+	@Override
+	public void erstelleSpieler(String name) throws RemoteException, SpielerExistiertBereitsException {
+		spielerVw.neuerSpieler(name);
+		this.anzahlSpieler = anzahlSpieler;
+		if(spielerVw.getSpielerList().size() == anzahlSpieler){
+			try {
+				laenderErstellen();
+				laenderverbindungenUndKontinenteErstellen();
+				missionsListeErstellen();
+			} catch (IOException e) {
+				JOptionPane.showMessageDialog(null, e.getMessage(), "Fehler", JOptionPane.WARNING_MESSAGE);
+			}
+			missionenVerteilen();
+			laenderAufteilen();
+
+			try {
+				farbenVerteilen();
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+
+			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));
+		}
+		
+	}
+	
 
 
 

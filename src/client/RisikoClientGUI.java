@@ -33,6 +33,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import client.BeitretenPanel.BeitretenButtonClicked;
 import client.ButtonPanel.ButtonClickHandler;
 import client.ErstellenPanel.ErstellenButtonClicked;
 import client.MapPanel.MapClickHandler;
@@ -58,7 +59,7 @@ import local.valueobjects.Spieler;
 import net.miginfocom.swing.MigLayout;
 
 
-public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHandler, ButtonClickHandler, StartButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler, GameEventListener, LoadHandler {
+public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHandler, ButtonClickHandler, StartButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler, GameEventListener, LoadHandler, BeitretenButtonClicked {
 
 	ServerRemote sp;
 	int anzahlSpieler;
@@ -71,6 +72,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private ConsolePanel consolePanel;
 	private StartPanel startPanel;
 	private ErstellenPanel erstellenPanel;
+	private BeitretenPanel beitretenPanel;
 	private MenuBar menu;
 	private Font schrift;
 	private Font uberschrift;
@@ -124,6 +126,17 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.repaint();
 		frame.revalidate();
 	}
+	private void spielBeitretenPanel(){
+		frame.setTitle("Spiel erstellen");
+		frame.setSize(280, 200);
+		frame.setLocationRelativeTo(null);
+		//		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		beitretenPanel = new BeitretenPanel(this);
+		frame.add(beitretenPanel);
+		frame.setVisible(true);
+		frame.repaint();
+		frame.revalidate();
+	}
 
 	public void spielErstellen(String name, int anzahl) {
 		//von Spiel erstellen zu Spiel wechseln
@@ -168,7 +181,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			consolePanel = new ConsolePanel(schrift);
 
 			//Spieler erstellen
-			sp.erstelleSpieler(name, anzahlSpieler);
+			if(anzahlSpieler < 7){
+				sp.erstelleSpieler(name, anzahlSpieler);
+			}else{
+				sp.erstelleSpieler(name);
+			}
 			frame.remove(erstellenPanel);
 			//			for (int i = 1; i < anzahlSpieler; i++) {
 			//				neuerSpieler();
@@ -723,6 +740,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		spielErstellen();
 	}
 
+	public void spielBeitreten() {
+		frame.remove(startPanel);
+		spielBeitretenPanel();
+		
+	}
+
 	public void phaseButtonClicked() throws RemoteException{
 		//Wenn Mission erfüllt, dann gewonnen aufrufen
 		try {
@@ -1002,6 +1025,10 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				statistikPanel.statistikPanelAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
 				consolePanel.textSetzen(gae.getText());
 				break;
+			case ANGRIFF:
+				spielfeld.fahneEinheit(sp.getLaenderListe());
+				statistikPanel.statistikPanelAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
+				consolePanel.textSetzen(gae.getText());
 			}
 
 		}
@@ -1044,8 +1071,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			}	
 		}while(land.length() != 0);
 		sp.setAktiverSpielerNummer(Integer.parseInt(pm.spielstandLaden()));
+		
 		pm.close();
 	}
+
+
 	
 
 

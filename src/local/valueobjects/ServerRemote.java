@@ -176,5 +176,7 @@ public interface ServerRemote extends Remote{
 	public void landErstellen(ArrayList<String> land)throws RemoteException;
 	
 	public void setAktiverSpielerNummer(int nummer)throws RemoteException;
+	
+	public void erstelleSpieler(String name)throws RemoteException, SpielerExistiertBereitsException;
 
 }

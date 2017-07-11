@@ -29,6 +29,7 @@ public class StartPanel extends JPanel{
 	
 	public interface LoadHandler {
 		public void spielLaden();
+		public void spielBeitreten();
 	}
 	
 	public void initialize() {
@@ -46,11 +47,13 @@ public class StartPanel extends JPanel{
 		
 		JButton startBtn = new JButton("Spiel erstellen");
 		JButton ladenBtn = new JButton("Spiel laden");
+		JButton beitretenBtn = new JButton("Spiel beitreten");
 		JButton optionBtn = new JButton("Optionen");
 		JButton beendenBtn = new JButton("Beenden");
 		
 		startBtn.addActionListener(start -> handler.startButtonClicked());
 		ladenBtn.addActionListener(load -> loadHandler.spielLaden());
+		beitretenBtn.addActionListener(beitreten -> loadHandler.spielBeitreten());
 		beendenBtn.addActionListener(close -> System.exit(0));
 		
 		this.add(logo,"center");
