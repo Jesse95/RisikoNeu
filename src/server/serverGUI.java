@@ -181,20 +181,31 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		kriegsVw.nextTurn();
 		GameControlEvent.phasen phaseEvent = null;
 
+//		switch(kriegsVw.getTurn()){
+//		case STARTPHASE:
+//			phaseEvent = GameControlEvent.phasen.ANGRIFF;
+//			break;
+//		case VERSCHIEBEN:
+//			phaseEvent = GameControlEvent.phasen.VERTEILEN;
+//			break;
+//		case ANGRIFF:
+//			phaseEvent = GameControlEvent.phasen.VERSCHIEBEN;
+//			break;
+//		case VERTEILEN:
+//			phaseEvent = GameControlEvent.phasen.ANGRIFF;
+//			break;
 		switch(kriegsVw.getTurn()){
 		case STARTPHASE:
-			phaseEvent = GameControlEvent.phasen.ANGRIFF;
+			phaseEvent = GameControlEvent.phasen.VERTEILEN;
 			break;
 		case VERSCHIEBEN:
-			phaseEvent = GameControlEvent.phasen.VERTEILEN;
-			naechsterSpieler();
-			break;
-		case ANGRIFF:
 			phaseEvent = GameControlEvent.phasen.VERSCHIEBEN;
 			break;
-		case VERTEILEN:
+		case ANGRIFF:
 			phaseEvent = GameControlEvent.phasen.ANGRIFF;
-
+			break;
+		case VERTEILEN:
+			phaseEvent = GameControlEvent.phasen.VERTEILEN;
 			break;
 		}
 		listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), phaseEvent));

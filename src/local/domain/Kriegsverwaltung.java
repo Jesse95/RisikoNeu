@@ -264,7 +264,7 @@ private int startphaseZaehler = 1;
 	public void nextTurn(){
 		switch(Phase){
 			case STARTPHASE:
-				Phase = phasen.ANGRIFF;
+				Phase = phasen.VERTEILEN;
 				break;
 			case VERSCHIEBEN:
 				Phase = phasen.VERTEILEN;
