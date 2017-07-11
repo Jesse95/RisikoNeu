@@ -152,6 +152,9 @@ public class MapPanel extends JLayeredPane {
 		for(JLabel lab : fahnenLabs) {
 			this.remove(lab);
 		}
+		while(einheitenLabs.size() > 0){
+			einheitenLabs.remove(0);
+		}
 
 		
 		

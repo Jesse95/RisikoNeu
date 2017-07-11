@@ -106,17 +106,10 @@ private int startphaseZaehler = 1;
 	 * @throws KeinNachbarlandException
 	 */
 	public AngriffRueckgabe befreiungsAktion(Angriff angriff) throws KeinNachbarlandException {
-		Land angreifendesLand = null;
-		Land verteidigendesLand = null;
+		Land angreifendesLand = landServerVerbindung(angriff.getAngriffsland());
+		Land verteidigendesLand = landServerVerbindung(angriff.getVerteidigungsland());
 		istNachbar(angriff.getAngriffsland(), angriff.getVerteidigungsland(), null);
-		for(Land l : weltVw.getLaenderListe()){
-			if(angriff.getAngriffsland().getName().equals(l.getName())){
-				angreifendesLand = l;
-			}
-			if(angriff.getVerteidigungsland().getName().equals(l.getName())){
-				verteidigendesLand = l;
-			}
-		}
+	
 		
 		int angreiferEinheiten = angreifendesLand.getEinheiten();
 		int verteidigerEinheiten = verteidigendesLand.getEinheiten();
@@ -202,7 +195,7 @@ private int startphaseZaehler = 1;
 	 */
 	public void einheitenPositionieren(int anzahl, Land land) {
 		
-		land.setEinheiten(land.getEinheiten() + anzahl);
+		landServerVerbindung(land).setEinheiten(land.getEinheiten() + anzahl);
 	}
 	
 	/**
@@ -210,7 +203,8 @@ private int startphaseZaehler = 1;
 	 * @param spieler
 	 * @return int
 	 */
-	public int bekommtEinheiten(Spieler spieler) {
+	public int bekommtEinheiten(Spieler spielerA) {
+		Spieler spieler = spielerServerVerbindung(spielerA);
 		int anzahl = 1;
 		int einheiten = weltVw.besitztLaender(spieler).size() / 3;
 		
@@ -450,7 +444,8 @@ private int startphaseZaehler = 1;
 	 * @param spieler
 	 * @return
 	 */
-	public List<Land> getSpielerLaender(Spieler spieler){
+	public List<Land> getSpielerLaender(Spieler spielerA){
+		Spieler spieler = spielerServerVerbindung(spielerA);
 		List<Land> rueckgabeLaender = new Vector<Land>();
 		for(Land l : weltVw.getLaenderListe()){
 			if(l.getBesitzer().equals(spieler)){
@@ -558,7 +553,8 @@ private int startphaseZaehler = 1;
 	 * @param spieler
 	 * @return
 	 */
-	public boolean spielerRaus(Spieler spieler) {
+	public boolean spielerRaus(Spieler spielerA) {
+		Spieler spieler = spielerServerVerbindung(spielerA);
 		for(Land l : weltVw.getLaenderListe()) {
 			if(l.getBesitzer().equals(spieler)) {
 				return false;
@@ -572,8 +568,8 @@ private int startphaseZaehler = 1;
 	 * 
 	 * @return
 	 */
-	public Mission getMissionVonSpieler(Spieler spieler)
-	{
+	public Mission getMissionVonSpieler(Spieler spielerA){
+	Spieler spieler = spielerServerVerbindung(spielerA);
 		for(Mission m: missionVw.getMissionsListe()) {
 			if(m.getSpieler().equals(spieler)) {
 				return m;
