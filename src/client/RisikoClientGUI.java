@@ -859,9 +859,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			spielerListPanel.setAktiverSpieler(sp.getSpielerList().indexOf(aktiverSpieler) + 1);
 			if(aktiverSpieler.getName().equals(ownSpieler.getName())) {
 				System.out.println("aktiver SPieler " + sp.getTurn());//!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!
+				System.out.println("gce - " + gce.getTurn());
 				switch (gce.getTurn()) {
 				case STARTPHASE:
-					System.out.println("gce " + gce.getTurn());
 					buttonPanel.phaseDisable();
 					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
 					buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
@@ -885,15 +885,15 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(aktiverSpieler).getBeschreibung());
 					break;
 				case VERSCHIEBEN:
-//					buttonPanel.phaseEnable();
-//					istSpielerRaus();
-//					spielfeld.wuerfelEntfernen();
-//					consolePanel.textSetzen(aktiverSpieler.getName() + " verschiebe nun deine Einheiten.");
-//					buttonPanel.verschiebenAktiv("erstes Land", "zweites Land");
-//					if(aktiverSpieler.getEinheitenkarten().size() < 5){
-//						sp.einheitenKarteZiehen(aktiverSpieler);			
-//					}
-//					missionPanel.kartenAusgeben(aktiverSpieler);
+					buttonPanel.phaseEnable();
+					istSpielerRaus();
+					spielfeld.wuerfelEntfernen();
+					consolePanel.textSetzen(aktiverSpieler.getName() + " verschiebe nun deine Einheiten.");
+					buttonPanel.verschiebenAktiv("erstes Land", "zweites Land");
+					if(aktiverSpieler.getEinheitenkarten().size() < 5){
+						sp.einheitenKarteZiehen(aktiverSpieler);			
+					}
+					missionPanel.kartenAusgeben(aktiverSpieler);
 					break;
 				case STARTEN:
 					ArrayList<Land> laenderListe = new ArrayList<>();
