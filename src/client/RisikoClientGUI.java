@@ -45,6 +45,7 @@ import local.domain.exceptions.KeinNachbarlandException;
 import local.domain.exceptions.LandBereitsBenutztException;
 import local.domain.exceptions.NichtGenugEinheitenException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
+import local.persistence.FilePersistenceManager;
 import local.valueobjects.Angriff;
 import local.valueobjects.AngriffRueckgabe;
 import local.valueobjects.GameActionEvent;
@@ -215,7 +216,14 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			aufloesung.add(aufloesung3);
 			aufloesung1.addActionListener(ausfuehren -> aufloesungAendern(1920, 1080));
 			aufloesung2.addActionListener(ausfuehren -> aufloesungAendern(1280, 800));
-			speichern.addActionListener(save -> spielSpeichern());
+			speichern.addActionListener(save -> {
+				try {
+					spielSpeichern();
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
 			schliessen.addActionListener(close -> System.exit(0));
 			menu.setFont(schrift);
 			frame.setMenuBar(menu);
@@ -335,90 +343,105 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			e.printStackTrace();
 		}
 
-			frame.setLayout(new MigLayout("debug, wrap2", "[1050][]", "[][][]"));
-			spielfeld = new MapPanel(this, schrift,1050, 550);
-			spielerListPanel = new SpielerPanel(schrift, uberschrift);
-			missionPanel = new MissionPanel(uberschrift, schrift,this);
-			infoPanel = new InfoPanel(sp.getTurn() + "", schrift, uberschrift);
-			buttonPanel = new ButtonPanel(this, uberschrift);
-			statistikPanel = new StatistikPanel(sp.getSpielerList(), sp.getLaenderListe(), schrift, uberschrift);
-			consolePanel = new ConsolePanel(schrift);
+		frame.setLayout(new MigLayout("debug, wrap2", "[1050][]", "[][][]"));
+		spielfeld = new MapPanel(this, schrift,1050, 550);
+		spielerListPanel = new SpielerPanel(schrift, uberschrift);
+		missionPanel = new MissionPanel(uberschrift, schrift,this);
+		infoPanel = new InfoPanel(sp.getTurn() + "", schrift, uberschrift);
+		buttonPanel = new ButtonPanel(this, uberschrift);
+		statistikPanel = new StatistikPanel(sp.getSpielerList(), sp.getLaenderListe(), schrift, uberschrift);
+		consolePanel = new ConsolePanel(schrift);
 
-			//Spieler erstellen
-			sp.geladenesSpielStarten(anzahlSpieler);
-			frame.remove(erstellenPanel);
-			//			for (int i = 1; i < anzahlSpieler; i++) {
-			//				neuerSpieler();
-			//			}
-			aktiverSpieler = sp.getAktiverSpieler();
-			//TODO OwnSpieler muss gespeichert wertden und hier genutzt werden
-			for(Spieler s:sp.getSpielerList()) {
-				if(s.getName().equals(sp.getAktiverSpieler())){
-					ownSpieler = s;
-				}
+		//Spieler erstellen
+		sp.geladenesSpielStarten(anzahlSpieler);
+		frame.remove(erstellenPanel);
+		//			for (int i = 1; i < anzahlSpieler; i++) {
+		//				neuerSpieler();
+		//			}
+		aktiverSpieler = sp.getAktiverSpieler();
+		//TODO OwnSpieler muss gespeichert wertden und hier genutzt werden
+		for(Spieler s:sp.getSpielerList()) {
+			if(s.getName().equals(sp.getAktiverSpieler())){
+				ownSpieler = s;
 			}
+		}
 
-			frame.setTitle("Risiko - Spieler: " + ownSpieler.getName());
-			frame.setSize(1250, 817);
-			frame.setLocationRelativeTo(null);
-			//			frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		frame.setTitle("Risiko - Spieler: " + ownSpieler.getName());
+		frame.setSize(1250, 817);
+		frame.setLocationRelativeTo(null);
+		//			frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
-			//Fenster mit Layout und Paneln füllen
-			//			frame.setLayout(new MigLayout("debug, wrap2", "[1050][]", "[][][]"));
-			//			spielfeld = new MapPanel(this, schrift,1050, 550);
-			//			spielerListPanel = new SpielerPanel(schrift, uberschrift);
-			//			missionPanel = new MissionPanel(uberschrift, schrift,this);
-			//			infoPanel = new InfoPanel(sp.getTurn() + "", aktiverSpieler.getName(), schrift, uberschrift);
-			//			buttonPanel = new ButtonPanel(this, uberschrift);
-			//			statistikPanel = new StatistikPanel(sp.getSpielerList(), sp.getLaenderListe(), schrift, uberschrift);
-			//			consolePanel = new ConsolePanel(schrift);
+		//Fenster mit Layout und Paneln füllen
+		//			frame.setLayout(new MigLayout("debug, wrap2", "[1050][]", "[][][]"));
+		//			spielfeld = new MapPanel(this, schrift,1050, 550);
+		//			spielerListPanel = new SpielerPanel(schrift, uberschrift);
+		//			missionPanel = new MissionPanel(uberschrift, schrift,this);
+		//			infoPanel = new InfoPanel(sp.getTurn() + "", aktiverSpieler.getName(), schrift, uberschrift);
+		//			buttonPanel = new ButtonPanel(this, uberschrift);
+		//			statistikPanel = new StatistikPanel(sp.getSpielerList(), sp.getLaenderListe(), schrift, uberschrift);
+		//			consolePanel = new ConsolePanel(schrift);
 
-			//Menuleiste erstellen
-			menu = new MenuBar();
-			Menu datei = new Menu("Datei");
-			Menu grafik = new Menu("Grafik");
-			menu.add(datei);
-			menu.add(grafik);
-			MenuItem speichern = new MenuItem("Speichern");
-			MenuItem schliessen = new MenuItem("Schließen");
-			Menu aufloesung = new Menu("Aufloesung");
-			MenuItem aufloesung1 = new MenuItem("1920x1080");
-			MenuItem aufloesung2 = new MenuItem("1280x800");
-			MenuItem aufloesung3 = new MenuItem("3.Auflösung");
-			datei.add(speichern);
-			datei.add(schliessen);
-			grafik.add(aufloesung);
-			aufloesung.add(aufloesung1);
-			aufloesung.add(aufloesung2);
-			aufloesung.add(aufloesung3);
-			aufloesung1.addActionListener(ausfuehren -> aufloesungAendern(1920, 1080));
-			aufloesung2.addActionListener(ausfuehren -> aufloesungAendern(1280, 800));
-			speichern.addActionListener(save -> spielSpeichern());
-			schliessen.addActionListener(close -> System.exit(0));
-			menu.setFont(schrift);
-			frame.setMenuBar(menu);
+		//Menuleiste erstellen
+		menu = new MenuBar();
+		Menu datei = new Menu("Datei");
+		Menu grafik = new Menu("Grafik");
+		menu.add(datei);
+		menu.add(grafik);
+		MenuItem speichern = new MenuItem("Speichern");
+		MenuItem schliessen = new MenuItem("Schließen");
+		Menu aufloesung = new Menu("Aufloesung");
+		MenuItem aufloesung1 = new MenuItem("1920x1080");
+		MenuItem aufloesung2 = new MenuItem("1280x800");
+		MenuItem aufloesung3 = new MenuItem("3.Auflösung");
+		datei.add(speichern);
+		datei.add(schliessen);
+		grafik.add(aufloesung);
+		aufloesung.add(aufloesung1);
+		aufloesung.add(aufloesung2);
+		aufloesung.add(aufloesung3);
+		aufloesung1.addActionListener(ausfuehren -> aufloesungAendern(1920, 1080));
+		aufloesung2.addActionListener(ausfuehren -> aufloesungAendern(1280, 800));
+		speichern.addActionListener(save -> {
+			try {
+				spielSpeichern();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		schliessen.addActionListener(close -> System.exit(0));
+		menu.setFont(schrift);
+		frame.setMenuBar(menu);
 
-			//Layout anpassen
-			frame.add(spielfeld, "left,spany 3,grow");
-			frame.add(infoPanel, "left,growx");
-			frame.add(spielerListPanel, "growx");
-			frame.add(statistikPanel, "left,top,growx,spany 2");
-			//			frame.add(missionPanel, "left,top,split3,wmin 300, wmax 300");
-			frame.add(missionPanel, "left,top,split3");
-			frame.add(consolePanel, "left, top");
-			//			frame.add(buttonPanel, "right,growy, wmin 180, wmax 180");
-			frame.add(buttonPanel, "right,growy");
-			frame.setResizable(false);
-			frame.setVisible(true);
-			frame.pack();
-			infoPanel.changePanel(sp.getTurn() + "");
+		//Layout anpassen
+		frame.add(spielfeld, "left,spany 3,grow");
+		frame.add(infoPanel, "left,growx");
+		frame.add(spielerListPanel, "growx");
+		frame.add(statistikPanel, "left,top,growx,spany 2");
+		//			frame.add(missionPanel, "left,top,split3,wmin 300, wmax 300");
+		frame.add(missionPanel, "left,top,split3");
+		frame.add(consolePanel, "left, top");
+		//			frame.add(buttonPanel, "right,growy, wmin 180, wmax 180");
+		frame.add(buttonPanel, "right,growy");
+		frame.setResizable(false);
+		frame.setVisible(true);
+		frame.pack();
+		infoPanel.changePanel(sp.getTurn() + "");
 	}
 
-	private void spielSpeichern() {
-		try{
-			sp.spielSpeichern("Game2.txt");
-		}catch(IOException e){
-			consolePanel.textSetzen("Spiel konnte nicht gespeichert werden" + e.getMessage());
+	private void spielSpeichern() throws RemoteException {
+		String name = JOptionPane.showInputDialog(frame, "Spiel speichern.");
+		if(name.length() > 0){
+			FilePersistenceManager pm = new FilePersistenceManager();
+			try {
+				pm.schreibkanalOeffnen(name + ".txt");
+			} catch (IOException e) {
+				consolePanel.textSetzen("Spiel konnte nicht gespeichert werden" + e.getMessage());
+			}
+			pm.spielSpeichern(sp.getLaenderListe(), sp.getSpielerList(), sp.getTurn() + "", sp.getAktiverSpielerNummer(), sp.getMissionsListe());
+			pm.close();
+		}else{
+			consolePanel.textSetzen("Du musst einen Namen eingeben");
 		}
 	}
 
@@ -473,27 +496,27 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				consolePanel.textSetzen(lene.getMessage());
 			}
 		}else{
-		//eine Einheit verteilen in Startphase oder Verteilen-Phase
-		try {
-			sp.landWaehlen(landstring, aktiverSpieler);
+			//eine Einheit verteilen in Startphase oder Verteilen-Phase
+			try {
+				sp.landWaehlen(landstring, aktiverSpieler);
 
-			if (anzahlSetzbareEinheiten > 0) {
-				missionPanel.klickDisablen();
-				consolePanel.textSetzen("Du kannst nun keine Einheitenkarten mehr tauschen");
-				sp.einheitenPositionieren(1, land);
-				anzahlSetzbareEinheiten--;
-				spielfeld.labelsSetzen("", land.getEinheiten(), "");
-				//				spielfeld.fahneEinheit(land.getEinheitenLab());
-				statistikPanel.statistikPanelAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
-				buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
+				if (anzahlSetzbareEinheiten > 0) {
+					missionPanel.klickDisablen();
+					consolePanel.textSetzen("Du kannst nun keine Einheitenkarten mehr tauschen");
+					sp.einheitenPositionieren(1, land);
+					anzahlSetzbareEinheiten--;
+					spielfeld.labelsSetzen("", land.getEinheiten(), "");
+					//				spielfeld.fahneEinheit(land.getEinheitenLab());
+					statistikPanel.statistikPanelAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
+					buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
+				}
+				if(anzahlSetzbareEinheiten == 0){
+					consolePanel.textSetzen("Du hast alle Einheiten gesetzt.");
+					buttonPanel.phaseEnable();
+				}
+			} catch (KannLandNichtBenutzenException lene) {
+				consolePanel.textSetzen(lene.getMessage());
 			}
-			if(anzahlSetzbareEinheiten == 0){
-				consolePanel.textSetzen("Du hast alle Einheiten gesetzt.");
-				buttonPanel.phaseEnable();
-			}
-		} catch (KannLandNichtBenutzenException lene) {
-			consolePanel.textSetzen(lene.getMessage());
-		}
 		}
 	}
 
@@ -591,7 +614,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			} else {
 				consolePanel.textSetzen("Ihr habt unentschieden gespielt, beide verlieren eine Einheit.");
 			}
-		
+
 			//Einheiten auf Fahne setzen
 			spielfeld.fahneEinheit(sp.getLaenderListe());
 			land1 = null;
@@ -965,7 +988,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				}
 				break;
 			case EROBERT:
-				
+
 				spielfeld.fahnenVerteilen(sp.getLaenderListe());
 				spielfeld.fahneEinheit(sp.getLaenderListe());
 				statistikPanel.statistikPanelAktualisieren(sp.getLaenderListe(), sp.getSpielerList());

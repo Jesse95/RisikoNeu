@@ -437,6 +437,10 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		}
 		
 	}
+	@Override
+	public int getAktiverSpielerNummer() throws RemoteException{
+		return spielerVw.getAktiverSpielerNummer();
+	}
 
 
 

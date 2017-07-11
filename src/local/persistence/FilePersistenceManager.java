@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import local.valueobjects.Einheitenkarten;
@@ -54,7 +55,7 @@ public class FilePersistenceManager {
 		
 	}
 
-	public boolean spielSpeichern(List<Land> welt, List<Spieler> spielerListe, String phase, int aktiverSpieler, List<Mission> missionsListe){
+	public boolean spielSpeichern(ArrayList<Land> welt, ArrayList<Spieler> spielerListe, String phase, int aktiverSpieler, ArrayList<Mission> missionsListe){
 		schreibeZeile(phase);
 		for(Spieler s : spielerListe){
 			schreibeZeile(s.getName());

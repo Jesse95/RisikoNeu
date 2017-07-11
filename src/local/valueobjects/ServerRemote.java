@@ -168,5 +168,7 @@ public interface ServerRemote extends Remote{
 	public void farbenVerteilen()throws RemoteException;
 
 	public void spielerBereit()throws RemoteException;
+	
+	public int getAktiverSpielerNummer()throws RemoteException;
 
 }

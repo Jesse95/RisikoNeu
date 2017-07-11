@@ -514,8 +514,6 @@ private int startphaseZaehler = 1;
 			}	
 		}while(land.length() != 0);
 		
-		weltVw.erstellen();
-		
 		int spielerNummer = Integer.parseInt(pm.spielstandLaden());
 		spielerVw.setAktiverSpieler(spielerNummer);
 
