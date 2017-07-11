@@ -909,9 +909,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					consolePanel.textSetzen(aktiverSpieler.getName() + " verschiebe nun deine Einheiten.");
 					buttonPanel.verschiebenAktiv("erstes Land", "zweites Land");
 					if(aktiverSpieler.getEinheitenkarten().size() < 5){
+						System.out.println("Karte gezogen");
 						sp.einheitenKarteZiehen(aktiverSpieler);			
 					}
-					missionPanel.kartenAusgeben(aktiverSpieler);
 					break;
 				case STARTEN:
 					ArrayList<Land> laenderListe = new ArrayList<>();
@@ -1002,6 +1002,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 
 			infoPanel.changePanel(sp.getTurn() + "");
+			missionPanel.kartenAusgeben(ownSpieler);
 		}else{
 			GameActionEvent gae = (GameActionEvent)event;
 			aktiverSpieler = gae.getSpieler();
@@ -1024,7 +1025,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				spielfeld.fahneEinheit(sp.getLaenderListe());
 				statistikPanel.statistikPanelAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
 				consolePanel.textSetzen(gae.getText());
-				wuerfelAnzeigen();
+//				wuerfelAnzeigen();
 			}
 
 		}

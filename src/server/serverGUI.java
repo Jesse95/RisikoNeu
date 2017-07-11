@@ -355,7 +355,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	}
 
 	public Einheitenkarten einheitenKarteZiehen(Spieler spieler) {
-		return einheitenVw.karteNehmen(spieler);	
+		return einheitenVw.karteNehmen(kriegsVw.spielerServerVerbindung(spieler));	
 	}
 
 	public boolean missionIstAbgeschlossen(Mission mission){
