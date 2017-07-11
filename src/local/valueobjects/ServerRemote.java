@@ -25,6 +25,7 @@ public interface ServerRemote extends Remote{
 	
 	public void erstelleSpieler(String name, int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException;
 	
+	public void geladenesSpielStarten(int anzahlSpieler) throws RemoteException;
 
 	/**
 	 * @param anzahlSpieler

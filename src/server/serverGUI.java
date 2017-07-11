@@ -118,7 +118,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			try {
 				farbenVerteilen();
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -127,6 +126,20 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	}
 
 
+	public void geladenesSpielStarten(int anzahlSpieler) throws RemoteException {
+		if(spielerVw.getSpielerList().size() == anzahlSpieler){
+			
+			try {
+				farbenVerteilen();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));
+		}
+	}
+	
 	/**
 	 * @param anzahlSpieler
 	 */

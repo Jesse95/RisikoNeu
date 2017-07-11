@@ -141,6 +141,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 	private void spiel(String name, int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException {
 		this.anzahlSpieler = anzahlSpieler;
+		this.lokalSpielerString = name;
 		try{
 			String servicename = "GameServer";
 			Registry registry = LocateRegistry.getRegistry("127.0.0.1",4711);
@@ -334,8 +335,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			e.printStackTrace();
 		}
 
-		//Spiel erzeugen
-		try {
 			frame.setLayout(new MigLayout("debug, wrap2", "[1050][]", "[][][]"));
 			spielfeld = new MapPanel(this, schrift,1050, 550);
 			spielerListPanel = new SpielerPanel(schrift, uberschrift);
@@ -346,15 +345,15 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			consolePanel = new ConsolePanel(schrift);
 
 			//Spieler erstellen
-			sp.erstelleSpieler(name, anzahlSpieler);
+			sp.geladenesSpielStarten(anzahlSpieler);
 			frame.remove(erstellenPanel);
 			//			for (int i = 1; i < anzahlSpieler; i++) {
 			//				neuerSpieler();
 			//			}
 			aktiverSpieler = sp.getAktiverSpieler();
-
+			//TODO OwnSpieler muss gespeichert wertden und hier genutzt werden
 			for(Spieler s:sp.getSpielerList()) {
-				if(s.getName().equals(name)){
+				if(s.getName().equals(sp.getAktiverSpieler())){
 					ownSpieler = s;
 				}
 			}
@@ -412,16 +411,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			frame.setResizable(false);
 			frame.setVisible(true);
 			frame.pack();
-			//Spiel beginnen
-			System.out.println("Zu Beginn" + sp.getTurn());//!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!
-			sp.setTurn("STARTPHASE");
-			anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
-			consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
-			System.out.println("nach setzen von SP" + sp.getTurn());//!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!
 			infoPanel.changePanel(sp.getTurn() + "");
-		} catch (SpielerExistiertBereitsException sebe) {
-			JOptionPane.showMessageDialog(null, sebe.getMessage(), "Name vergeben", JOptionPane.WARNING_MESSAGE);
-		}
 	}
 
 	private void spielSpeichern() {
