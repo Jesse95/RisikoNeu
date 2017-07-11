@@ -183,10 +183,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			//Spieler erstellen
 			if(anzahlSpieler < 7){
 				sp.erstelleSpieler(name, anzahlSpieler);
+				frame.remove(erstellenPanel);
 			}else{
 				sp.erstelleSpieler(name);
+				frame.remove(beitretenPanel);
 			}
-			frame.remove(erstellenPanel);
+			
 			//			for (int i = 1; i < anzahlSpieler; i++) {
 			//				neuerSpieler();
 			//			}

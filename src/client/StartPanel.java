@@ -59,6 +59,7 @@ public class StartPanel extends JPanel{
 		this.add(logo,"center");
 		this.add(startBtn,"center,growx");
 		this.add(ladenBtn,"center,growx");
+		this.add(beitretenBtn,"center, growx");
 		this.add(optionBtn,"center,growx");
 		this.add(beendenBtn,"center,growx");
 	}	
