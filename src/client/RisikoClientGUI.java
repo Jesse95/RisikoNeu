@@ -86,6 +86,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private JFrame frame;
 	private String lokalSpielerString = "";
 	private Spieler lokalSpieler = null;
+	private AngriffRueckgabe angriffRueckgabe;
 
 
 	private RisikoClientGUI()throws RemoteException {
@@ -607,7 +608,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		Land aLand = land1;
 		Land vLand = land2;
 		//Angriff durchführen
-		AngriffRueckgabe angriffRueckgabe = sp.befreiungsAktion(new Angriff(aLand, vLand));
+		angriffRueckgabe = sp.befreiungsAktion(new Angriff(aLand, vLand));
 		//Würfel anzeigen lassen
 		spielfeld.wuerfelAnzeigen(angriffRueckgabe.getWuerfelAngreifer(), angriffRueckgabe.getWuerfelVerteidiger());
 		//Angriff auswerten und Ergebnis anzeigen
@@ -651,6 +652,10 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	}
 
 
+	private void wuerfelAnzeigen(){
+		spielfeld.wuerfelAnzeigen(angriffRueckgabe.getWuerfelAngreifer(), angriffRueckgabe.getWuerfelVerteidiger());
+		
+	}
 	private void istSpielerRaus()throws RemoteException{
 		//Überprüfung ob ein Spieler verloren hat
 		List<Spieler> spielerListe = sp.getSpielerList();
@@ -952,9 +957,8 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
 					break;
 				case ANGRIFF:
-					System.out.println("I - gce " + gce.getTurn());
 					buttonPanel.removeAll();
-					consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun angreifen.");
+					consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun angreifen.");					
 					break;
 				case VERTEILEN:
 					buttonPanel.removeAll();
@@ -1009,7 +1013,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				}
 				break;
 			case EROBERT:
-
 				spielfeld.fahnenVerteilen(sp.getLaenderListe());
 				spielfeld.fahneEinheit(sp.getLaenderListe());
 				statistikPanel.statistikPanelAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
@@ -1019,6 +1022,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				spielfeld.fahneEinheit(sp.getLaenderListe());
 				statistikPanel.statistikPanelAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
 				consolePanel.textSetzen(gae.getText());
+				wuerfelAnzeigen();
 			}
 
 		}
@@ -1064,9 +1068,4 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		
 		pm.close();
 	}
-
-
-	
-
-
 }	
