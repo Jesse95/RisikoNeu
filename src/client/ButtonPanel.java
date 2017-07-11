@@ -121,7 +121,7 @@ public class ButtonPanel extends JPanel{
 	}
 	
 	public void phaseDisable() {
-		nextTurn.setEnabled(true);
+		nextTurn.setEnabled(false);
 	}
 	
 	public void phaseEnable() {
@@ -150,7 +150,7 @@ public class ButtonPanel extends JPanel{
 	public void startphase(int einheiten) {
 		removeAll();
 		this.add(anzahlEinheitenVerteilen,"center");
-		anzahlEinheitenVerteilen.setText(einheiten + "");
+		anzahlEinheitenVerteilen.setText(0 + "");
 		this.add(nextTurn,"left,grow");
 		nextTurn.setEnabled(false);
 		this.repaint();

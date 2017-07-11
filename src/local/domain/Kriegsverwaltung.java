@@ -237,25 +237,25 @@ private int startphaseZaehler = 1;
 		}
 	
 	public int checkAnfangseinheiten(){
-//		int einheiten = 0;
-//		switch(spielerVw.getSpielerList().size()){
-//		case 2:
-//			einheiten = 35;
-//			break;
-//		case 3:
-//			einheiten = 30;
-//			break;
-//		case 4:
-//			einheiten = 30;
-//			break;
-//		case 5:
-//			einheiten = 25;
-//			break;
-//		case 6:
-//			einheiten = 25;
-//			break;
-//		}
-		return 3;	//TODO: hier 25?
+		int einheiten = 0;
+		switch(spielerVw.getSpielerList().size()+1){
+		case 2:
+			einheiten = 35;
+			break;
+		case 3:
+			einheiten = 30;
+			break;
+		case 4:
+			einheiten = 30;
+			break;
+		case 5:
+			einheiten = 25;
+			break;
+		case 6:
+			einheiten = 25;
+			break;
+		}
+		return einheiten;	//TODO: hier 25?
 	}
 	
 	/**

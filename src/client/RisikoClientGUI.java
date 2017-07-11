@@ -990,6 +990,8 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					missionPanel.kartenAusgeben(ownSpieler);
 					missionPanel.klickDisablen();
 					buttonPanel.removeAll();
+					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
+					buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
 					consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun seine Einheiten setzen.");
 					break;
 				default:
