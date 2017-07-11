@@ -853,6 +853,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 					break;
 				case ANGRIFF:
+					buttonPanel.phaseEnable();
 					System.out.println("gce " + gce.getTurn());
 					missionPanel.klickDisablen();
 					consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun angreifen.");
@@ -869,6 +870,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(aktiverSpieler).getBeschreibung());
 					break;
 				case VERSCHIEBEN:
+					buttonPanel.phaseEnable();
 					istSpielerRaus();
 					spielfeld.wuerfelEntfernen();
 					consolePanel.textSetzen(aktiverSpieler.getName() + " verschiebe nun deine Einheiten.");
@@ -896,7 +898,15 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					statistikPanel.statistikAktualisieren(sp.getLaenderListe(), sp.getSpielerList());
 					break;
 				case ALLE_BEREIT:
-					phaseButtonClicked();
+					missionPanel.kartenAusgeben(aktiverSpieler);
+					missionPanel.klickEnablen();
+					buttonPanel.phaseDisable();
+					anzahlSetzbareEinheiten = sp.bekommtEinheiten(aktiverSpieler);
+					consolePanel.textSetzen(
+							aktiverSpieler.getName() + " du kannst " + anzahlSetzbareEinheiten + " Einheiten setzen.");
+					buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
+					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(aktiverSpieler).getBeschreibung());
+
 					break;
 				}
 			} else {
