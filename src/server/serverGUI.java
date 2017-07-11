@@ -185,13 +185,12 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			break;
 		case VERSCHIEBEN:
 			phaseEvent = GameControlEvent.phasen.VERTEILEN;
-			
+			naechsterSpieler();
 			break;
 		case ANGRIFF:
 			phaseEvent = GameControlEvent.phasen.VERSCHIEBEN;
 			break;
 		case VERTEILEN:
-			naechsterSpieler();
 			phaseEvent = GameControlEvent.phasen.ANGRIFF;
 			
 			break;

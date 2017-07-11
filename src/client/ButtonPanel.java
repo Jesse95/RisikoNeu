@@ -83,6 +83,7 @@ public class ButtonPanel extends JPanel{
 		this.add(angreifen,"left,grow");
 		this.add(nextTurn,"left,grow");
 		nextTurn.setText("Naechste Phase");
+		System.out.println("shalalalalalalallala");
 		this.repaint();
 	}
 	
