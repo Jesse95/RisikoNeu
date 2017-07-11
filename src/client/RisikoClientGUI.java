@@ -1005,6 +1005,40 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		// TODO Auto-generated method stub
 
 	}
+	
+	public void spielLaden2() throws RemoteException, IOException{
+		FilePersistenceManager pm = new FilePersistenceManager();
+		pm.lesekanalOeffnen("Game5.txt");
+		sp.setTurn(pm.spielstandLaden());
+		pm.spielstandLaden();
+		ArrayList<String> spielerListe = new ArrayList<>();
+		String spieler;
+		do{
+			spieler = pm.spielstandLaden();
+			if(spieler.length() != 0){
+				sp.spielerErstellen(spieler);
+			}
+		}while(spieler.length() != 0);
+		String land;
+		do{
+			 land = pm.spielstandLaden();
+			if(land.length() != 0){
+				ArrayList<String> liste = new ArrayList<>();
+				liste.add(land);
+				liste.add(pm.spielstandLaden());
+				liste.add(pm.spielstandLaden());
+				liste.add(pm.spielstandLaden());
+				liste.add(pm.spielstandLaden());
+				liste.add(pm.spielstandLaden());
+				
+				sp.landErstellen(liste);
+					
+			}	
+		}while(land.length() != 0);
+		sp.setAktiverSpielerNummer(Integer.parseInt(pm.spielstandLaden()));
+		pm.close();
+	}
+	
 
 
 }	

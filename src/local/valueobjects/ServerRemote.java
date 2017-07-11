@@ -170,5 +170,11 @@ public interface ServerRemote extends Remote{
 	public void spielerBereit()throws RemoteException;
 	
 	public int getAktiverSpielerNummer()throws RemoteException;
+	
+	public void spielerErstellen(String spieler)throws RemoteException;
+	
+	public void landErstellen(ArrayList<String> land)throws RemoteException;
+	
+	public void setAktiverSpielerNummer(int nummer)throws RemoteException;
 
 }
