@@ -24,6 +24,7 @@ public class MapPanel extends JLayeredPane {
 
 	public interface MapClickHandler {
 		public void mausklickAktion(Color color);
+		public void mouseHover(Color color);
 	}
 	
 	private List<JLabel> fahnenLabs = new Vector<JLabel>();
@@ -119,6 +120,11 @@ public class MapPanel extends JLayeredPane {
 				int farbenInt =  weltKarteBunt.getRGB(e.getX(), e.getY());
 				Color color = new Color(farbenInt, true);
 				handler.mausklickAktion(color);
+			}
+			public void mouseEntered(MouseEvent eh){
+				int farbenInt =  weltKarteBunt.getRGB(eh.getX(), eh.getY());
+				Color color = new Color(farbenInt, true);
+				handler.mouseHover(color);
 			}
 		});
 

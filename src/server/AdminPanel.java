@@ -133,16 +133,6 @@ public class AdminPanel extends JPanel{
 	}
 	
 	private String besitzerSetzenVerarbeiten(){
-		String land = laenderWahl.getSelectedItem() +"";
-		String rueckgabe = "";
-		for(int i = 0; i < land.length(); i++){
-			if(land.charAt(i) != ' '){
-				rueckgabe += land.charAt(i);
-			}else{
-				return rueckgabe;
-			}
-		}
-		return null;
-		
+		return laenderListe.get(laenderWahl.getSelectedIndex()).getName();
 	}
 }
