@@ -9,7 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 
 import local.domain.Einheitenkartenverwaltung;
 import local.domain.Kriegsverwaltung;
@@ -36,6 +38,7 @@ import local.valueobjects.Land;
 import local.valueobjects.Mission;
 import local.valueobjects.ServerRemote;
 import local.valueobjects.Spieler;
+import net.miginfocom.swing.MigLayout;
 
 
 public class serverGUI extends UnicastRemoteObject implements ServerRemote{
@@ -49,7 +52,11 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	private List<GameEventListener> listeners;
 	private int bereitZaehler = 0;
 	private int anzahlSpieler = 0;
+	private JFrame frame;
+	
+	private JTextArea consoleText;
 
+	
 	public static void main(String[] args){
 		String serviceName = "GameServer";
 		try{
@@ -66,7 +73,20 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		}catch(RemoteException e){
 			e.printStackTrace();
 		}
+		
 	}
+	
+	public void initialize(){
+		ConsolePanel consolePanel = new ConsolePanel();
+		frame = new JFrame();
+		frame.setLayout(new MigLayout("debug, wrap2", "[][]", "[][][]"));
+		frame.setSize(300,600);
+		frame.add(consolePanel);
+		frame.setVisible(true);
+		frame.setLocationRelativeTo(null);
+		
+	}
+	
 	public serverGUI() throws RemoteException{
 		listeners = new Vector<>();
 		this.spielerVw = new Spielerverwaltung();
@@ -74,6 +94,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		this.missionVw = new Missionsverwaltung();
 		this.einheitenVw = new Einheitenkartenverwaltung();
 		this.kriegsVw = new Kriegsverwaltung(spielerVw, weltVw, missionVw);
+		initialize();
 	}
 
 	public void addGameEventListener(GameEventListener listener) throws RemoteException {
