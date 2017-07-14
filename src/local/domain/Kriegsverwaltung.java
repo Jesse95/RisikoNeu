@@ -255,7 +255,7 @@ private int startphaseZaehler = 1;
 			einheiten = 25;
 			break;
 		}
-		return einheiten;	//TODO: hier 25?
+		return 3;	//TODO: hier 25?
 	}
 	
 	/**

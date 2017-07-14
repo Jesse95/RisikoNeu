@@ -163,7 +163,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			sp = (ServerRemote)registry.lookup(servicename);
 
 			sp.addGameEventListener(this);
-
+			sp.serverBenachrichtigung("Spieler registriert: " + name);
 		}catch(RemoteException e){
 
 		} catch (NotBoundException e) {

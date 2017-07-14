@@ -1,5 +1,8 @@
 package server;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -9,7 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
@@ -53,34 +59,33 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	private int bereitZaehler = 0;
 	private int anzahlSpieler = 0;
 	private JFrame frame;
+	private ConsolePanel consolePanel;
+	JLabel ampel = null;
+	BufferedImage ampelRot;
+	BufferedImage ampelGruen;
 	
-	private JTextArea consoleText;
-
-	
-	public static void main(String[] args){
-		String serviceName = "GameServer";
-		try{
-			ServerRemote server = new serverGUI();
-			Registry registry;
-			try{
-				registry = LocateRegistry.createRegistry(4711);
-				//				registry = LocateRegistry.getRegistry();
-			}catch(RemoteException re){
-				registry = LocateRegistry.createRegistry(4711);
-			}
-			registry.rebind(serviceName, server);
-			System.out.println("Server gestartet");
-		}catch(RemoteException e){
-			e.printStackTrace();
-		}
+	public static void main(String[] args) throws RemoteException{
+		ServerRemote server = new serverGUI();
+		server.serverStarten(server);
 		
 	}
 	
 	public void initialize(){
-		ConsolePanel consolePanel = new ConsolePanel();
+		consolePanel = new ConsolePanel();
 		frame = new JFrame();
 		frame.setLayout(new MigLayout("debug, wrap2", "[][]", "[][][]"));
 		frame.setSize(300,600);
+		
+		
+		try {
+			ampelRot = ImageIO.read(new File("./ampel_Rot.png"));
+			ampelGruen = ImageIO.read(new File("./ampel_Gruen.png"));
+			ampel = new JLabel(new ImageIcon(ampelRot.getScaledInstance(50, 100, Image.SCALE_FAST)));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+			
+		frame.add(ampel,"center,spanx 2,grow");
 		frame.add(consolePanel);
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
@@ -104,8 +109,23 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 
 	public void removeGameEventListener(GameEventListener listener) throws RemoteException {
 		listeners.remove(listener);
-
 	}
+	
+	public void serverStarten(ServerRemote server) throws RemoteException{
+		String serviceName = "GameServer";
+			Registry registry;
+			consolePanel.textSetzen("Server starten....");
+			try{
+				registry = LocateRegistry.createRegistry(4711);
+				//				registry = LocateRegistry.getRegistry();
+			}catch(RemoteException re){
+				registry = LocateRegistry.createRegistry(4711);
+			}
+			registry.rebind(serviceName, server);
+			ampelSchalten(true);
+			consolePanel.textSetzen("Server gestartet");
+	}
+	
 	private void listenerBenachrichtigen(GameEvent event)throws RemoteException{
 		for (GameEventListener listener : listeners) {
 
@@ -151,7 +171,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 
 	public void geladenesSpielStarten(int anzahlSpieler) throws RemoteException {
 		if(spielerVw.getSpielerList().size() == anzahlSpieler){
-
+			consolePanel.textSetzen("Spiel wird geladen");
 			try {
 				farbenVerteilen();
 			} catch (RemoteException e) {
@@ -500,8 +520,8 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	@Override
 	public void erstelleSpieler(String name) throws RemoteException, SpielerExistiertBereitsException {
 		spielerVw.neuerSpieler(name);
-		this.anzahlSpieler = anzahlSpieler;
 		if(spielerVw.getSpielerList().size() == anzahlSpieler){
+			consolePanel.textSetzen("Spiel wird erstellt");
 			try {
 				laenderErstellen();
 				laenderverbindungenUndKontinenteErstellen();
@@ -517,14 +537,21 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			} catch (RemoteException e) {
 				e.printStackTrace();
 			}
-
 			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));
 		}
-		
 	}
 	
-
-
-
-
+	public void serverBenachrichtigung(String nachricht){
+		consolePanel.textSetzen(nachricht);
 	}
+	
+	public void ampelSchalten(Boolean ampelAn) {
+		if(ampelAn){
+			ampel = new JLabel(new ImageIcon(ampelGruen.getScaledInstance(50, 100, Image.SCALE_FAST)));
+		} else {
+			ampel = new JLabel(new ImageIcon(ampelRot.getScaledInstance(50, 100, Image.SCALE_FAST)));
+		}
+		frame.repaint();
+		frame.revalidate();
+	}
+}
