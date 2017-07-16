@@ -422,10 +422,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		return weltVw.getLandVonFarbcode(farbe);
 	}
 
-	//	public Mission getMissionVonAktivemSpieler()throws RemoteException	{
-	//		return kriegsVw.getMissionVonAktivemSpieler();
-	//	}
-
 	public int kartenEinloesen(Spieler spieler, ArrayList<String> tauschKarten) throws RemoteException {
 		return 0;
 	}

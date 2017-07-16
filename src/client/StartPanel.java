@@ -14,22 +14,16 @@ import javax.swing.JPanel;
 import net.miginfocom.swing.MigLayout;
 
 public class StartPanel extends JPanel{
-	private StartButtonClickHandler handler = null;
-	private LoadHandler loadHandler = null;
+	private StartHandler starthandler = null;
 	
-	public StartPanel(StartButtonClickHandler handler){
-		this.handler = handler;
-		this.loadHandler = (LoadHandler) handler;
+	public StartPanel(StartHandler handler){
+		this.starthandler = handler;
 		initialize();
 	}
 	
-	public interface StartButtonClickHandler {
-		public void startButtonClicked();
-	}
-	
-	public interface LoadHandler {
+	public interface StartHandler {
 		public void spielLaden();
-		public void spielBeitreten();
+		public void SpielerRegistrierungOeffnen(boolean ersterSpieler);
 	}
 	
 	public void initialize() {
@@ -51,9 +45,9 @@ public class StartPanel extends JPanel{
 		JButton optionBtn = new JButton("Optionen");
 		JButton beendenBtn = new JButton("Beenden");
 		
-		startBtn.addActionListener(start -> handler.startButtonClicked());
-		ladenBtn.addActionListener(load -> loadHandler.spielLaden());
-		beitretenBtn.addActionListener(beitreten -> loadHandler.spielBeitreten());
+		startBtn.addActionListener(start -> starthandler.SpielerRegistrierungOeffnen(true));
+		ladenBtn.addActionListener(load -> starthandler.spielLaden());
+		beitretenBtn.addActionListener(beitreten -> starthandler.SpielerRegistrierungOeffnen(false));
 		beendenBtn.addActionListener(close -> System.exit(0));
 		
 		this.add(logo,"center");

@@ -9,6 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -28,7 +29,7 @@ import net.miginfocom.swing.MigLayout;
 public class MissionPanel extends JPanel {
 
 	public interface KarteClickedHandler{
-		public void karteEintauschen(List<String> tauschKarten);
+		public void karteEintauschen(ArrayList<String> tauschKarten);
 		public void tauschFehlgeschlagen();
 	}
 	
@@ -110,7 +111,7 @@ public class MissionPanel extends JPanel {
 				System.out.println("Speicher3");
 				System.out.println(kartenSpeicher1 + " " + kartenSpeicher2 + " " + kartenSpeicher3);
 				if(kartenSpeicher1 == kartenSpeicher2 && kartenSpeicher1 == kartenSpeicher3 || kartenSpeicher1 != kartenSpeicher2 && kartenSpeicher2 != kartenSpeicher3 && kartenSpeicher1 != kartenSpeicher3  || kartenSpeicher1 == kartenSpeicher2 && kartenSpeicher3 == "Joker" || kartenSpeicher2 == kartenSpeicher3 && kartenSpeicher1 == "Joker" || kartenSpeicher1 == kartenSpeicher3 && kartenSpeicher2 == "Joker"){
-					List<String> kartenUebergabe = new Vector<String>();
+					ArrayList<String> kartenUebergabe = new ArrayList<String>();
 					kartenUebergabe.add(kartenSpeicher1);
 					kartenUebergabe.add(kartenSpeicher2);
 					kartenUebergabe.add(kartenSpeicher3);

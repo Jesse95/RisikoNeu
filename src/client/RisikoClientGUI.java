@@ -28,19 +28,16 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 
 import client.BeitretenPanel.BeitretenButtonClicked;
 import client.ButtonPanel.ButtonClickHandler;
 import client.ErstellenPanel.ErstellenButtonClicked;
 import client.MapPanel.MapClickHandler;
 import client.MissionPanel.KarteClickedHandler;
-import client.StartPanel.LoadHandler;
-import client.StartPanel.StartButtonClickHandler;
+import client.StartPanel.StartHandler;
 import local.domain.exceptions.KannLandNichtBenutzenException;
 import local.domain.exceptions.KeinGegnerException;
 import local.domain.exceptions.KeinNachbarlandException;
@@ -60,7 +57,7 @@ import local.valueobjects.Spieler;
 import net.miginfocom.swing.MigLayout;
 
 
-public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHandler, ButtonClickHandler, StartButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler, GameEventListener, LoadHandler, BeitretenButtonClicked {
+public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHandler, ButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler, GameEventListener, StartHandler, BeitretenButtonClicked {
 
 	ServerRemote sp;
 	int anzahlSpieler;
@@ -360,16 +357,16 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			//Phasen abhängige Aktion beim Klicken eines Landes
 			switch (sp.getTurn()) {
 			case STARTPHASE:
-				verteilenBeiLandklick(land);
+				verteilenButtonPanelAnzeige(land);
 				break;
 			case ANGRIFF:
-				angreifenBeiLandklick(land);
+				angreifenButtonPanelAnzeige(land);
 				break;
 			case VERTEILEN:
-				verteilenBeiLandklick(land);
+				verteilenButtonPanelAnzeige(land);
 				break;
 			case VERSCHIEBEN:
-				verschiebenBeiLandklick(land);
+				verschiebenButtonPanelAnzeige(land);
 				break;
 			}
 		}
@@ -377,7 +374,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	}
 
 
-	private void verteilenBeiLandklick(Land land)throws RemoteException {
+	private void verteilenButtonPanelAnzeige(Land land)throws RemoteException {
 		try {
 			sp.landWaehlen(land, ownSpieler);
 			
@@ -404,7 +401,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	private void angreifenBeiLandklick(Land land)throws RemoteException {
+	private void angreifenButtonPanelAnzeige(Land land)throws RemoteException {
 		if (land1 == null) {
 			//Land wählen mit dem angegriffen werden soll
 			try {
@@ -437,7 +434,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	private void verschiebenBeiLandklick(Land land)throws RemoteException {
+	private void verschiebenButtonPanelAnzeige(Land land)throws RemoteException {
 		if (land1 == null) {
 			//Land wählen von dem aus verschoben werden soll
 			try {
@@ -477,66 +474,18 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 	
-	private void angriff(boolean genugEinheiten, Spieler aSpieler) throws KeinNachbarlandException, RemoteException {
-
-		//Angriff durchführen
-		angriffRueckgabe = sp.befreiungsAktion(new Angriff(land1, land2));
-		//Würfel anzeigen lassen
-		spielfeld.wuerfelAnzeigen(angriffRueckgabe.getWuerfelAngreifer(), angriffRueckgabe.getWuerfelVerteidiger());
-		//Angriff auswerten und Ergebnis anzeigen
-		if (angriffRueckgabe.isErobert() != true) {
-			//Ausgabe falls nicht erobert ist
-			if (angriffRueckgabe.hatGewonnen().equals("V")) {
-				consolePanel.textSetzen(land2.getBesitzer().getName() + " hat gewonnen.");
-			} else if (angriffRueckgabe.hatGewonnen().equals("A")) {
-				consolePanel.textSetzen(land1.getBesitzer().getName() + " hat gewonnen.");
-			} else {
-				consolePanel.textSetzen("Ihr habt unentschieden gespielt, beide verlieren eine Einheit.");
-			}
-
-			//Einheiten auf Fahne setzen
-			spielfeld.fahneEinheit(laenderListe);
-			land1 = null;
-			land2 = null;
-			buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
-		} else {
-			//bei Eroberung
-			//			vLand.setFahne(aSpieler.getFarbe());
-			spielfeld.fahnenVerteilen(laenderListe);
-			consolePanel.textSetzen(land1.getBesitzer().getName() + " hat das Land erobert.");
-			genugEinheiten = false;
-			// Verschieben nach Eroberung
-			if (land1.getEinheiten() == 2) {
-				//wenn nur zwei Einheiten auf ANgriffsland sind
-				consolePanel.textSetzen("Eine Einheit wird auf " + land2.getName() + " gesetzt.");
-				sp.eroberungBesetzen(land1, land2, 1);
-				genugEinheiten = true;
-				spielfeld.fahneEinheit(laenderListe);
-				land1 = null;
-				land2 = null;
-				buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
-			} else {
-				//verschieben einstellungen in button panel öffnen
-				buttonPanel.verschiebenNachAngreifenAktiv(land1.getName(), land2.getName());
-			}
-			schuss();
-		}
-	}
-	
 	private void istSpielerRaus()throws RemoteException{
 		//Überprüfung ob ein Spieler verloren hat
-		List<Spieler> spielerListe = this.spielerListe;
 		for(Spieler s : spielerListe){
-			String name = s.getName();
 			if(sp.spielerRaus(s)){
-				System.out.println("Der Spieler " + name + " hat verloren und ist raus");
+				consolePanel.textSetzen("Der Spieler " + s.getName() + " hat verloren und ist raus");
 				istSpielerRaus();
 				break;
 			}
 		}
 	}
 
-	//alle Panels entfernen und Gewonnen Screen zeigen
+	//TODO: Überarbeiten
 	public void gewonnen(){
 		frame.remove(spielfeld);
 		frame.remove(spielerListPanel);
@@ -558,26 +507,24 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.repaint();
 		frame.revalidate();
 	}
-
-	public void karteEintauschen(ArrayList<String> tauschKarten) throws RemoteException {
-		//Karten eintauschen
+	
+	public void karteEintauschen(ArrayList<String> tauschKarten) {
 		try {
 			anzahlSetzbareEinheiten += sp.kartenEinloesen(aktiverSpieler, tauschKarten);
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (RemoteException e) {}
+		
 		missionPanel.kartenAusgeben(aktiverSpieler, spielerListe);
 		buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
 	}
-
+//------------------------- BIS HIER ---------------------------------
+	//TODO kann man die in die karteEintauschen einbinden?
 	public void tauschFehlgeschlagen() {
 		consolePanel.textSetzen("Die Karten konnten nicht eingetauscht werden.");
 	}
 
 	public void processMouseClick(Color color) {
 		try {
-			if(sp.getAktiverSpieler().equals(ownSpieler) || sp.getTurn().toString() == "STARTPHASE"){
+			if(sp.getAktiverSpieler().equals(ownSpieler) || sp.getTurn().toString().equals("STARTPHASE")){
 				//Farbcode auslesen
 				String landcode = color.getRed() + "" + color.getGreen() + "" + color.getBlue();
 				try {
@@ -589,23 +536,18 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			}else{
 				consolePanel.textSetzen("Du bist nicht dran!");
 			}
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		} catch (RemoteException e) {}
 	}
 
-	public void startButtonClicked() {
-		//von Anfangsmenü zu Spieler erstellen wechseln
-		frame.remove(startPanel);
-		zweitesPanelSpielErstellen();
-	}
 
-	public void spielBeitreten() {
+	public void SpielerRegistrierungOeffnen(boolean ersterSpieler) {
 		frame.remove(startPanel);
-		zweitesPanelSpielBeitreten();
 		
+		if(ersterSpieler) {
+			zweitesPanelSpielErstellen();
+		} else {
+			zweitesPanelSpielBeitreten();
+		}
 	}
 
 	public void phaseButtonClicked() throws RemoteException{
@@ -618,56 +560,50 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			e.printStackTrace();
 		}
 		sp.nextTurn();
-		//		aktiverSpieler = sp.getAktiverSpieler();
-		//		missionPanel.kartenAusgeben(aktiverSpieler);
-		//		//Rahmen auf aktiven Spieler
-		//		spielerListPanel.setAktiverSpieler(spielerListe.indexOf(aktiverSpieler) + 1);
-
-		//		switch (sp.getTurn()) {
-		//		case STARTPHASE:
-		//			buttonPanel.phaseDisable();
-		//			anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
-		//			buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
-		//			consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
-		//			missionPanel.setMBeschreibung(sp.getMissionVonAktivemSpieler().getBeschreibung());
-		//			break;
-		//		case ANGRIFF:
-		//			
-		//			missionPanel.klickDisablen();
-		//			consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun angreifen.");
-		//			buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
-		//			break;
-		//		case VERTEILEN:
-		//			missionPanel.kartenAusgeben(aktiverSpieler);
-		//			missionPanel.klickEnablen();
-		//			buttonPanel.phaseDisable();
-		//			anzahlSetzbareEinheiten = sp.bekommtEinheiten(aktiverSpieler);
-		//			consolePanel.textSetzen(
-		//			aktiverSpieler.getName() + " du kannst " + anzahlSetzbareEinheiten + " Einheiten setzen.");
-		//			buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
-		//			missionPanel.setMBeschreibung(sp.getMissionVonAktivemSpieler().getBeschreibung());
-		//			break;
-		//		case VERSCHIEBEN:
-		//			istSpielerRaus();
-		//			spielfeld.wuerfelEntfernen();
-		//			consolePanel.textSetzen(aktiverSpieler.getName() + " verschiebe nun deine Einheiten.");
-		//			buttonPanel.verschiebenAktiv("erstes Land", "zweites Land");
-		//			if(aktiverSpieler.getEinheitenkarten().size() < 5){
-		//				sp.einheitenKarteZiehen(aktiverSpieler);			
-		//			}
-		//			missionPanel.kartenAusgeben(aktiverSpieler);
-		//			break;
-		//		}
-		//		infoPanel.changePanel(sp.getTurn() + "");
 	}
 
 	public void angriffClicked() {
 		//Angreifen Button klicken
-		try {
-			angriff(true, aktiverSpieler);
-		} catch (KeinNachbarlandException | RemoteException e) {
-			e.printStackTrace();
-		}
+			try {
+				//Angriff durchführen
+				angriffRueckgabe = sp.befreiungsAktion(new Angriff(land1, land2));
+				//Würfel anzeigen lassen
+				spielfeld.wuerfelAnzeigen(angriffRueckgabe.getWuerfelAngreifer(), angriffRueckgabe.getWuerfelVerteidiger());
+				//Angriff auswerten und Ergebnis anzeigen
+				
+				if (angriffRueckgabe.isErobert() != true) {
+					if (angriffRueckgabe.hatGewonnen().equals("V")) {
+						consolePanel.textSetzen(land2.getBesitzer().getName() + " hat gewonnen.");
+					} else if (angriffRueckgabe.hatGewonnen().equals("A")) {
+						consolePanel.textSetzen(land1.getBesitzer().getName() + " hat gewonnen.");
+					} else {
+						consolePanel.textSetzen("Ihr habt unentschieden gespielt, beide verlieren eine Einheit.");
+					}
+					spielfeld.fahneEinheit(laenderListe);
+					land1 = null;
+					land2 = null;
+					buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
+				} else {
+					spielfeld.fahnenVerteilen(laenderListe);
+					consolePanel.textSetzen(land1.getBesitzer().getName() + " hat das Land erobert.");
+					spielfeld.fahneEinheit(laenderListe);
+					if (land1.getEinheiten() == 2) {
+						//wenn nur zwei Einheiten auf Angriffsland sind
+						consolePanel.textSetzen("Eine Einheit wird auf " + land2.getName() + " gesetzt.");
+						sp.eroberungBesetzen(land1, land2, 1);
+						land1 = null;
+						land2 = null;
+						buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
+					} else {
+						//verschieben einstellungen in button panel öffnen
+						buttonPanel.verschiebenNachAngreifenAktiv(land1.getName(), land2.getName());
+					}
+					schuss();
+				}
+			} catch (RemoteException e) {
+			} catch (KeinNachbarlandException e) {
+				consolePanel.textSetzen(e.getMessage());
+			}
 	}
 
 	public void verschiebenClicked(int einheiten) {
@@ -901,12 +837,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			}
 
 		}
-
-	}
-
-	@Override
-	public void karteEintauschen(List<String> tauschKarten) {
-		// TODO Auto-generated method stub
 
 	}
 	

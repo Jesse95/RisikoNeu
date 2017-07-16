@@ -198,10 +198,6 @@ public class MapPanel extends JLayeredPane {
 			l.setText(laender.get(a).getEinheiten()+"");
 			a++;
 		}
-//		for(int i = 0; i < laender.size(); i++){
-//			einheitenLabs.get(i).setText(laender.get(i).getEinheiten()+"");
-//		}
-
 	}
 	
 	public List<JLabel> getFahnenList() {
