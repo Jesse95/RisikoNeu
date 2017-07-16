@@ -34,7 +34,7 @@ public class Weltverwaltung{
 		}
 	}
 
-	public void erstellen(){
+	public void laenderverbindungenUndKontinenteErstellen(){
 		this.verbindungenErstellen();
 		this.kontinenteErstellen();
 	}
@@ -79,7 +79,7 @@ public class Weltverwaltung{
 		pm.lesekanalOeffnen("Welt.txt");
 		Land land;
 		do{
-				land = pm.ladeLand();
+			land = pm.ladeLand();
 			if(land != null){	
 				laenderListe.add(land);
 			}
@@ -339,8 +339,8 @@ public class Weltverwaltung{
 	 * @return boolean
 	 * @throws KeinGegnerException
 	 */
-	public boolean istGegner(String land,Spieler spieler) throws KeinGegnerException{
-		if(this.stringToLand(land).getBesitzer().equals(spieler)){
+	public boolean istGegner(Land land,Spieler spieler) throws KeinGegnerException{
+		if(land.getBesitzer().equals(spieler)){
 			throw new KeinGegnerException(land);
 		}else{
 			return true;

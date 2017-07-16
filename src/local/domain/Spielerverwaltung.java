@@ -1,5 +1,7 @@
 package local.domain;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.persistence.FilePersistenceManager;
@@ -78,4 +80,19 @@ public class Spielerverwaltung{
 	public void setSpielerList(ArrayList<Spieler> liste){
 		this.spielerListe = liste;
 	}
+
+	public void farbenVerteilen(){
+		List<String> farben = new Vector<String>();
+		farben.add("rot");
+		farben.add("gruen");
+		farben.add("blau");
+		farben.add("gelb");
+		farben.add("orange");
+		farben.add("cyan");
+		for (Spieler s : spielerListe) {
+			s.setFarbe(farben.get(0));
+			farben.remove(0);
+		}
+	}
+	
 }

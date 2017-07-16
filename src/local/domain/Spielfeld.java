@@ -244,7 +244,7 @@ public class Spielfeld{
 	}
 	
 	public void laenderverbindungenUndKontinenteErstellen(){
-		weltVw.erstellen();
+		weltVw.laenderverbindungenUndKontinenteErstellen();
 	}
 	
 	public Mission getSpielerMission(Spieler spieler){

@@ -70,7 +70,7 @@ private int startphaseZaehler = 1;
 	 * @return boolean
 	 * @throws KeinNachbarlandException
 	 */
-	public boolean istNachbar(Land wahlLand, Land landZiel, Spieler spieler) throws KeinNachbarlandException{
+	public boolean istNachbar(Land wahlLand, Land landZiel) throws KeinNachbarlandException{
 		List<Land> nachbarLaender = this.weltVw.getNachbarLaender(wahlLand);
 		for(Land l : nachbarLaender){
 			if(l.getName().equals(landZiel.getName())){
@@ -108,7 +108,7 @@ private int startphaseZaehler = 1;
 	public AngriffRueckgabe befreiungsAktion(Angriff angriff) throws KeinNachbarlandException {
 		Land angreifendesLand = landServerVerbindung(angriff.getAngriffsland());
 		Land verteidigendesLand = landServerVerbindung(angriff.getVerteidigungsland());
-		istNachbar(angriff.getAngriffsland(), angriff.getVerteidigungsland(), null);
+		istNachbar(angriff.getAngriffsland(), angriff.getVerteidigungsland());
 	
 		
 		int angreiferEinheiten = angreifendesLand.getEinheiten();
@@ -254,6 +254,9 @@ private int startphaseZaehler = 1;
 		case 6:
 			einheiten = 25;
 			break;
+		default:
+			einheiten = 9999;
+			System.out.println("default Wert eingetreten(oben + 1 weg)");
 		}
 		return 3;	//TODO: hier 25?
 	}
@@ -342,8 +345,8 @@ private int startphaseZaehler = 1;
 	 * @return boolean
 	 * @throws KannLandNichtBenutzenException
 	 */
-	public boolean landWaehlen(String land, Spieler spieler) throws KannLandNichtBenutzenException{
-		if(!weltVw.stringToLand(land).getBesitzer().equals(spieler)){
+	public boolean landWaehlen(Land land, Spieler spieler) throws KannLandNichtBenutzenException{
+		if(!land.getBesitzer().equals(spieler)){
 			throw new KannLandNichtBenutzenException();	
 		}else{
 			return true;
@@ -357,10 +360,10 @@ private int startphaseZaehler = 1;
 	 * @return boolean
 	 * @throws NichtGenugEinheitenException
 	 */
-	public boolean checkEinheiten(String land, int einheiten) throws NichtGenugEinheitenException{
-		int landEinheiten = weltVw.stringToLand(land).getEinheiten();
+	public boolean checkEinheiten(Land land, int einheiten) throws NichtGenugEinheitenException{
+		int landEinheiten = land.getEinheiten();
 		
-		if(landEinheiten < 2 || landEinheiten <= einheiten || einheiten < 1){
+		if(landEinheiten < 2 || landEinheiten <= einheiten){
 			throw new NichtGenugEinheitenException(einheiten);
 		}else{
 			return true;

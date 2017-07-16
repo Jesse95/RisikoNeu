@@ -1,7 +1,9 @@
 package local.domain.exceptions;
 
+import local.valueobjects.Land;
+
 public class KeinGegnerException extends Exception{
-	public KeinGegnerException(String land) {
-		super("Das Land " + land +  " geh\u00F6rt dir");
+	public KeinGegnerException(Land land) {
+		super("Das Land " + land.getName() +  " geh\u00F6rt dir");
 	}
 }

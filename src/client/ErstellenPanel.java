@@ -1,5 +1,7 @@
 package client;
 
+import java.rmi.RemoteException;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -11,7 +13,7 @@ import net.miginfocom.swing.MigLayout;
 public class ErstellenPanel extends JPanel {
 	private ErstellenButtonClicked handler = null;
 	public interface ErstellenButtonClicked{
-		public void spielErstellen(String name, int anzahl);
+		public void hauptspielStarten(String name, int anzahl) throws RemoteException;
 	}
 	
 	public ErstellenPanel(ErstellenButtonClicked handler) {
@@ -33,7 +35,13 @@ public class ErstellenPanel extends JPanel {
 		JComboBox<String> anzahlCBox = new JComboBox<String>(zahlen);
 		JButton startBtn = new JButton("Spiel starten");
 		//Actionlistener
-		startBtn.addActionListener(start -> handler.spielErstellen(nameText.getText(),Integer.parseInt((String)anzahlCBox.getSelectedItem())));
+		startBtn.addActionListener(start -> {
+			try {
+				handler.hauptspielStarten(nameText.getText(),Integer.parseInt((String)anzahlCBox.getSelectedItem()));
+			} catch (NumberFormatException | RemoteException e) {
+				e.printStackTrace();
+			}
+		});
 		this.add(nameLab,"right");
 		this.add(nameText,"left,growx");
 		this.add(ipLab,"right");

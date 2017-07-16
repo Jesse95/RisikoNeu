@@ -1,18 +1,18 @@
 package client;
 
+import java.rmi.RemoteException;
+
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import client.ErstellenPanel.ErstellenButtonClicked;
 import net.miginfocom.swing.MigLayout;
 
 public class BeitretenPanel extends JPanel{
 	private BeitretenButtonClicked handler = null;
 	public interface BeitretenButtonClicked{
-		public void spielErstellen(String name, int anzahl);
+		public void hauptspielStarten(String name, int anzahl) throws RemoteException;
 	}
 	
 	public BeitretenPanel(BeitretenButtonClicked handler) {
@@ -31,7 +31,13 @@ public class BeitretenPanel extends JPanel{
 		JTextField portText = new JTextField();
 		JButton startBtn = new JButton("Spiel beitreten");
 		//Actionlistener
-		startBtn.addActionListener(start -> handler.spielErstellen(nameText.getText(),10));
+		startBtn.addActionListener(start -> {
+			try {
+				handler.hauptspielStarten(nameText.getText(),-1);
+			} catch (RemoteException e) {
+				e.printStackTrace();
+			}
+		});
 		this.add(nameLab,"right");
 		this.add(nameText,"left,growx");
 		this.add(ipLab,"right");
