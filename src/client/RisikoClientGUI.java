@@ -692,7 +692,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.revalidate();
 	}
 
-	public void karteEintauschen(ArrayList<String> tauschKarten) {
+	public void karteEintauschen(ArrayList<String> tauschKarten) throws RemoteException {
 		//Karten eintauschen
 		try {
 			anzahlSetzbareEinheiten += sp.kartenEinloesen(aktiverSpieler, tauschKarten);
@@ -700,7 +700,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		missionPanel.kartenAusgeben(aktiverSpieler);
+		missionPanel.kartenAusgeben(aktiverSpieler, sp.getSpielerList());
 		buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
 	}
 
@@ -871,7 +871,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			GameControlEvent gce = (GameControlEvent)event;
 			aktiverSpieler = gce.getSpieler();
 			System.out.println("TEST: Karte wird ausgegeben!");
-			missionPanel.kartenAusgeben(ownSpieler);
+			missionPanel.kartenAusgeben(ownSpieler, sp.getSpielerList());
 			infoPanel.changePanel(sp.getTurn() + "");
 			//Rahmen auf aktiven Spieler
 			spielerListPanel.setAktiverSpieler(sp.getSpielerList().indexOf(aktiverSpieler) + 1);
@@ -893,7 +893,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
 					break;
 				case VERTEILEN:
-					missionPanel.kartenAusgeben(aktiverSpieler);
+					missionPanel.kartenAusgeben(aktiverSpieler, sp.getSpielerList());
 					missionPanel.klickEnablen();
 					buttonPanel.phaseDisable();
 					anzahlSetzbareEinheiten = sp.bekommtEinheiten(aktiverSpieler);
@@ -932,7 +932,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					break;
 				case ALLE_BEREIT:
 					sp.setTurn("VERTEILEN");
-					missionPanel.kartenAusgeben(aktiverSpieler);
+					missionPanel.kartenAusgeben(aktiverSpieler, sp.getSpielerList());
 					missionPanel.klickEnablen();
 					buttonPanel.phaseDisable();
 					anzahlSetzbareEinheiten = sp.bekommtEinheiten(aktiverSpieler);
@@ -946,7 +946,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			} else {
 				System.out.println("inaktiverSpieler " + sp.getTurn());//!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!
 				missionPanel.klickDisablen();
-				missionPanel.kartenAusgeben(ownSpieler);
+				missionPanel.kartenAusgeben(ownSpieler, sp.getSpielerList());
 				missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 				switch (gce.getTurn()) {
 				case STARTPHASE:
@@ -987,7 +987,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					break;
 				case ALLE_BEREIT:
 					sp.setTurn("VERTEILEN");
-					missionPanel.kartenAusgeben(ownSpieler);
+					missionPanel.kartenAusgeben(ownSpieler, sp.getSpielerList());
 					missionPanel.klickDisablen();
 					buttonPanel.removeAll();
 					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
@@ -1002,7 +1002,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 
 			infoPanel.changePanel(sp.getTurn() + "");
-			missionPanel.kartenAusgeben(ownSpieler);
+			missionPanel.kartenAusgeben(ownSpieler, sp.getSpielerList());
 		}else{
 			GameActionEvent gae = (GameActionEvent)event;
 			aktiverSpieler = gae.getSpieler();

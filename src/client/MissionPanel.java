@@ -132,7 +132,7 @@ public class MissionPanel extends JPanel {
 		}
 	}
 
-	public void kartenAusgeben(Spieler spieler){
+	public void kartenAusgeben(Spieler spieler, List<Spieler>spielerliste){
 
 		for(JLabel k : kartenListe){
 			karten.remove(k);
@@ -140,15 +140,14 @@ public class MissionPanel extends JPanel {
 		while(kartenListe.size() > 0){
 			kartenListe.remove(0);
 		}
-/*
-		//TEST
+
+		//SERVER-CLIENT SPIELER ÜBERTRAGUNG
 		for(Spieler s :spielerliste){
 			if(spieler.getName().equals(s.getName())){
 				spieler = s;
 			}
 		}
-		//TEST
-		*/
+		
 		List<Einheitenkarten> kartenStapel = spieler.getEinheitenkarten();
 		for(int i = 0; i < kartenStapel.size(); i++){
 			int s = i;
