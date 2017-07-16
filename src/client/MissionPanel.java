@@ -140,7 +140,15 @@ public class MissionPanel extends JPanel {
 		while(kartenListe.size() > 0){
 			kartenListe.remove(0);
 		}
-
+/*
+		//TEST
+		for(Spieler s :spielerliste){
+			if(spieler.getName().equals(s.getName())){
+				spieler = s;
+			}
+		}
+		//TEST
+		*/
 		List<Einheitenkarten> kartenStapel = spieler.getEinheitenkarten();
 		for(int i = 0; i < kartenStapel.size(); i++){
 			int s = i;

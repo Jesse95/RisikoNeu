@@ -577,6 +577,7 @@ private int startphaseZaehler = 1;
 		}
 	return null;
 	}
+	
 	public Land landServerVerbindung (Land land){
 		Land rueckgabe = null;
 		for(Land l :weltVw.getLaenderListe()){
@@ -586,6 +587,7 @@ private int startphaseZaehler = 1;
 		}
 		return rueckgabe;
 	}
+	
 	public Spieler spielerServerVerbindung (Spieler spieler){
 		Spieler rueckgabe = null;
 		for(Spieler s :spielerVw.getSpielerList()){

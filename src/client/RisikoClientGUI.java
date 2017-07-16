@@ -870,7 +870,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 			GameControlEvent gce = (GameControlEvent)event;
 			aktiverSpieler = gce.getSpieler();
-
+			System.out.println("TEST: Karte wird ausgegeben!");
 			missionPanel.kartenAusgeben(ownSpieler);
 			infoPanel.changePanel(sp.getTurn() + "");
 			//Rahmen auf aktiven Spieler
