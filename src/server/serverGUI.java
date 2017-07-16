@@ -14,10 +14,10 @@ import java.util.Vector;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
 
 import local.domain.Einheitenkartenverwaltung;
 import local.domain.Kriegsverwaltung;
@@ -63,18 +63,21 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	JLabel ampel = null;
 	BufferedImage ampelRot;
 	BufferedImage ampelGruen;
+	private static ServerRemote server;
+	private JButton startBtn;
 	
 	public static void main(String[] args) throws RemoteException{
-		ServerRemote server = new serverGUI();
-		server.serverStarten(server);
+		server = new serverGUI();
+		
 		
 	}
 	
-	public void initialize(){
+	public void initialize( )throws RemoteException{
+		startBtn = new JButton("Server starten");
 		consolePanel = new ConsolePanel();
 		frame = new JFrame();
 		frame.setLayout(new MigLayout("debug, wrap2", "[][]", "[][][]"));
-		frame.setSize(300,600);
+//		frame.setSize(450,600);
 		
 		
 		try {
@@ -84,15 +87,25 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-			
-		frame.add(ampel,"center,spanx 2,grow");
-		frame.add(consolePanel);
+		startBtn.addActionListener(starten -> {
+			try {
+				serverStarten();
+			} catch (RemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		});
+		frame.add(consolePanel,"spany 2");
+		frame.add(ampel,"top,growx");
+		frame.add(startBtn,"top,growx");	
+		
+		frame.pack();
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 		
 	}
 	
-	public serverGUI() throws RemoteException{
+	public serverGUI( ) throws RemoteException{
 		listeners = new Vector<>();
 		this.spielerVw = new Spielerverwaltung();
 		this.weltVw = new Weltverwaltung();
@@ -111,7 +124,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		listeners.remove(listener);
 	}
 	
-	public void serverStarten(ServerRemote server) throws RemoteException{
+	public void serverStarten() throws RemoteException{
 		String serviceName = "GameServer";
 			Registry registry;
 			consolePanel.textSetzen("Server starten....");
@@ -124,6 +137,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			registry.rebind(serviceName, server);
 			ampelSchalten(true);
 			consolePanel.textSetzen("Server gestartet");
+			startBtn.setEnabled(false);
 	}
 	
 	private void listenerBenachrichtigen(GameEvent event)throws RemoteException{
@@ -547,11 +561,12 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	
 	public void ampelSchalten(Boolean ampelAn) {
 		if(ampelAn){
-			ampel = new JLabel(new ImageIcon(ampelGruen.getScaledInstance(50, 100, Image.SCALE_FAST)));
+			ampel.setIcon(new ImageIcon(ampelGruen.getScaledInstance(50, 100, Image.SCALE_FAST)));
 		} else {
-			ampel = new JLabel(new ImageIcon(ampelRot.getScaledInstance(50, 100, Image.SCALE_FAST)));
+			ampel.setIcon(new ImageIcon(ampelRot.getScaledInstance(50, 100, Image.SCALE_FAST)));
 		}
 		frame.repaint();
 		frame.revalidate();
 	}
+
 }

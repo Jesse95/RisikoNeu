@@ -179,7 +179,7 @@ public interface ServerRemote extends Remote{
 	
 	public void erstelleSpieler(String name)throws RemoteException, SpielerExistiertBereitsException;
 
-	public void serverStarten(ServerRemote server) throws RemoteException;
+	public void serverStarten() throws RemoteException;
 	
 	public void serverBenachrichtigung(String nachricht) throws RemoteException;
 
