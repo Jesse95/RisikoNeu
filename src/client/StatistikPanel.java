@@ -45,9 +45,9 @@ public class StatistikPanel extends JPanel{
 		header.setFont(uberschrift);
 		
 		try{
-			iconLand = ImageIO.read(new File("./land.png"));
-			iconEinheiten = ImageIO.read(new File("./soldat.png"));
-			iconKarten = ImageIO.read(new File("./karten.png"));
+			iconLand = ImageIO.read(new File("./Bilder/land.png"));
+			iconEinheiten = ImageIO.read(new File("./Bilder/soldat.png"));
+			iconKarten = ImageIO.read(new File("./Bilder/karten.png"));
 		}catch (IOException e){}
 		
 		JLabel icon1 = new JLabel(new ImageIcon(iconLand.getScaledInstance(40, 40, Image.SCALE_FAST)));

@@ -71,15 +71,9 @@ public class Weltverwaltung{
 	 * erstellt Länder
 	 */
 	public void laenderErstellen()	throws IOException{
-		pm.lesekanalOeffnen("Welt.txt");
-		Land land;
-		do{
-			land = pm.ladeLand();
-			if(land != null){	
+		for(Land land : pm.laenderAusDateiLaden()) {
 				laenderListe.add(land);
-			}
-		}while(land != null);
-		pm.close();
+		}
 	}
 	
 	/**

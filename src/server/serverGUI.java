@@ -78,8 +78,8 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		
 		
 		try {
-			ampelRot = ImageIO.read(new File("./ampel_Rot.png"));
-			ampelGruen = ImageIO.read(new File("./ampel_Gruen.png"));
+			ampelRot = ImageIO.read(new File("./Bilder/ampel_Rot.png"));
+			ampelGruen = ImageIO.read(new File("./Bilder/ampel_Gruen.png"));
 			ampel = new JLabel(new ImageIcon(ampelRot.getScaledInstance(50, 100, Image.SCALE_FAST)));
 			
 		} catch (IOException e) {

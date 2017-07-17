@@ -33,7 +33,7 @@ public class StartPanel extends JPanel{
 		BufferedImage logoImg;
 		JLabel logo = new JLabel();
 		try {
-			logoImg = ImageIO.read(new File("./logo.jpeg"));
+			logoImg = ImageIO.read(new File("./Bilder/logo.jpeg"));
 			logo = new JLabel(new ImageIcon(logoImg.getScaledInstance(300, 150, Image.SCALE_FAST)));
 		} catch (IOException e) {
 			e.printStackTrace();

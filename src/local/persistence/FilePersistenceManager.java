@@ -10,8 +10,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import javax.swing.JList;
-
 import local.valueobjects.Einheitenkarten;
 import local.valueobjects.Land;
 import local.valueobjects.Mission;
@@ -122,7 +120,7 @@ public class FilePersistenceManager {
 	}
 	
 	public ArrayList<String> speicherstaendeLaden() {
-		File[] fs = new File("./Speicher/").listFiles();
+		File[] fs = new File("./Bilder/Speicher/").listFiles();
         ArrayList<String> games = new ArrayList<String>();
         for (File f : fs) {
             if (f.isFile()) {
@@ -130,6 +128,21 @@ public class FilePersistenceManager {
             }
         }
         return games;
+	}
+	
+	public ArrayList<Land> laenderAusDateiLaden()	throws IOException{
+		lesekanalOeffnen("Daten/Welt.txt");
+		Land land;
+		ArrayList<Land> laenderListe = new ArrayList<Land>();
+		do{
+			land = ladeLand();
+			if(land != null){	
+				laenderListe.add(land);
+			}
+		}while(land != null);
+		close();
+		
+		return laenderListe;
 	}
 
 }

@@ -16,7 +16,6 @@ import net.miginfocom.swing.MigLayout;
 
 public class BeitretenPanel extends JPanel{
 	private BeitretenButtonClicked handler = null;
-//	private String[] games = {"1","2","3"};
 	private DefaultListModel<String> games;
 	private JList<DefaultListModel<String>> gameList;
 	

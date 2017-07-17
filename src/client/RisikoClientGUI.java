@@ -417,7 +417,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		JLabel gewinner = new JLabel("Spieler" + " hat gewonnen.");
 		gewinner.setFont(uberschrift);
 		gewinner.setForeground(Color.white);
-		JLabel firework = new JLabel(new ImageIcon("./firework.gif"));
+		JLabel firework = new JLabel(new ImageIcon("./Bilder/firework.gif"));
 		frame.add(gewinner, "center");
 		frame.add(firework, "center");
 		frame.setBackground(Color.BLACK);
@@ -548,7 +548,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 	public void schussSound(){
 		try{
-			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("hit.wav"));
+			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("Sounds/hit.wav"));
 			AudioFormat af = audioInputStream.getFormat();
 			int size = (int)(af.getFrameSize() * audioInputStream.getFrameLength());
 			byte[] audio = new byte[size];

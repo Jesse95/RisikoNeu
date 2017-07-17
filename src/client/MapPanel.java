@@ -79,38 +79,36 @@ public class MapPanel extends JLayeredPane {
 	
 	private void wuerfelBilderLaden() {
 		try{
-			wuerfelB1 = ImageIO.read(new File("./wuerfel/blau/wuerfelB1.png"));
-			wuerfelB2 = ImageIO.read(new File("./wuerfel/blau/wuerfelB2.png"));
-			wuerfelB3 = ImageIO.read(new File("./wuerfel/blau/wuerfelB3.png"));
-			wuerfelB4 = ImageIO.read(new File("./wuerfel/blau/wuerfelB4.png"));
-			wuerfelB5 = ImageIO.read(new File("./wuerfel/blau/wuerfelB5.png"));
-			wuerfelB6 = ImageIO.read(new File("./wuerfel/blau/wuerfelB6.png"));
-			wuerfelR1 = ImageIO.read(new File("./wuerfel/rot/wuerfelR1.png"));
-			wuerfelR2 = ImageIO.read(new File("./wuerfel/rot/wuerfelR2.png"));
-			wuerfelR3 = ImageIO.read(new File("./wuerfel/rot/wuerfelR3.png"));
-			wuerfelR4 = ImageIO.read(new File("./wuerfel/rot/wuerfelR4.png"));
-			wuerfelR5 = ImageIO.read(new File("./wuerfel/rot/wuerfelR5.png"));
-			wuerfelR6 = ImageIO.read(new File("./wuerfel/rot/wuerfelR6.png"));
-		}catch (IOException e){
-				System.out.println("nicht geladen");
-			}
+			wuerfelB1 = ImageIO.read(new File("./Bilder/wuerfel/blau/wuerfelB1.png"));
+			wuerfelB2 = ImageIO.read(new File("./Bilder/wuerfel/blau/wuerfelB2.png"));
+			wuerfelB3 = ImageIO.read(new File("./Bilder/wuerfel/blau/wuerfelB3.png"));
+			wuerfelB4 = ImageIO.read(new File("./Bilder/wuerfel/blau/wuerfelB4.png"));
+			wuerfelB5 = ImageIO.read(new File("./Bilder/wuerfel/blau/wuerfelB5.png"));
+			wuerfelB6 = ImageIO.read(new File("./Bilder/wuerfel/blau/wuerfelB6.png"));
+			wuerfelR1 = ImageIO.read(new File("./Bilder/wuerfel/rot/wuerfelR1.png"));
+			wuerfelR2 = ImageIO.read(new File("./Bilder/wuerfel/rot/wuerfelR2.png"));
+			wuerfelR3 = ImageIO.read(new File("./Bilder/wuerfel/rot/wuerfelR3.png"));
+			wuerfelR4 = ImageIO.read(new File("./Bilder/wuerfel/rot/wuerfelR4.png"));
+			wuerfelR5 = ImageIO.read(new File("./Bilder/wuerfel/rot/wuerfelR5.png"));
+			wuerfelR6 = ImageIO.read(new File("./Bilder/wuerfel/rot/wuerfelR6.png"));
+		}catch (IOException e){}
 	}
 
 	public void initialize() {
 		try{
-			fahneRotImg = ImageIO.read(new File("./Fahne_Rot.png"));
-			fahneGruenImg = ImageIO.read(new File("./Fahne_Gruen.png"));
-			fahneBlauImg = ImageIO.read(new File("./Fahne_Blau.png"));
-			fahneGelbImg = ImageIO.read(new File("./Fahne_Gelb.png"));
-			fahneOrangeImg = ImageIO.read(new File("./Fahne_Orange.png"));
-			fahneCyanImg = ImageIO.read(new File("./Fahne_Cyan.png"));
+			fahneRotImg = ImageIO.read(new File("./Bilder/Fahne_Rot.png"));
+			fahneGruenImg = ImageIO.read(new File("./Bilder/Fahne_Gruen.png"));
+			fahneBlauImg = ImageIO.read(new File("./Bilder/Fahne_Blau.png"));
+			fahneGelbImg = ImageIO.read(new File("./Bilder/Fahne_Gelb.png"));
+			fahneOrangeImg = ImageIO.read(new File("./Bilder/Fahne_Orange.png"));
+			fahneCyanImg = ImageIO.read(new File("./Bilder/Fahne_Cyan.png"));
 		}catch (IOException e){}
         try {
-			myPicture = ImageIO.read(new File("./weltkarte.jpg"));
+			myPicture = ImageIO.read(new File("./Bilder/weltkarte.jpg"));
 			spielfeld = new JLabel(new ImageIcon(myPicture.getScaledInstance(breite, hoehe, Image.SCALE_FAST)));
-			weltKarteBunt = ImageIO.read(new File("./weltkarte_bunt.png"));
+			weltKarteBunt = ImageIO.read(new File("./Bilder/weltkarte_bunt.png"));
 			weltKarteBuntLab = new JLabel(new ImageIcon(weltKarteBunt));
-		    firework = new JLabel(new ImageIcon("./firework.gif"));
+		    firework = new JLabel(new ImageIcon("./Bilder/firework.gif"));
         } catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
@@ -145,18 +143,13 @@ public class MapPanel extends JLayeredPane {
         this.setPreferredSize(new Dimension(breite, hoehe));   
 	}
 	
-	public void fahnenVerteilen(ArrayList<Land> laender) {
-		
-		
-		
+	public void fahnenVerteilen(ArrayList<Land> laender) {		
 		for(JLabel lab : fahnenLabs) {
 			this.remove(lab);
 		}
 		while(einheitenLabs.size() > 0){
 			einheitenLabs.remove(0);
 		}
-
-		
 		
 		ArrayList<Land> laenderKopie = new ArrayList<Land>();
 		for(Land l : laender){
@@ -166,7 +159,6 @@ public class MapPanel extends JLayeredPane {
 			JLabel fahne = null;
 			JLabel einheiten = null;
 			String farbe = l.getBesitzer().getFarbe();
-			System.out.println(farbe);
 			switch(farbe){
 			case "rot":		fahne = new JLabel(new ImageIcon(fahneRotImg.getScaledInstance(40, 40, Image.SCALE_FAST)));
 			break;
@@ -306,11 +298,11 @@ public class MapPanel extends JLayeredPane {
 		this.breite = breite;
 		this.hoehe = hoehe;
 		try {
-			myPicture = ImageIO.read(new File("./weltkarte.jpg"));
+			myPicture = ImageIO.read(new File("./Bilder/weltkarte.jpg"));
 		
 			spielfeld.setIcon(new ImageIcon(myPicture.getScaledInstance(breite, hoehe, Image.SCALE_FAST)));
 			
-			weltKarteBunt = ImageIO.read(new File("./weltkarte_bunt.png"));
+			weltKarteBunt = ImageIO.read(new File("./Bilder/weltkarte_bunt.png"));
 			weltKarteBuntLab = new JLabel(new ImageIcon(weltKarteBunt));
 		} catch (IOException e) {
 			System.out.println(e.getMessage());

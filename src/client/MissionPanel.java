@@ -74,10 +74,10 @@ public class MissionPanel extends JPanel {
 		karten.setLayout(new MigLayout("debug, wrap5","[][][][][]","[][][]"));
 
 		try{
-			iconEinheiten = ImageIO.read(new File("./soldat.png"));
-			iconPferd = ImageIO.read(new File("./pferd.png"));
-			iconKanone = ImageIO.read(new File("./panzer.png"));
-			iconJoker = ImageIO.read(new File("./joker.png"));
+			iconEinheiten = ImageIO.read(new File("./Bilder/soldat.png"));
+			iconPferd = ImageIO.read(new File("./Bilder/pferd.png"));
+			iconKanone = ImageIO.read(new File("./Bilder/panzer.png"));
+			iconJoker = ImageIO.read(new File("./Bilder/joker.png"));
 		} catch (IOException e){}
 
 		soldatImg = new ImageIcon(iconEinheiten.getScaledInstance(40, 40, Image.SCALE_FAST));
@@ -101,14 +101,10 @@ public class MissionPanel extends JPanel {
 			String karte = kartenString;
 			if(kartenSpeicher1 == null){
 				kartenSpeicher1 = karte;
-				System.out.println("Speicher1");
 			}else if(kartenSpeicher2 == null){
 				kartenSpeicher2 = karte;
-				System.out.println("Speicher2");
 			}else if(kartenSpeicher3 == null){
 				kartenSpeicher3 = karte;
-				System.out.println("Speicher3");
-				System.out.println(kartenSpeicher1 + " " + kartenSpeicher2 + " " + kartenSpeicher3);
 				if(kartenSpeicher1 == kartenSpeicher2 && kartenSpeicher1 == kartenSpeicher3 || kartenSpeicher1 != kartenSpeicher2 && kartenSpeicher2 != kartenSpeicher3 && kartenSpeicher1 != kartenSpeicher3  || kartenSpeicher1 == kartenSpeicher2 && kartenSpeicher3 == "Joker" || kartenSpeicher2 == kartenSpeicher3 && kartenSpeicher1 == "Joker" || kartenSpeicher1 == kartenSpeicher3 && kartenSpeicher2 == "Joker"){
 					ArrayList<String> kartenUebergabe = new ArrayList<String>();
 					kartenUebergabe.add(kartenSpeicher1);
@@ -155,7 +151,6 @@ public class MissionPanel extends JPanel {
 			case "Soldat":
 				kartenListe.add(new JLabel(soldatImg));
 				kartenListe.get(i).setName("Soldat");
-				System.out.println(kartenListe.get(i).getName());
 				kartenListe.get(i).addMouseListener(new MouseAdapter() {					
 					
 					public void mouseClicked(MouseEvent e) {
@@ -184,7 +179,6 @@ public class MissionPanel extends JPanel {
 			case "Pferd":
 				kartenListe.add(new JLabel(pferdImg));
 				kartenListe.get(i).setName("Pferd");
-				System.out.println(kartenListe.get(i).getName());
 				kartenListe.get(i).addMouseListener(new MouseAdapter() {					
 
 					public void mouseClicked(MouseEvent e) {
@@ -239,7 +233,6 @@ public class MissionPanel extends JPanel {
 				break;
 			case "Joker":
 				kartenListe.add(new JLabel(jokerImg));
-				System.out.println(kartenListe.get(i).getName());
 				kartenListe.get(i).addMouseListener(new MouseAdapter() {
 
 					public void mouseClicked(MouseEvent e) {

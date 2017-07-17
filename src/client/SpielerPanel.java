@@ -57,12 +57,12 @@ public class SpielerPanel extends JPanel{
 		spieler6.setFont(schrift);
 		
 		try{
-			fahneRotImg = ImageIO.read(new File("./Fahne_Rot.png"));
-			fahneGruenImg = ImageIO.read(new File("./Fahne_Gruen.png"));
-			fahneBlauImg = ImageIO.read(new File("./Fahne_Blau.png"));
-			fahneGelbImg = ImageIO.read(new File("./Fahne_Gelb.png"));
-			fahneOrangeImg = ImageIO.read(new File("./Fahne_Orange.png"));
-			fahneCyanImg = ImageIO.read(new File("./Fahne_Cyan.png"));
+			fahneRotImg = ImageIO.read(new File("./Bilder/Fahne_Rot.png"));
+			fahneGruenImg = ImageIO.read(new File("./Bilder/Fahne_Gruen.png"));
+			fahneBlauImg = ImageIO.read(new File("./Bilder/Fahne_Blau.png"));
+			fahneGelbImg = ImageIO.read(new File("./Bilder/Fahne_Gelb.png"));
+			fahneOrangeImg = ImageIO.read(new File("./Bilder/Fahne_Orange.png"));
+			fahneCyanImg = ImageIO.read(new File("./Bilder/Fahne_Cyan.png"));
 		}catch (IOException e){}
 		
 		this.add(header,"center,growx,wrap");
