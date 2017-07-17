@@ -34,7 +34,6 @@ import local.domain.exceptions.NichtGenugEinheitenException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.valueobjects.Angriff;
 import local.valueobjects.AngriffRueckgabe;
-import local.valueobjects.Einheitenkarten;
 import local.valueobjects.GameActionEvent;
 import local.valueobjects.GameControlEvent;
 import local.valueobjects.GameEvent;
@@ -67,8 +66,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	
 	public static void main(String[] args) throws RemoteException{
 		server = new serverGUI();
-		
-		
 	}
 	
 	public void initialize( )throws RemoteException{
@@ -76,7 +73,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		serverConsolePanel = new ConsolePanel();
 		frame = new JFrame();
 		frame.setLayout(new MigLayout("debug, wrap2", "[][]", "[][][]"));
-//		frame.setSize(450,600);
 		
 		
 		try {
@@ -144,18 +140,10 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		kriegsVw.setTurn(phase);
 	}
 	
-	/**
-	 * Leitet die Phase aus der Kriegsverwaltung weiter
-	 * @return phasen
-	 */
 	public phasen getTurn(){
 		return kriegsVw.getTurn();
 	}
 
-	/**
-	 * Leitet Spieler aus der Spielerverwaltung weiter
-	 * @return Spieler
-	 */
 	public Spieler getAktiverSpieler(){
 		return spielerVw.getAktiverSpieler();
 	}
@@ -179,7 +167,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			serverConsolePanel.textSetzen("Server starten....");
 			try{
 				registry = LocateRegistry.createRegistry(4711);
-				//				registry = LocateRegistry.getRegistry();
 			}catch(RemoteException re){
 				registry = LocateRegistry.createRegistry(4711);
 			}
@@ -188,9 +175,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			serverConsolePanel.textSetzen("Server gestartet");
 			startBtn.setEnabled(false);
 	}
-	
-	//-------------Bis hier auf jedenn Fall alles genutzt---------------
-	
+
 	public void removeGameEventListener(GameEventListener listener) throws RemoteException {
 		listeners.remove(listener);
 	}
@@ -219,27 +204,10 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		}
 	}
 
-
-	/**
-	 * @param spieler
-	 * @return int
-	 */
 	public int bekommtEinheiten(Spieler spieler) {
 		return kriegsVw.bekommtEinheiten(spieler);
 	}
 
-	/**
-	 * @param spieler
-	 * @return List<Land>
-	 */
-	public ArrayList<Land> besitztLaender(Spieler spieler) {
-		return weltVw.besitztLaender(spieler);
-	}
-
-	/**
-	 * Ruft nextTurn in der KriegsVerwaltung auf
-	 * @throws RemoteException 
-	 */
 	public void nextTurn() throws RemoteException{
 		kriegsVw.nextTurn();
 		GameControlEvent.phasen phaseEvent = null;
@@ -261,49 +229,15 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), phaseEvent));
 	}
 
-	/**
-	 * Ruft nächsterSpieler in der Spielerverwaltung auf 
-	 */
-	public void naechsterSpieler(){
-		spielerVw.naechsterSpieler();
-	}
-
-	/**
-	 * Leitet das Land aus stringToLand weiter
-	 * @param angriffsLandString
-	 * @return Land
-	 */
 	public Land stringToLand(String angriffsLandString) {
 		return weltVw.stringToLand(angriffsLandString);
 	}
 
-	/**
-	 * 
-	 * @param anzahl
-	 * @param land
-	 * @throws RemoteException 
-	 */
 	public void einheitenPositionieren(int anzahl, Land land) throws RemoteException {
 		kriegsVw.einheitenPositionieren(anzahl, weltVw.stringToLand(land.getName()));
 		listenerBenachrichtigen(new GameActionEvent("", spielerVw.getAktiverSpieler(), GameActionEvent.GameActionEventType.VERTEILEN));
 	}
 
-	/**
-	 * 
-	 * @param land
-	 * @return
-	 */
-	public ArrayList<Land> moeglicheAngriffsziele(Land land) {
-		return kriegsVw.moeglicheAngriffsziele(land);
-	}
-
-	/**
-	 * 
-	 * @param angriff
-	 * @return
-	 * @throws KeinNachbarlandException
-	 * @throws RemoteException 
-	 */
 	public AngriffRueckgabe befreiungsAktion(Angriff angriff) throws KeinNachbarlandException, RemoteException {
 		listenerBenachrichtigen(new GameActionEvent(angriff.getAngriffsland().getBesitzer().getName() + " hat " + angriff.getVerteidigungsland().getBesitzer().getName() + " angegriffen.", spielerVw.getAktiverSpieler(), GameActionEvent.GameActionEventType.ANGRIFF));
 		return kriegsVw.befreiungsAktion(angriff);
@@ -317,8 +251,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		kriegsVw.eroberungBesetzen(weltVw.stringToLand(aLand.getName()),weltVw.stringToLand(vLand.getName()), einheiten);
 		String text = "Der Spieler " + spielerVw.getAktiverSpieler() + " hat das Land " + vLand.getName() + " erobert.";
 		listenerBenachrichtigen(new GameActionEvent(text, spielerVw.getAktiverSpieler(), GameActionEvent.GameActionEventType.EROBERT));
-
-
 	}
 
 	public boolean landWaehlen(Land land, Spieler spieler) throws KannLandNichtBenutzenException{
@@ -409,21 +341,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		return weltVw.getLandVonFarbcode(farbe);
 	}
 
-	@Override
-	public Spieler getSpielerVonIndex(int index) throws RemoteException {
-		return spielerVw.getSpieler(index+1);
-	}
-	@Override
-	public Land getLandVonIndex(int index) throws RemoteException {
-		return weltVw.getLandVonIndex(index);
-	}
-	@Override
-	public void setPlayerList(ArrayList<Spieler> liste) throws RemoteException {
-		spielerVw.setSpielerList(liste);
-
-	}
-	
-	@Override
 	public Mission getMissionVonSpieler(Spieler spieler) throws RemoteException {
 		return kriegsVw.getMissionVonSpieler(spieler);
 	}
@@ -434,13 +351,12 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			setTurn("VERTEILEN");
 			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.VERTEILEN));
 		}
-
 	}
-	@Override
+
 	public int getAktiverSpielerNummer() throws RemoteException{
 		return spielerVw.getAktiverSpielerNummer();
 	}
-	@Override
+
 	public void spielerErstellen(String spieler) throws RemoteException {
 		try {
 			spielerVw.neuerSpieler(spieler);
@@ -450,7 +366,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		}
 
 	}
-	@Override
+
 	public void landErstellen(ArrayList<String> land) throws RemoteException {
 
 		for(Spieler s : spielerVw.getSpielerList()){
@@ -461,7 +377,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 
 		}
 	}
-	@Override
+
 	public void setAktiverSpielerNummer(int nummer) throws RemoteException {
 		spielerVw.setAktiverSpieler(nummer);
 		

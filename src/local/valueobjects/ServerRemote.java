@@ -24,65 +24,19 @@ public interface ServerRemote extends Remote{
 	public void erstelleErstenSpieler(String name, int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException;
 	
 	public void geladenesSpielStarten(int anzahlSpieler) throws RemoteException;
-	/**
-	 * @param spieler
-	 * @return int
-	 */
+
 	public int bekommtEinheiten(Spieler spieler)throws RemoteException;
 	
-	/**
-	 * @param spieler
-	 * @return List<Land>
-	 */
-	public ArrayList<Land> besitztLaender(Spieler spieler)throws RemoteException;
-	
-	/**
-	 * Leitet die Phase aus der Kriegsverwaltung weiter
-	 * @return phasen
-	 */
 	public phasen getTurn()throws RemoteException;
-	/**
-	 * Ruft nextTurn in der KriegsVerwaltung auf
-	 */
+
 	public void nextTurn()throws RemoteException;
 	
-	/**
-	 * Leitet Spieler aus der Spielerverwaltung weiter
-	 * @return Spieler
-	 */
 	public Spieler getAktiverSpieler()throws RemoteException;
-	/**
-	 * Ruft nächsterSpieler in der Spielerverwaltung auf 
-	 */
-	public void naechsterSpieler()throws RemoteException;
 
-	/**
-	 * Leitet das Land aus stringToLand weiter
-	 * @param angriffsLandString
-	 * @return Land
-	 */
 	public Land stringToLand(String angriffsLandString) throws RemoteException;
 	
-	/**
-	 * 
-	 * @param anzahl
-	 * @param land
-	 */
 	public void einheitenPositionieren(int anzahl, Land land)throws RemoteException;
-	
-	/**
-	 * 
-	 * @param land
-	 * @return
-	 */
-	public ArrayList<Land> moeglicheAngriffsziele(Land land)throws RemoteException;
-	
-	/**
-	 * 
-	 * @param angriff
-	 * @return
-	 * @throws KeinNachbarlandException
-	 */
+
 	public AngriffRueckgabe befreiungsAktion(Angriff angriff) throws KeinNachbarlandException, RemoteException;
 	
 	public ArrayList<Spieler> getSpielerList() throws RemoteException;
@@ -143,12 +97,6 @@ public interface ServerRemote extends Remote{
 	
 	public Mission getMissionVonSpieler(Spieler spieler)throws RemoteException;
 	
-	public Spieler getSpielerVonIndex(int index)throws RemoteException;
-	
-	public Land getLandVonIndex(int index)throws RemoteException;
-	
-	public void setPlayerList(ArrayList<Spieler> liste)throws RemoteException;
-	
 	public void spielerBereit()throws RemoteException;
 	
 	public int getAktiverSpielerNummer()throws RemoteException;
@@ -158,7 +106,7 @@ public interface ServerRemote extends Remote{
 	public void landErstellen(ArrayList<String> land)throws RemoteException;
 	
 	public void setAktiverSpielerNummer(int nummer)throws RemoteException;
-	
+
 	public void erstelleWeiterenSpielerUndSpielaufbau(String name)throws RemoteException, SpielerExistiertBereitsException;
 
 	public void serverStarten() throws RemoteException;

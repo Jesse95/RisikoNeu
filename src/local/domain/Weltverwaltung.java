@@ -2,8 +2,6 @@ package local.domain;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 import local.domain.exceptions.KeinGegnerException;
 import local.domain.exceptions.LandExistiertNichtException;
@@ -45,8 +43,8 @@ public class Weltverwaltung{
 	 * @param spielerVw
 	 * @param weltVw
 	 */
-	public void laenderAufteilen(List<Spieler> spielerListe){
-		List<Land> laenderWahl = new Vector<Land>();
+	public void laenderAufteilen(ArrayList<Spieler> spielerListe){
+		ArrayList<Land> laenderWahl = new ArrayList<Land>();
 		int random;
 		
 		for(Land ls :this.getLaenderListe()){
@@ -66,9 +64,6 @@ public class Weltverwaltung{
 					laenderWahl.remove(random);
 				}
 			}
-		}
-		for(Land l : this.laenderListe){
-			System.out.println("Das Land: " + l.getName() + " hat den Besitzer " + l.getBesitzer().getName() + " bekommen");
 		}
 	}
 
@@ -144,35 +139,35 @@ public class Weltverwaltung{
 	 * Erstellt alle Kontinente
 	 */
 	public void kontinenteErstellen() {
-		List<Land> europa = new Vector<Land>();
+		ArrayList<Land> europa = new ArrayList<Land>();
 		
 		for(int i = 0;i < 7;i++) {
 			europa.add(laenderListe.get(i));
 		}
 	
 		kontinentenListe.add(new Kontinent("Europa",europa));
-		List<Land> asien = new Vector<Land>();
+		ArrayList<Land> asien = new ArrayList<Land>();
 		
 		for (int i=7;i < 19;i++){
 			asien.add(laenderListe.get(i));
 		}
 		kontinentenListe.add(new Kontinent("Asien",asien));
-		List<Land> australien= new Vector<Land>();
+		ArrayList<Land> australien= new ArrayList<Land>();
 		for (int i=19;i < 23;i++){
 			australien.add(laenderListe.get(i));
 		}
 		kontinentenListe.add(new Kontinent("Australien",australien));
-		List<Land> afrika = new Vector<Land>();
+		ArrayList<Land> afrika = new ArrayList<Land>();
 		for (int i=23;i < 29;i++){
 			afrika.add(laenderListe.get(i));
 		}
 		kontinentenListe.add(new Kontinent("Afrika",afrika));
-		List<Land> suedamerika = new Vector<Land>();
+		ArrayList<Land> suedamerika = new ArrayList<Land>();
 		for (int i=29;i < 33;i++){
 			suedamerika.add(laenderListe.get(i));
 		}
 		kontinentenListe.add(new Kontinent("Suedamerika",suedamerika));
-		List<Land> nordamerika = new Vector<Land>();
+		ArrayList<Land> nordamerika = new ArrayList<Land>();
 		for (int i=33;i < 42;i++){
 			nordamerika.add(laenderListe.get(i));
 		}
@@ -271,7 +266,7 @@ public class Weltverwaltung{
 	/**
 	 * @return List<Kontinent>
 	 */
-	public List<Kontinent> getKontinentenListe() {
+	public ArrayList<Kontinent> getKontinentenListe() {
 		return kontinentenListe;
 	}
 

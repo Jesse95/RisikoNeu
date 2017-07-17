@@ -5,6 +5,7 @@ import java.util.List;
 
 public interface SpielerRemote extends Remote{
 	public String getName();
+	
 	public void setName(String name);
 	
 	public void karteNehmen(Einheitenkarten karte);

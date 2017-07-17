@@ -2,15 +2,13 @@ package local.domain;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
-import java.util.Vector;
 
 import local.valueobjects.Einheitenkarten;
 import local.valueobjects.Spieler;
 
 public class Einheitenkartenverwaltung{
 
-	private List<Einheitenkarten> kartenstapel;
+	private ArrayList<Einheitenkarten> kartenstapel;
 	private int kartenEingeloest = 1;
 	
 	
@@ -18,8 +16,8 @@ public class Einheitenkartenverwaltung{
 		kartenstapelErstellen();
 	}
 
-	public List<Einheitenkarten> kartenstapelErstellen() {
-		kartenstapel = new Vector<Einheitenkarten>();
+	public ArrayList<Einheitenkarten> kartenstapelErstellen() {
+		kartenstapel = new ArrayList<Einheitenkarten>();
 		for(int i = 0;i < 14;i++) {
 			kartenstapel.add(new Einheitenkarten("Soldat"));
 			kartenstapel.add(new Einheitenkarten("Pferd"));

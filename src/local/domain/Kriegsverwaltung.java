@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Vector;
 
 import local.domain.exceptions.KannEinheitenNichtVerschiebenException;
 import local.domain.exceptions.KannLandNichtBenutzenException;
@@ -48,7 +47,7 @@ private int startphaseZaehler = 1;
 	 * Gibt Nachbarlaender die angegriffen werden können zurück
 	 * @param land
 	 * @param spieler
-	 * @return Vector<Land>
+	 * @return ArrayList<Land>
 	 */
 	public ArrayList<Land> moeglicheAngriffsziele(Land land) {
 		ArrayList<Land> nachbarLaender = this.weltVw.getNachbarLaender(land);	
@@ -85,8 +84,8 @@ private int startphaseZaehler = 1;
 	 * @param anzahl
 	 * @return Vector<Integer>
 	 */
-	public List<Integer> wuerfeln(int anzahl) {
-		List<Integer> ergebnisse = new Vector<Integer>();
+	public ArrayList<Integer> wuerfeln(int anzahl) {
+		ArrayList<Integer> ergebnisse = new ArrayList<Integer>();
 				
 		for(int i = 0;i < anzahl;i++) {
 			ergebnisse.add((int)(Math.random() * 6) + 1);
@@ -115,9 +114,9 @@ private int startphaseZaehler = 1;
 		int verteidigerEinheiten = verteidigendesLand.getEinheiten();
 		int angreifendeEinheiten;
 		int verteidigendeEinheiten;
-		List<Integer> wuerfeAngreifer;
-		List<Integer> wuerfeVerteidiger;
-		List<Integer> verluste = new Vector<Integer>();
+		ArrayList<Integer> wuerfeAngreifer;
+		ArrayList<Integer> wuerfeVerteidiger;
+		ArrayList<Integer> verluste = new ArrayList<Integer>();
 		AngriffRueckgabe rueckgabe;
 		boolean erobert = false;
 
@@ -173,7 +172,7 @@ private int startphaseZaehler = 1;
 			}
 		}
 		
-		//verluste ist ein Vector mit den Angaben: AngreiferVerlust / VerteidigerVerlust
+		//verluste ist ein ArrayList mit den Angaben: AngreiferVerlust / VerteidigerVerlust
 		angreifendesLand.setEinheiten(angreifendesLand.getEinheiten() - verluste.get(0));
 		verteidigendesLand.setEinheiten(verteidigendesLand.getEinheiten() - verluste.get(1));
 
@@ -453,9 +452,9 @@ private int startphaseZaehler = 1;
 	 * @param spieler
 	 * @return
 	 */
-	public List<Land> getSpielerLaender(Spieler spielerA){
+	public ArrayList<Land> getSpielerLaender(Spieler spielerA){
 		Spieler spieler = spielerServerVerbindung(spielerA);
-		List<Land> rueckgabeLaender = new Vector<Land>();
+		ArrayList<Land> rueckgabeLaender = new ArrayList<Land>();
 		for(Land l : weltVw.getLaenderListe()){
 			if(l.getBesitzer().equals(spieler)){
 				rueckgabeLaender.add(l);

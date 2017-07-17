@@ -21,8 +21,6 @@ import net.miginfocom.swing.MigLayout;
 
 public class StatistikPanel extends JPanel{
 
-	private ArrayList<Land> laenderListe;
-	private ArrayList<Spieler> spielerListe;
 	private BufferedImage iconLand;
 	private BufferedImage iconEinheiten;
 	private BufferedImage iconKarten;
@@ -35,9 +33,7 @@ public class StatistikPanel extends JPanel{
 	private Font schrift;
 	private Font uberschrift;
 	
-	public StatistikPanel(ArrayList<Spieler> spielerListe, ArrayList<Land> laenderListe,Font schrift,Font uberschrift){
-		this.laenderListe = laenderListe;
-		this.spielerListe = spielerListe;
+	public StatistikPanel(Font schrift,Font uberschrift){
 		this.schrift = schrift;
 		this.uberschrift = uberschrift;
 		initialize();
@@ -73,18 +69,15 @@ public class StatistikPanel extends JPanel{
 	
 	public void statistikAktualisieren(ArrayList<Land>laenderListe, ArrayList<Spieler>spielerListe) {
 		 statistikPanelAktualisieren(laenderListe, spielerListe);
-		for(int laenderAnzahl : laenderVonSpieler)
-		{
+		for(int laenderAnzahl : laenderVonSpieler) {
 			laenderVonSpielerLabel.add(new JLabel(laenderAnzahl + ""));
 		}
 		
-		for(int einheitenAnzahl : einheitenVonSpieler)
-		{
+		for(int einheitenAnzahl : einheitenVonSpieler) {
 			einheitenVonSpielerLabel.add(new JLabel(einheitenAnzahl + ""));
 		}
 		
-		for(int kartenAnzahl : kartenVonSpieler)
-		{
+		for(int kartenAnzahl : kartenVonSpieler) {
 			kartenVonSpielerLabel.add(new JLabel(kartenAnzahl + ""));
 		}
 
@@ -129,11 +122,8 @@ public class StatistikPanel extends JPanel{
 			anzahlEinheiten = 0;
 			anzahlKarten = s.getEinheitenkarten().size();
 			
-			for(Land l: laenderListe)
-			{
-				if(l.getBesitzer().equals(s))
-				{
-					
+			for(Land l: laenderListe) {
+				if(l.getBesitzer().equals(s)) {
 					anzahlLaender++;
 					anzahlEinheiten += l.getEinheiten();
 				}
@@ -144,8 +134,7 @@ public class StatistikPanel extends JPanel{
 			kartenVonSpieler.add(anzahlKarten);
 		}
 	
-		for(int i = 0; i < laenderVonSpielerLabel.size(); i++)
-		{
+		for(int i = 0; i < laenderVonSpielerLabel.size(); i++) {
 			laenderVonSpielerLabel.get(i).setText(laenderVonSpieler.get(i) + "");
 			einheitenVonSpielerLabel.get(i).setText(einheitenVonSpieler.get(i) + "");
 			kartenVonSpielerLabel.get(i).setText(kartenVonSpieler.get(i)+ "");

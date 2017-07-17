@@ -2,8 +2,6 @@ package local.domain;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 import local.valueobjects.Kontinent;
 import local.valueobjects.KontinentenMission;
@@ -23,25 +21,25 @@ public class Missionsverwaltung{
 	 * @param laenderListe 
 	 * @throws IOException 
 	 */
-	public void missionsListeErstellen(List<Land> laenderListe, List<Kontinent> kontinentenListe, List<Spieler> spielerListe) {
+	public void missionsListeErstellen(ArrayList<Land> laenderListe, ArrayList<Kontinent> kontinentenListe, ArrayList<Spieler> spielerListe) {
 		Spieler platzhalterSpieler = new Spieler("Platzhalter");
 		//Befreien Sie Nordamerika und Afrika
-		List<Kontinent> mission1Kontinente = new Vector<Kontinent>();
+		ArrayList<Kontinent> mission1Kontinente = new ArrayList<Kontinent>();
 		mission1Kontinente.add(kontinentenListe.get(3));
 		mission1Kontinente.add(kontinentenListe.get(5));
 		missionsListe.add(new KontinentenMission(1,platzhalterSpieler,mission1Kontinente));
 		//Befreien Sie Nordamerika und Australien
-		List<Kontinent> mission2Kontinente = new Vector<Kontinent>();
+		ArrayList<Kontinent> mission2Kontinente = new ArrayList<Kontinent>();
 		mission2Kontinente.add(kontinentenListe.get(2));
 		mission2Kontinente.add(kontinentenListe.get(5));
 		missionsListe.add(new KontinentenMission(2,platzhalterSpieler,mission2Kontinente));
 		//Befreien Sie Asien und Südamerika
-		List<Kontinent> mission3Kontinente = new Vector<Kontinent>();
+		ArrayList<Kontinent> mission3Kontinente = new ArrayList<Kontinent>();
 		mission3Kontinente.add(kontinentenListe.get(1));
 		mission3Kontinente.add(kontinentenListe.get(4));
 		missionsListe.add(new KontinentenMission(3,platzhalterSpieler,mission3Kontinente));
 		//Befreien Sie Afrika und Asien
-		List<Kontinent> mission4Kontinente = new Vector<Kontinent>();
+		ArrayList<Kontinent> mission4Kontinente = new ArrayList<Kontinent>();
 		mission4Kontinente.add(kontinentenListe.get(1));
 		mission4Kontinente.add(kontinentenListe.get(3));
 		missionsListe.add(new KontinentenMission(4,platzhalterSpieler,mission4Kontinente));
@@ -58,8 +56,8 @@ public class Missionsverwaltung{
 	 * 
 	 * @param spielerListe
 	 */
-	public void missionenVerteilen(List<Spieler> spielerListe){
-		List<Mission> speicher= new Vector<Mission>();
+	public void missionenVerteilen(ArrayList<Spieler> spielerListe){
+		ArrayList<Mission> speicher= new ArrayList<Mission>();
 		for(Mission m : this.missionsListe){
 			speicher.add(m);
 		}
@@ -142,28 +140,28 @@ public class Missionsverwaltung{
 	 * @param spieler2
 	 * @param id
 	 */
-	public void missionLaden(List<Land> laenderListe, List<Kontinent> kontinentenListe, List<Spieler> spielerListe, Spieler spieler, Spieler spieler2, int id) {
+	public void missionLaden(ArrayList<Land> laenderListe, ArrayList<Kontinent> kontinentenListe, ArrayList<Spieler> spielerListe, Spieler spieler, Spieler spieler2, int id) {
 		if(id == 1) {
 			//Befreien Sie Nordamerika und Afrika
-			List<Kontinent> mission1Kontinente = new Vector<Kontinent>();
+			ArrayList<Kontinent> mission1Kontinente = new ArrayList<Kontinent>();
 			mission1Kontinente.add(kontinentenListe.get(3));
 			mission1Kontinente.add(kontinentenListe.get(5));
 			missionsListe.add(new KontinentenMission(1,spieler,mission1Kontinente));
 		} else if(id == 2) {
 			//Befreien Sie Nordamerika und Australien
-			List<Kontinent> mission2Kontinente = new Vector<Kontinent>();
+			ArrayList<Kontinent> mission2Kontinente = new ArrayList<Kontinent>();
 			mission2Kontinente.add(kontinentenListe.get(2));
 			mission2Kontinente.add(kontinentenListe.get(5));
 			missionsListe.add(new KontinentenMission(2,spieler,mission2Kontinente));
 		} else if(id == 3) {
 			//Befreien Sie Asien und Südamerika
-			List<Kontinent> mission3Kontinente = new Vector<Kontinent>();
+			ArrayList<Kontinent> mission3Kontinente = new ArrayList<Kontinent>();
 			mission3Kontinente.add(kontinentenListe.get(1));
 			mission3Kontinente.add(kontinentenListe.get(4));
 			missionsListe.add(new KontinentenMission(3,spieler,mission3Kontinente));
 		} else if(id == 4) {
 			//Befreien Sie Afrika und Asien
-			List<Kontinent> mission4Kontinente = new Vector<Kontinent>();
+			ArrayList<Kontinent> mission4Kontinente = new ArrayList<Kontinent>();
 			mission4Kontinente.add(kontinentenListe.get(1));
 			mission4Kontinente.add(kontinentenListe.get(3));
 			missionsListe.add(new KontinentenMission(4,spieler,mission4Kontinente));

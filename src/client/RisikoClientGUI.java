@@ -21,7 +21,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.List;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -752,7 +751,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		pm.lesekanalOeffnen("Game5.txt");
 		sp.setTurn(pm.spielstandLaden());
 		pm.spielstandLaden();
-		ArrayList<String> spielerListe = new ArrayList<>();
 		String spieler;
 		do{
 			spieler = pm.spielstandLaden();

@@ -1,16 +1,17 @@
 package local.valueobjects;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AngriffRueckgabe implements Serializable{
 	private int verlusteVerteidiger;
 	private int verlusteAngreifer;
-	private List<Integer> wuerfelVerteidiger;
-	private List<Integer> wuerfelAngreifer;
+	private ArrayList<Integer> wuerfelVerteidiger;
+	private ArrayList<Integer> wuerfelAngreifer;
 	private boolean erobert;
 
-	public AngriffRueckgabe(int verlusteVerteidiger, int verlusteAngreifer, List<Integer> wuerfelVerteidiger, List<Integer> wuerfelAngreifer, boolean erobert) {
+	public AngriffRueckgabe(int verlusteVerteidiger, int verlusteAngreifer, ArrayList<Integer> wuerfelVerteidiger, ArrayList<Integer> wuerfelAngreifer, boolean erobert) {
 		this.verlusteVerteidiger = verlusteVerteidiger;
 		this.verlusteAngreifer = verlusteAngreifer;
 		this.wuerfelVerteidiger = wuerfelVerteidiger;
@@ -48,15 +49,15 @@ public class AngriffRueckgabe implements Serializable{
 		return wuerfelVerteidiger;
 	}
 	
-	public void setWuerfelVerteidiger(List<Integer> wuerfelVerteidiger) {
+	public void setWuerfelVerteidiger(ArrayList<Integer> wuerfelVerteidiger) {
 		this.wuerfelVerteidiger = wuerfelVerteidiger;
 	}
 	
-	public List<Integer> getWuerfelAngreifer() {
+	public ArrayList<Integer> getWuerfelAngreifer() {
 		return wuerfelAngreifer;
 	}
 	
-	public void setWuerfelAngreifer(List<Integer> wuerfelAngreifer) {
+	public void setWuerfelAngreifer(ArrayList<Integer> wuerfelAngreifer) {
 		this.wuerfelAngreifer = wuerfelAngreifer;
 	}
 	

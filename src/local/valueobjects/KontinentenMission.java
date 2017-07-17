@@ -1,13 +1,14 @@
 package local.valueobjects;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
 public class KontinentenMission extends Mission{
 
-	private List<Kontinent> kontinente;
+	private ArrayList<Kontinent> kontinente;
 	
-	public KontinentenMission(int id, Spieler spieler, List<Kontinent> kontinente) {
+	public KontinentenMission(int id, Spieler spieler, ArrayList<Kontinent> kontinente) {
 		super(id, "<html>Erobern Sie die Kontinente : <br><center> " +  kontinente.get(0).getName() + "<br>" + kontinente.get(1).getName() +"</center></html>",spieler,"kontinent");
 		this.kontinente = kontinente;
 	}
@@ -24,7 +25,6 @@ public class KontinentenMission extends Mission{
 				return false;
 			}
 		}
-		
 		return true;
 	}
 }

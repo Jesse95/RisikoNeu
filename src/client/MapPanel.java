@@ -158,7 +158,7 @@ public class MapPanel extends JLayeredPane {
 
 		
 		
-		List<Land>laenderKopie = new Vector();
+		ArrayList<Land> laenderKopie = new ArrayList<Land>();
 		for(Land l : laender){
 			laenderKopie.add(l);
 		}

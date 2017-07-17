@@ -2,8 +2,6 @@ package local.valueobjects;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 public class Spieler implements Serializable{
 	

@@ -1,10 +1,13 @@
 package client;
 
+import java.awt.Font;
 import java.rmi.RemoteException;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import net.miginfocom.swing.MigLayout;
@@ -21,14 +24,16 @@ public class BeitretenPanel extends JPanel{
 	}
 	
 	public void initialize() {
-		this.setLayout(new MigLayout(" wrap2","[][150]","[][][][][]")); 
+		this.setLayout(new MigLayout(" wrap2","[][300]","[][][100][]")); 
 		//Objekte erstellen
 		JLabel nameLab = new JLabel("Name:");
 		JTextField nameText = new JTextField();
-		JLabel ipLab = new JLabel("IP:");
-		JTextField ipText = new JTextField();
-		JLabel portLab = new JLabel("Port:");
-		JTextField portText = new JTextField();
+		JLabel openGamesLab = new JLabel("Offene Spiele:");
+		JTextArea gameList = new JTextArea();
+		JScrollPane gameListScrollBar = new JScrollPane(gameList);
+		gameList.setLineWrap(true);
+		gameList.setFont(new Font(Font.SANS_SERIF, Font.PLAIN,15));
+		
 		JButton startBtn = new JButton("Spiel beitreten");
 		//Actionlistener
 		startBtn.addActionListener(start -> {
@@ -40,10 +45,8 @@ public class BeitretenPanel extends JPanel{
 		});
 		this.add(nameLab,"right");
 		this.add(nameText,"left,growx");
-		this.add(ipLab,"right");
-		this.add(ipText,"left,growx");
-		this.add(portLab,"right");
-		this.add(portText,"left,growx");
+		this.add(openGamesLab,"left,spanx2");
+		this.add(gameListScrollBar,"growx,growy,spanx2");
 		this.add(startBtn,"center,spanx2");
 	}
 }
