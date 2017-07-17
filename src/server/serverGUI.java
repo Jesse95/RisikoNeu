@@ -63,6 +63,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	BufferedImage ampelGruen;
 	private static ServerRemote server;
 	private JButton startBtn;
+	private AdminPanel adminPanel;
 	
 	public static void main(String[] args) throws RemoteException{
 		server = new serverGUI();
@@ -71,6 +72,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	public void initialize( )throws RemoteException{
 		startBtn = new JButton("Server starten");
 		serverConsolePanel = new ConsolePanel();
+		adminPanel = new AdminPanel();
 		frame = new JFrame();
 		frame.setLayout(new MigLayout("debug, wrap2", "[][]", "[][][]"));
 		
@@ -79,6 +81,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			ampelRot = ImageIO.read(new File("./ampel_Rot.png"));
 			ampelGruen = ImageIO.read(new File("./ampel_Gruen.png"));
 			ampel = new JLabel(new ImageIcon(ampelRot.getScaledInstance(50, 100, Image.SCALE_FAST)));
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -90,9 +93,10 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 				e.printStackTrace();
 			}
 		});
-		frame.add(serverConsolePanel,"spany 2");
+		frame.add(serverConsolePanel,"spany 3");
 		frame.add(ampel,"top,growx");
-		frame.add(startBtn,"top,growx");	
+		frame.add(startBtn,"top,growx");
+		frame.add(adminPanel,"top,center");
 		
 		frame.pack();
 		frame.setVisible(true);
@@ -118,6 +122,8 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	public void erstelleWeiterenSpielerUndSpielaufbau(String name) throws RemoteException, SpielerExistiertBereitsException {
 		spielerVw.neuerSpieler(name);
 		if(spielerVw.getSpielerList().size() == anzahlSpieler){
+			adminPanel.listenSetzen(spielerVw.getSpielerList(), weltVw.getLaenderListe());
+			frame.repaint();
 			serverConsolePanel.textSetzen("Spiel wird erstellt");
 			try {
 				weltVw.laenderErstellen();
@@ -167,12 +173,14 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			serverConsolePanel.textSetzen("Server starten....");
 			try{
 				registry = LocateRegistry.createRegistry(4711);
+				
 			}catch(RemoteException re){
 				registry = LocateRegistry.createRegistry(4711);
 			}
 			registry.rebind(serviceName, server);
 			ampelSchalten(true);
 			serverConsolePanel.textSetzen("Server gestartet");
+		
 			startBtn.setEnabled(false);
 	}
 
