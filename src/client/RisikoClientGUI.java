@@ -125,12 +125,15 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	
 	private void zweitesPanelSpielBeitreten(){
 		frame.setTitle("Spiel erstellen");
-		frame.setSize(280, 200);
+		frame.setSize(320, 250);
 		frame.setLocationRelativeTo(null);
 		//frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		beitretenPanel = new BeitretenPanel(this);
 		frame.add(beitretenPanel);
 		frame.setVisible(true);
+		//Test
+		beitretenPanel.zuSpielAnzeigeHinzufuegen(2, 1, 4711, "TestGame1");
+		beitretenPanel.zuSpielAnzeigeHinzufuegen(5, 3, 4712, "TestGame2");
 		frame.repaint();
 		frame.revalidate();
 	}
@@ -158,7 +161,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			missionPanel = new MissionPanel(uberschrift, schrift,this);
 			infoPanel = new InfoPanel(sp.getTurn() + "", schrift, uberschrift);
 			buttonPanel = new ButtonPanel(this, uberschrift);
-			statistikPanel = new StatistikPanel(sp.getSpielerList(), sp.getLaenderListe(), schrift, uberschrift);
+			statistikPanel = new StatistikPanel(schrift, uberschrift);
 			consolePanel = new ConsolePanel(schrift);
 			frame.setSize(1250, 817);
 			frame.setLocationRelativeTo(null);
@@ -264,7 +267,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		missionPanel = new MissionPanel(uberschrift, schrift,this);
 		infoPanel = new InfoPanel(sp.getTurn() + "", schrift, uberschrift);
 		buttonPanel = new ButtonPanel(this, uberschrift);
-		statistikPanel = new StatistikPanel(spielerListe, sp.getLaenderListe(), schrift, uberschrift);
+		statistikPanel = new StatistikPanel(schrift, uberschrift);
 		consolePanel = new ConsolePanel(schrift);
 
 		//Spieler erstellen
