@@ -71,6 +71,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private StartPanel startPanel;
 	private ErstellenPanel erstellenPanel;
 	private BeitretenPanel beitretenPanel;
+	private LadenPanel ladenPanel;
 	private MenuBar menu;
 	private Font schrift;
 	private Font uberschrift;
@@ -83,6 +84,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private AngriffRueckgabe angriffRueckgabe;
 	private ArrayList<Spieler> spielerListe;
 	private ArrayList<Land> laenderListe;
+	private FilePersistenceManager pm = new FilePersistenceManager();;
 
 
 	private RisikoClientGUI()throws RemoteException {
@@ -124,7 +126,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	}
 	
 	private void zweitesPanelSpielBeitreten(){
-		frame.setTitle("Spiel erstellen");
+		frame.setTitle("Spiel beitreten");
 		frame.setSize(320, 250);
 		frame.setLocationRelativeTo(null);
 		//frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -138,6 +140,34 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.revalidate();
 	}
 	
+	public void zweitesPanelSpielLaden(){
+		frame.remove(startPanel);
+		frame.setTitle("Spiel laden");
+		frame.setSize(320, 250);
+		frame.setLocationRelativeTo(null);
+		ladenPanel = new LadenPanel();
+		frame.add(ladenPanel);
+		frame.setVisible(true);
+		ladenPanel.speicherstaendeAnzeigen(pm.speicherstaendeLaden());
+		frame.repaint();
+		frame.revalidate();
+	}
+
+		private void spielSpeichern() throws RemoteException {
+			String name = JOptionPane.showInputDialog(frame, "Spiel speichern.");
+			if(name.length() > 0){
+				try {
+					pm.schreibkanalOeffnen("./Speicher/" + name + ".txt");
+				} catch (IOException e) {
+					consolePanel.textSetzen("Spiel konnte nicht gespeichert werden. " + e.getMessage());
+				}
+				pm.spielSpeichern(sp.getLaenderListe(), spielerListe, sp.getTurn() + "", sp.getAktiverSpielerNummer(), sp.getMissionsListe());
+				pm.close();
+			}else{
+				consolePanel.textSetzen("Du musst einen Namen eingeben.");
+			}
+		}
+
 	public void hauptspielStarten(String name, int anzahlSpieler) throws RemoteException {
 		this.anzahlSpieler = anzahlSpieler;
 		
@@ -234,121 +264,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.revalidate();
 
 		frame.setLocationRelativeTo(null);
-	}
-
-	public void spielLaden(){
-		try{
-			sp.spielLaden("Game2.txt");
-			geladenesSpielErstellen();
-		} catch(Exception e) {
-			System.out.println("Kann nicht geladen werden");
-		}
-	}
-
-	//TODO KOMPLETT ÜBERARBEITEN UND AN NEUE DINGE ANPASSEN
-	private void geladenesSpielErstellen()throws RemoteException {
-		this.anzahlSpieler = spielerListe.size();
-		try{
-			String servicename = "GameServer";
-			Registry registry = LocateRegistry.getRegistry("127.0.0.1",4711);
-			sp = (ServerRemote)registry.lookup(servicename);
-
-			sp.addGameEventListener(this);
-
-		}catch(RemoteException e){
-
-		} catch (NotBoundException e) {
-			e.printStackTrace();
-		}
-
-		frame.setLayout(new MigLayout("debug, wrap2", "[1050][]", "[][][]"));
-		spielfeld = new MapPanel(this, schrift,1050, 550);
-		spielerListPanel = new SpielerPanel(schrift, uberschrift);
-		missionPanel = new MissionPanel(uberschrift, schrift,this);
-		infoPanel = new InfoPanel(sp.getTurn() + "", schrift, uberschrift);
-		buttonPanel = new ButtonPanel(this, uberschrift);
-		statistikPanel = new StatistikPanel(schrift, uberschrift);
-		consolePanel = new ConsolePanel(schrift);
-
-		//Spieler erstellen
-		sp.geladenesSpielStarten(anzahlSpieler);
-		frame.remove(erstellenPanel);
-
-		aktiverSpieler = sp.getAktiverSpieler();
-		//TODO OwnSpieler muss gespeichert wertden und hier genutzt werden
-		for(Spieler s:spielerListe) {
-			if(s.getName().equals(sp.getAktiverSpieler())){
-				ownSpieler = s;
-			}
-		}
-
-		frame.setTitle("Risiko - Spieler: " + ownSpieler.getName());
-		frame.setSize(1250, 817);
-		frame.setLocationRelativeTo(null);
-		//			frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-
-		//Menuleiste erstellen
-		menu = new MenuBar();
-		Menu datei = new Menu("Datei");
-		Menu grafik = new Menu("Grafik");
-		menu.add(datei);
-		menu.add(grafik);
-		MenuItem speichern = new MenuItem("Speichern");
-		MenuItem schliessen = new MenuItem("Schließen");
-//		Menu aufloesung = new Menu("Aufloesung");
-//		MenuItem aufloesung1 = new MenuItem("1920x1080");
-//		MenuItem aufloesung2 = new MenuItem("1280x800");
-//		MenuItem aufloesung3 = new MenuItem("3.Auflösung");
-		datei.add(speichern);
-		datei.add(schliessen);
-//		grafik.add(aufloesung);
-//		aufloesung.add(aufloesung1);
-//		aufloesung.add(aufloesung2);
-//		aufloesung.add(aufloesung3);
-//		aufloesung1.addActionListener(ausfuehren -> aufloesungAendern(1920, 1080));
-//		aufloesung2.addActionListener(ausfuehren -> aufloesungAendern(1280, 800));
-		speichern.addActionListener(save -> {
-			try {
-				spielSpeichern();
-			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		});
-		schliessen.addActionListener(close -> System.exit(0));
-		menu.setFont(schrift);
-		frame.setMenuBar(menu);
-
-		//Layout anpassen
-		frame.add(spielfeld, "left,spany 3,grow");
-		frame.add(infoPanel, "left,growx");
-		frame.add(spielerListPanel, "growx");
-		frame.add(statistikPanel, "left,top,growx,spany 2");
-		//			frame.add(missionPanel, "left,top,split3,wmin 300, wmax 300");
-		frame.add(missionPanel, "left,top,split3");
-		frame.add(consolePanel, "left, top");
-		//			frame.add(buttonPanel, "right,growy, wmin 180, wmax 180");
-		frame.add(buttonPanel, "right,growy");
-		frame.setResizable(false);
-		frame.setVisible(true);
-		frame.pack();
-		infoPanel.changePanel(sp.getTurn() + "");
-	}
-	// ebenfalls überarbeiten
-	private void spielSpeichern() throws RemoteException {
-		String name = JOptionPane.showInputDialog(frame, "Spiel speichern.");
-		if(name.length() > 0){
-			FilePersistenceManager pm = new FilePersistenceManager();
-			try {
-				pm.schreibkanalOeffnen(name + ".txt");
-			} catch (IOException e) {
-				consolePanel.textSetzen("Spiel konnte nicht gespeichert werden" + e.getMessage());
-			}
-			pm.spielSpeichern(sp.getLaenderListe(), spielerListe, sp.getTurn() + "", sp.getAktiverSpielerNummer(), sp.getMissionsListe());
-			pm.close();
-		}else{
-			consolePanel.textSetzen("Du musst einen Namen eingeben");
-		}
 	}
 
 	private void landAnklicken(String landcode)throws RemoteException {
@@ -746,39 +661,5 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				consolePanel.textSetzen(gae.getText());
 			}
 		}
-	}
-	
-	//TODO überarbeiten
-	public void spielLaden2() throws RemoteException, IOException{
-		FilePersistenceManager pm = new FilePersistenceManager();
-		pm.lesekanalOeffnen("Game5.txt");
-		sp.setTurn(pm.spielstandLaden());
-		pm.spielstandLaden();
-		String spieler;
-		do{
-			spieler = pm.spielstandLaden();
-			if(spieler.length() != 0){
-				sp.spielerErstellen(spieler);
-			}
-		}while(spieler.length() != 0);
-		String land;
-		do{
-			 land = pm.spielstandLaden();
-			if(land.length() != 0){
-				ArrayList<String> liste = new ArrayList<>();
-				liste.add(land);
-				liste.add(pm.spielstandLaden());
-				liste.add(pm.spielstandLaden());
-				liste.add(pm.spielstandLaden());
-				liste.add(pm.spielstandLaden());
-				liste.add(pm.spielstandLaden());
-				
-				sp.landErstellen(liste);
-					
-			}	
-		}while(land.length() != 0);
-		sp.setAktiverSpielerNummer(Integer.parseInt(pm.spielstandLaden()));
-		
-		pm.close();
 	}
 }	

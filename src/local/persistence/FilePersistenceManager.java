@@ -2,12 +2,15 @@ package local.persistence;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+
+import javax.swing.JList;
 
 import local.valueobjects.Einheitenkarten;
 import local.valueobjects.Land;
@@ -116,6 +119,17 @@ public class FilePersistenceManager {
 	private void schreibeZeile(String daten) {
 		if (writer != null)
 			writer.println(daten);
+	}
+	
+	public ArrayList<String> speicherstaendeLaden() {
+		File[] fs = new File("./Speicher/").listFiles();
+        ArrayList<String> games = new ArrayList<String>();
+        for (File f : fs) {
+            if (f.isFile()) {
+                games.add(f.getName());
+            }
+        }
+        return games;
 	}
 
 }

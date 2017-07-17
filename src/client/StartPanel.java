@@ -22,7 +22,7 @@ public class StartPanel extends JPanel{
 	}
 	
 	public interface StartHandler {
-		public void spielLaden();
+		public void zweitesPanelSpielLaden();
 		public void SpielerRegistrierungOeffnen(boolean ersterSpieler);
 	}
 	
@@ -46,7 +46,7 @@ public class StartPanel extends JPanel{
 		JButton beendenBtn = new JButton("Beenden");
 		
 		startBtn.addActionListener(start -> starthandler.SpielerRegistrierungOeffnen(true));
-		ladenBtn.addActionListener(load -> starthandler.spielLaden());
+		ladenBtn.addActionListener(load -> starthandler.zweitesPanelSpielLaden());
 		beitretenBtn.addActionListener(beitreten -> starthandler.SpielerRegistrierungOeffnen(false));
 		beendenBtn.addActionListener(close -> System.exit(0));
 		
