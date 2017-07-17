@@ -26,9 +26,9 @@ public class ButtonPanel extends JPanel{
 	
 	public interface ButtonClickHandler {
 		public void phaseButtonClicked() throws RemoteException;
-		public void angriffClicked();
-		public void verschiebenClicked(int einheiten);
-		public void verschiebenNAClicked(int einheiten);
+		public void angriffButtonClicked();
+		public void verschiebenButtonClicked(int einheiten);
+		public void verschiebenNachAngriffButtonClicked(int einheiten);
 	}
 	
 	public ButtonPanel(ButtonClickHandler handler, Font font){
@@ -65,9 +65,9 @@ public class ButtonPanel extends JPanel{
 				e.printStackTrace();
 			}
 		});
-		angreifen.addActionListener(angriff -> handler.angriffClicked());
-		verschieben.addActionListener(verschieben -> handler.verschiebenClicked(Integer.parseInt(anzahlEinheitenVerschieben.getText())));
-		verschiebenNA.addActionListener(verschiebenNA -> handler.verschiebenNAClicked(Integer.parseInt(anzahlEinheitenVerschieben.getText())));
+		angreifen.addActionListener(angriff -> handler.angriffButtonClicked());
+		verschieben.addActionListener(verschieben -> handler.verschiebenButtonClicked(Integer.parseInt(anzahlEinheitenVerschieben.getText())));
+		verschiebenNA.addActionListener(verschiebenNA -> handler.verschiebenNachAngriffButtonClicked(Integer.parseInt(anzahlEinheitenVerschieben.getText())));
 		nextTurn.setEnabled(false);
 		//TODO hier muss Anzahl der Einheiten am Anfang rein
 		startphase(3);

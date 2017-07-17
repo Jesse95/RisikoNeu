@@ -29,8 +29,7 @@ import net.miginfocom.swing.MigLayout;
 public class MissionPanel extends JPanel {
 
 	public interface KarteClickedHandler{
-		public void karteEintauschen(ArrayList<String> tauschKarten);
-		public void tauschFehlgeschlagen();
+		public void karteEintauschen(Boolean erfolgreich, ArrayList<String> tauschKarten);
 	}
 	
 	private List<JLabel> kartenListe = new Vector<JLabel>();
@@ -78,7 +77,7 @@ public class MissionPanel extends JPanel {
 			iconEinheiten = ImageIO.read(new File("./soldat.png"));
 			iconPferd = ImageIO.read(new File("./pferd.png"));
 			iconKanone = ImageIO.read(new File("./panzer.png"));
-			iconJoker = ImageIO.read(new File("./karten.png"));
+			iconJoker = ImageIO.read(new File("./joker.png"));
 		} catch (IOException e){}
 
 		soldatImg = new ImageIcon(iconEinheiten.getScaledInstance(40, 40, Image.SCALE_FAST));
@@ -115,9 +114,9 @@ public class MissionPanel extends JPanel {
 					kartenUebergabe.add(kartenSpeicher1);
 					kartenUebergabe.add(kartenSpeicher2);
 					kartenUebergabe.add(kartenSpeicher3);
-					handler.karteEintauschen(kartenUebergabe);
+					handler.karteEintauschen(true, kartenUebergabe);
 				}else{
-					handler.tauschFehlgeschlagen();		
+					handler.karteEintauschen(false, null);		
 				}
 			}
 		}
@@ -133,7 +132,7 @@ public class MissionPanel extends JPanel {
 		}
 	}
 
-	public void kartenAusgeben(Spieler spieler, List<Spieler>spielerliste){
+	public void kartenAusgeben(Spieler spieler, ArrayList<Spieler>spielerliste){
 
 		for(JLabel k : kartenListe){
 			karten.remove(k);

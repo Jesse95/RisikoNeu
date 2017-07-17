@@ -1,6 +1,7 @@
 package local.valueobjects;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -8,11 +9,11 @@ public class Spieler implements Serializable{
 	
 	private String farbe;
 	private String name;
-	private List<Einheitenkarten> einheitenkarten;
+	private ArrayList<Einheitenkarten> einheitenkarten;
 	
 	public Spieler(String name){
 		this.name = name;
-		this.einheitenkarten = new Vector<Einheitenkarten>();
+		this.einheitenkarten = new ArrayList<Einheitenkarten>();
 	}
 	public String getName(){
 		return this.name;
@@ -26,11 +27,11 @@ public class Spieler implements Serializable{
 		einheitenkarten.add(karte);
 	}
 	
-	public List<Einheitenkarten> getEinheitenkarten() {
+	public ArrayList<Einheitenkarten> getEinheitenkarten() {
 		return einheitenkarten;
 	}
 	
-	public void setEinheitenkarten(List<Einheitenkarten> einheitenkarten) {
+	public void setEinheitenkarten(ArrayList<Einheitenkarten> einheitenkarten) {
 		this.einheitenkarten = einheitenkarten;
 	}
 	

@@ -23,7 +23,7 @@ import local.valueobjects.Land;
 public class MapPanel extends JLayeredPane {
 
 	public interface MapClickHandler {
-		public void processMouseClick(Color color);
+		public void mausklickAktion(Color color);
 	}
 	
 	private List<JLabel> fahnenLabs = new Vector<JLabel>();
@@ -120,7 +120,7 @@ public class MapPanel extends JLayeredPane {
 			public void mouseClicked(MouseEvent e) {
 				int farbenInt =  weltKarteBunt.getRGB(e.getX(), e.getY());
 				Color color = new Color(farbenInt, true);
-				handler.processMouseClick(color);
+				handler.mausklickAktion(color);
 			}
 		});
 

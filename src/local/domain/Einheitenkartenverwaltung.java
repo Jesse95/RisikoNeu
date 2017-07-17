@@ -1,5 +1,6 @@
 package local.domain;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Vector;
@@ -39,22 +40,21 @@ public class Einheitenkartenverwaltung{
 		return karte;
 	}
 	
-	private void einheitenKartenVonSpielerEntfernen(Spieler spieler, List<String> benutzteKarten)
+	private void einheitenKartenVonSpielerEntfernen(Spieler spieler, ArrayList<String> benutzteKarten)
 	{
-		List<Einheitenkarten> kartenListe = spieler.getEinheitenkarten();
+		ArrayList<Einheitenkarten> kartenListe = spieler.getEinheitenkarten();
 		
 		for (String karte: benutzteKarten) {
 			for(Einheitenkarten k : kartenListe){
-				if(k.getKartenwert() == karte){
+				if(k.getKartenwert().equals(karte)){
 					kartenListe.remove(k);
 					break;
 				}
 			}
-			
 		}
 	}
 	
-	public int einheitenkartenEinloesen(Spieler spieler,List<String> tauschKarten) {
+	public int einheitenkartenEinloesen(Spieler spieler,ArrayList<String> tauschKarten) {
 		int einheiten = 0;
 			
 		switch(kartenEingeloest) {

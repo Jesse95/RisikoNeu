@@ -406,8 +406,8 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		return kriegsVw.spielerRaus(spieler);
 	}
 
-	public int kartenEinloesen(Spieler spieler, List<String> tauschKarten){
-		return einheitenVw.einheitenkartenEinloesen(spieler,tauschKarten);
+	public int kartenEinloesen(Spieler spieler, ArrayList<String> tauschKarten){
+		return einheitenVw.einheitenkartenEinloesen(kriegsVw.spielerServerVerbindung(spieler),tauschKarten);
 	}
 
 	public Mission getSpielerMission(Spieler spieler){
@@ -422,9 +422,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		return weltVw.getLandVonFarbcode(farbe);
 	}
 
-	public int kartenEinloesen(Spieler spieler, ArrayList<String> tauschKarten) throws RemoteException {
-		return 0;
-	}
 	@Override
 	public Spieler getSpielerVonIndex(int index) throws RemoteException {
 		return spielerVw.getSpieler(index+1);

@@ -5,6 +5,7 @@
 //TODO Speichern erweitern (Idee: Jeder Spieler bekommt beim ersten Onlinespiel eine eindeutige ID)
 //TODO mit ostafrika kann man Nordafrika nicht angreifen?
 //TODO bei falscher Namenseinagbe kackt er rein
+//TODO Beim Karten eintauschen werden Karten nicht removed
 package client;
 
 import java.awt.Color;
@@ -508,41 +509,36 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.revalidate();
 	}
 	
-	public void karteEintauschen(ArrayList<String> tauschKarten) {
-		try {
-			anzahlSetzbareEinheiten += sp.kartenEinloesen(aktiverSpieler, tauschKarten);
-		} catch (RemoteException e) {}
-		
-		missionPanel.kartenAusgeben(aktiverSpieler, spielerListe);
-		buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
-	}
-//------------------------- BIS HIER ---------------------------------
-	//TODO kann man die in die karteEintauschen einbinden?
-	public void tauschFehlgeschlagen() {
-		consolePanel.textSetzen("Die Karten konnten nicht eingetauscht werden.");
+	public void karteEintauschen(Boolean erfolgreich, ArrayList<String> tauschKarten) {
+		if(erfolgreich) {
+			try {
+				anzahlSetzbareEinheiten += sp.kartenEinloesen(aktiverSpieler, tauschKarten);
+			} catch (RemoteException e) {}
+			
+			missionPanel.kartenAusgeben(aktiverSpieler, spielerListe);
+			buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
+			consolePanel.textSetzen("Du hast die Karten eingetauscht und kannst nun " + anzahlSetzbareEinheiten + " setzen.");
+		} else {
+			consolePanel.textSetzen("Die Karten konnten nicht eingetauscht werden.");
+		}
 	}
 
-	public void processMouseClick(Color color) {
+	public void mausklickAktion(Color color) {
 		try {
-			if(sp.getAktiverSpieler().equals(ownSpieler) || sp.getTurn().toString().equals("STARTPHASE")){
+			if(aktiverSpieler.equals(ownSpieler) || sp.getTurn().toString().equals("STARTPHASE")){
 				//Farbcode auslesen
 				String landcode = color.getRed() + "" + color.getGreen() + "" + color.getBlue();
 				try {
 					landAnklicken(landcode);
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				} catch (RemoteException e) {}
 			}else{
 				consolePanel.textSetzen("Du bist nicht dran!");
 			}
 		} catch (RemoteException e) {}
 	}
 
-
 	public void SpielerRegistrierungOeffnen(boolean ersterSpieler) {
 		frame.remove(startPanel);
-		
 		if(ersterSpieler) {
 			zweitesPanelSpielErstellen();
 		} else {
@@ -562,8 +558,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		sp.nextTurn();
 	}
 
-	public void angriffClicked() {
-		//Angreifen Button klicken
+	public void angriffButtonClicked() {
 			try {
 				//Angriff durchführen
 				angriffRueckgabe = sp.befreiungsAktion(new Angriff(land1, land2));
@@ -598,7 +593,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						//verschieben einstellungen in button panel öffnen
 						buttonPanel.verschiebenNachAngreifenAktiv(land1.getName(), land2.getName());
 					}
-					schuss();
+					schussSound();
 				}
 			} catch (RemoteException e) {
 			} catch (KeinNachbarlandException e) {
@@ -606,8 +601,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			}
 	}
 
-	public void verschiebenClicked(int einheiten) {
-		//verschieben Button klicken
+	public void verschiebenButtonClicked(int einheiten) {
 		try {
 			sp.checkEinheiten(land1, einheiten);
 			sp.einheitenPositionieren(-einheiten, land1);
@@ -621,14 +615,10 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			buttonPanel.verschiebenDisabled();
 		} catch (NichtGenugEinheitenException ngee) {
 			consolePanel.textSetzen(ngee.getMessage());
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (RemoteException e) {}
 	}
 
-	public void verschiebenNAClicked(int einheiten) {
-		//nach angreifen verteilen klicken
+	public void verschiebenNachAngriffButtonClicked(int einheiten) {
 		try {
 			sp.checkEinheiten(land1, einheiten);
 			sp.eroberungBesetzen(land1, land2, einheiten);
@@ -637,14 +627,10 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			buttonPanel.angreifenAktiv("erstes Land", "zweites Land");
 		} catch (NichtGenugEinheitenException ngee) {
 			consolePanel.textSetzen(ngee.getMessage());
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (RemoteException e) {}
 	}
 
-	public void schuss(){
-		//Schuss Geräusch für Angriff
+	public void schussSound(){
 		try{
 			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("hit.wav"));
 			AudioFormat af = audioInputStream.getFormat();
@@ -662,24 +648,21 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 
 	public void handleGameEvent(GameEvent event) throws RemoteException {
-
-		//TODO:hier könnten Probleme auftreten?
 		spielerListe =  sp.getSpielerList();
 		laenderListe = sp.getLaenderListe();
 		
 		try {
 			Thread.sleep(200);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} catch (InterruptedException e) {}
+		
 		if(event instanceof GameControlEvent){
 
 			GameControlEvent gce = (GameControlEvent)event;
 			aktiverSpieler = gce.getSpieler();
-			System.out.println("TEST: Karte wird ausgegeben!");
 			missionPanel.kartenAusgeben(ownSpieler, spielerListe);
 			infoPanel.changePanel(sp.getTurn() + "");
+			
+			//-------------------------
 			//Rahmen auf aktiven Spieler
 			spielerListPanel.setAktiverSpieler(spielerListe.indexOf(aktiverSpieler) + 1);
 			if(aktiverSpieler.getName().equals(ownSpieler.getName())) {
