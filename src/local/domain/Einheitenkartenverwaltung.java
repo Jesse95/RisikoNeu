@@ -32,12 +32,11 @@ public class Einheitenkartenverwaltung{
 		return kartenstapel;
 	}
 	
-	public Einheitenkarten karteNehmen(Spieler spieler) {
-		Einheitenkarten karte = kartenstapel.get(0);
-		kartenstapel.remove(0);
-		spieler.karteNehmen(karte);
-		
-		return karte;
+	public void karteNehmen(Spieler spieler) {
+		if(spieler.getEinheitenkarten().size() < 5){
+			spieler.karteNehmen(kartenstapel.get(0));
+			kartenstapel.remove(0);
+		}
 	}
 	
 	private void einheitenKartenVonSpielerEntfernen(Spieler spieler, ArrayList<String> benutzteKarten)

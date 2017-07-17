@@ -14,6 +14,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.Border;
 
+import local.valueobjects.Spieler;
 import net.miginfocom.swing.MigLayout;
 
 public class SpielerPanel extends JPanel{
@@ -79,61 +80,58 @@ public class SpielerPanel extends JPanel{
 		this.add(spieler6Fahne, "left");
 	}
 	
-	public void setLabel(int nummer, String text, String farbe) {
+	public void setLabel(Spieler spieler) {
 		ImageIcon fahne = null;
-		switch(farbe){
-			case "rot":		fahne = new ImageIcon(fahneRotImg.getScaledInstance(40, 40, Image.SCALE_FAST));
-			break;
-			case "blau":	fahne = new ImageIcon(fahneBlauImg.getScaledInstance(40, 40, Image.SCALE_FAST));
-			break;
-			case "gruen":	fahne = new ImageIcon(fahneGruenImg.getScaledInstance(40, 40, Image.SCALE_FAST));
-			break;
-			case "gelb":	fahne = new ImageIcon(fahneGelbImg.getScaledInstance(40, 40, Image.SCALE_FAST));
-			break;
-			case "orange":	fahne = new ImageIcon(fahneOrangeImg.getScaledInstance(40, 40, Image.SCALE_FAST));
-			break;
-			case "cyan":	fahne = new ImageIcon(fahneCyanImg.getScaledInstance(40, 40, Image.SCALE_FAST));
-			break;
-		}
-		
-		switch(nummer){
-			case 1: spieler1.setText(text);
-					spieler1Fahne.setIcon(fahne);
-					break;
-			case 2: spieler2.setText(text);
-					spieler2Fahne.setIcon(fahne);
-					break;
-			case 3: spieler3.setText(text);
-					spieler3Fahne.setIcon(fahne);
-					break;
-			case 4: spieler4.setText(text);
-					spieler4Fahne.setIcon(fahne);
-					break;
-			case 5: spieler5.setText(text);
-					spieler5Fahne.setIcon(fahne);
-					break;
-			case 6: spieler6.setText(text);
-					spieler6Fahne.setIcon(fahne);
-					break;
+		switch(spieler.getFarbe()){
+			case "rot":	
+				fahne = new ImageIcon(fahneRotImg.getScaledInstance(40, 40, Image.SCALE_FAST));
+				spieler1.setText(spieler.getName());
+				spieler1Fahne.setIcon(fahne);		
+				break;
+			case "gruen":	
+				fahne = new ImageIcon(fahneGruenImg.getScaledInstance(40, 40, Image.SCALE_FAST));
+				spieler2.setText(spieler.getName());
+				spieler2Fahne.setIcon(fahne);	
+				break;
+			case "blau":	
+				fahne = new ImageIcon(fahneBlauImg.getScaledInstance(40, 40, Image.SCALE_FAST));
+				spieler3.setText(spieler.getName());
+				spieler3Fahne.setIcon(fahne);	
+				break;
+			case "gelb":	
+				fahne = new ImageIcon(fahneGelbImg.getScaledInstance(40, 40, Image.SCALE_FAST));
+				spieler4.setText(spieler.getName());
+				spieler4Fahne.setIcon(fahne);	
+				break;
+			case "orange":	
+				fahne = new ImageIcon(fahneOrangeImg.getScaledInstance(40, 40, Image.SCALE_FAST));
+				spieler5.setText(spieler.getName());
+				spieler5Fahne.setIcon(fahne);	
+				break;
+			case "cyan":	
+				fahne = new ImageIcon(fahneCyanImg.getScaledInstance(40, 40, Image.SCALE_FAST));
+				spieler6.setText(spieler.getName());
+				spieler6Fahne.setIcon(fahne);	
+				break;
 		}
 	}
 	
-	public void setAktiverSpieler(int nummer){
+	public void setAktiverSpielerBorder(int nummer){
 		Border border = BorderFactory.createLineBorder(Color.ORANGE, 2);
 		removeBorder();
 		
 		switch(nummer){
-			case 1: spieler1.setBorder(border);
+			case 0: spieler1.setBorder(border);
 					break;
-			case 2: spieler2.setBorder(border);
+			case 1: spieler2.setBorder(border);
 					break;
-			case 3: spieler3.setBorder(border);
+			case 2: spieler3.setBorder(border);
 					break;
-			case 4: spieler4.setBorder(border);
+			case 3: spieler4.setBorder(border);
 					break;
-			case 5: spieler5.setBorder(border);
+			case 4: spieler5.setBorder(border);
 					break;
-			case 6: spieler6.setBorder(border);
+			case 5: spieler6.setBorder(border);
 					break;
 		}
 	}

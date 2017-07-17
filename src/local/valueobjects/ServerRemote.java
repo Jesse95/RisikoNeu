@@ -123,7 +123,7 @@ public interface ServerRemote extends Remote{
 	
 	public void spielLaden(String datei) throws IOException, SpielerExistiertBereitsException, RemoteException;
 	
-	public Einheitenkarten einheitenKarteZiehen(Spieler spieler)throws RemoteException;
+	public void einheitenKarteZiehen(Spieler spieler)throws RemoteException;
 	
 	public boolean missionIstAbgeschlossen(Mission mission)throws RemoteException;
 	

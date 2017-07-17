@@ -389,7 +389,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					
 				if(anzahlSetzbareEinheiten == 0){
 					consolePanel.textSetzen("Du hast alle Einheiten gesetzt.");
-						
 					if(sp.getTurn().toString() == "STARTPHASE"){
 						sp.spielerBereit();
 					} else {
@@ -660,169 +659,94 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			GameControlEvent gce = (GameControlEvent)event;
 			aktiverSpieler = gce.getSpieler();
 			missionPanel.kartenAusgeben(ownSpieler, spielerListe);
-			infoPanel.changePanel(sp.getTurn() + "");
-			
-			//-------------------------
+//			infoPanel.changePanel(sp.getTurn() + "");
 			//Rahmen auf aktiven Spieler
-			spielerListPanel.setAktiverSpieler(spielerListe.indexOf(aktiverSpieler) + 1);
+			spielerListPanel.setAktiverSpielerBorder(spielerListe.indexOf(aktiverSpieler));
+			
+			boolean istAktiverSpieler;
 			if(aktiverSpieler.getName().equals(ownSpieler.getName())) {
-				System.out.println("aktiver SPieler " + sp.getTurn());//!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!
-				System.out.println("gce - " + gce.getTurn());
+				istAktiverSpieler = true;
+			} else {
+				istAktiverSpieler = false;
+			}
+				
 				switch (gce.getTurn()) {
 				case STARTPHASE:
 					buttonPanel.phaseDisable();
 					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
-					buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
-					consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
-					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
+					buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
+					consolePanel.textSetzen(ownSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
 					break;
 				case ANGRIFF:
-					buttonPanel.phaseEnable();
 					missionPanel.klickDisablen();
-					consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun angreifen.");
-					buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
+					if(istAktiverSpieler) {
+						buttonPanel.phaseEnable();
+						consolePanel.textSetzen(ownSpieler.getName() + " du kannst nun angreifen.");
+						buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
+					} else {
+						buttonPanel.removeAll();
+						consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun angreifen.");		
+					}
 					break;
 				case VERTEILEN:
-					missionPanel.kartenAusgeben(aktiverSpieler, spielerListe);
 					missionPanel.klickEnablen();
-					buttonPanel.phaseDisable();
-					anzahlSetzbareEinheiten = sp.bekommtEinheiten(aktiverSpieler);
-					consolePanel.textSetzen(
-					aktiverSpieler.getName() + " du kannst " + anzahlSetzbareEinheiten + " Einheiten setzen.");
-					buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
-					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(aktiverSpieler).getBeschreibung());
+					if(istAktiverSpieler) {
+						buttonPanel.phaseDisable();
+						anzahlSetzbareEinheiten = sp.bekommtEinheiten(ownSpieler);
+						consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst " + anzahlSetzbareEinheiten + " Einheiten setzen.");
+						buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
+					} else {
+						buttonPanel.removeAll();
+						consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun Einheiten setzen.");
+					}
 					break;
 				case VERSCHIEBEN:
-					buttonPanel.phaseEnable();
 					istSpielerRaus();
 					spielfeld.wuerfelEntfernen();
-					consolePanel.textSetzen(aktiverSpieler.getName() + " verschiebe nun deine Einheiten.");
-					buttonPanel.verschiebenAktiv("erstes Land", "zweites Land");
-					if(aktiverSpieler.getEinheitenkarten().size() < 5){
-						System.out.println("Karte gezogen");
-						sp.einheitenKarteZiehen(aktiverSpieler);			
+					if(istAktiverSpieler) {
+						buttonPanel.phaseEnable();
+						consolePanel.textSetzen(ownSpieler.getName() + " verschiebe nun deine Einheiten.");
+						buttonPanel.verschiebenAktiv("erstes Land", "zweites Land");
+						//TODO: nur wenn Land erobert
+						sp.einheitenKarteZiehen(ownSpieler);		
+					} else {
+						buttonPanel.removeAll();
+						consolePanel.textSetzen(aktiverSpieler.getName() + " darf nun Einheiten verschieben.");
 					}
 					break;
 				case STARTEN:
-					ArrayList<Land> laenderListe = new ArrayList<>();
-					for(int i = 0; i < 42; i++){
-						laenderListe.add(sp.getLandVonIndex(i));
-					}
-
 					spielfeld.fahnenVerteilen(laenderListe);
-
-					int spielerNr = 1;
 					for (Spieler s : sp.getSpielerList()) {
-						spielerListPanel.setLabel(spielerNr, s.getName(), s.getFarbe());
-						spielerNr++;
+						spielerListPanel.setLabel(s);
 					}
-					//					statistikPanel.statistikAktualisieren(laenderListe, spielerListe);
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 					statistikPanel.statistikAktualisieren(laenderListe, spielerListe);
 					break;
-				case ALLE_BEREIT:
-					sp.setTurn("VERTEILEN");
-					missionPanel.kartenAusgeben(aktiverSpieler, spielerListe);
-					missionPanel.klickEnablen();
-					buttonPanel.phaseDisable();
-					anzahlSetzbareEinheiten = sp.bekommtEinheiten(aktiverSpieler);
-					consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst " + anzahlSetzbareEinheiten + " Einheiten setzen.");
-					buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
-					break;
-				default:
-					System.out.println("Fehler bei: Aktiv - " + gce.getTurn());
-					break;
 				}
-			} else {
-				System.out.println("inaktiverSpieler " + sp.getTurn());//!!!!!!!!!!!!!!!!!!!!!!!!TEST!!!!!!!!!
-				missionPanel.klickDisablen();
-				missionPanel.kartenAusgeben(ownSpieler, spielerListe);
-				missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
-				switch (gce.getTurn()) {
-				case STARTPHASE:
-					System.out.println("I - gce " + gce.getTurn());
-					//buttonPanel.phaseDisable();
-					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
-					buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
-					consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
-					break;
-				case ANGRIFF:
-					buttonPanel.removeAll();
-					consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun angreifen.");					
-					break;
-				case VERTEILEN:
-					buttonPanel.removeAll();
-					consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun Einheiten setzen.");
-					break;
-				case VERSCHIEBEN:
-					buttonPanel.removeAll();
-					istSpielerRaus();
-					spielfeld.wuerfelEntfernen();
-					consolePanel.textSetzen(aktiverSpieler.getName() + " darf nun Einheiten verschieben.");
-					break;
-				case STARTEN:
-					ArrayList<Land> laenderListe = new ArrayList<>();
-					for(int i = 0; i < 42; i++){
-						laenderListe.add(sp.getLandVonIndex(i));
-					}
-
-					spielfeld.fahnenVerteilen(laenderListe);
-
-					int spielerNr = 1;
-					for (Spieler s : spielerListe) {
-						spielerListPanel.setLabel(spielerNr, s.getName(), s.getFarbe());
-						spielerNr++;
-					}
-					statistikPanel.statistikAktualisieren(laenderListe, sp.getSpielerList());
-					break;
-				case ALLE_BEREIT:
-					sp.setTurn("VERTEILEN");
-					missionPanel.kartenAusgeben(ownSpieler, spielerListe);
-					missionPanel.klickDisablen();
-					buttonPanel.removeAll();
-					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
-					buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
-					consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun seine Einheiten setzen.");
-					break;
-				default:
-					System.out.println("Fehler bei: Inaktiv - " + gce.getTurn());
-					break;
-				}
-			}	
-
-
 			infoPanel.changePanel(sp.getTurn() + "");
 			missionPanel.kartenAusgeben(ownSpieler, spielerListe);
 		}else{
 			GameActionEvent gae = (GameActionEvent)event;
 			aktiverSpieler = gae.getSpieler();
+			spielfeld.fahneEinheit(laenderListe);
+			
 			switch(gae.getType()){
 			case VERTEILEN:
-
-				spielfeld.fahneEinheit(laenderListe);
 				statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
-				for(Spieler s : spielerListe){
-					System.out.println(s.getName());
-				}
 				break;
 			case EROBERT:
 				spielfeld.fahnenVerteilen(laenderListe);
-				spielfeld.fahneEinheit(laenderListe);
 				statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
 				consolePanel.textSetzen(gae.getText());
 				break;
 			case ANGRIFF:
-				spielfeld.fahneEinheit(laenderListe);
 				statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
 				consolePanel.textSetzen(gae.getText());
-//				spielfeld.wuerfelAnzeigen(angriffRueckgabe.getWuerfelAngreifer(), angriffRueckgabe.getWuerfelVerteidiger());
-				
 			}
-
 		}
-
 	}
 	
+	//TODO überarbeiten
 	public void spielLaden2() throws RemoteException, IOException{
 		FilePersistenceManager pm = new FilePersistenceManager();
 		pm.lesekanalOeffnen("Game5.txt");

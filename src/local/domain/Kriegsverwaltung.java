@@ -203,32 +203,38 @@ private int startphaseZaehler = 1;
 	 * @param spieler
 	 * @return int
 	 */
-	public int bekommtEinheiten(Spieler spielerA) {
-		Spieler spieler = spielerServerVerbindung(spielerA);
-		int anzahl = 1;
+	public int bekommtEinheiten(Spieler sp) {
+		Spieler spieler = spielerServerVerbindung(sp);
+		int besitztLaenderVonKontinent = 0;
 		int einheiten = weltVw.besitztLaender(spieler).size() / 3;
 		
 		if (einheiten < 3) {
 			einheiten = 3;
 		}
 			for (Kontinent k : weltVw.getKontinentenListe()){
-				for (int i = 1;i < k.getLaender().size();i++){
+				for (Land l : k.getLaender()){
 					
-					if(k.getLaender().get(i).getBesitzer() == k.getLaender().get(i-1).getBesitzer()) {
-						anzahl++;
+					if(l.getBesitzer().getName().equals(spieler.getName())) {
+						besitztLaenderVonKontinent++;
 					}
 					
-					if (anzahl == k.getLaender().size()){
-						if (k.getName() == "Europa"){
-							einheiten+=5;	
-						}else if(k.getName() =="Asien"){
-							einheiten+=7;
-						}else if(k.getName() == "Afrika"){
-							einheiten+=3;
-						}else if(k.getName() == "Suedamerika"){
-							einheiten+=2;
-						}else if(k.getName() == "Nordamerika"){
-							einheiten+=5;
+					if (besitztLaenderVonKontinent == k.getLaender().size()){
+						switch(k.getName()) {
+						case "Europa":
+							einheiten += 5;
+							break;
+						case "Asien":
+							einheiten += 7;
+							break;
+						case "Afrika":
+							einheiten += 3;
+							break;
+						case "Suedamerika":
+							einheiten += 2;
+							break;
+						case "Nordamerika":
+							einheiten += 5;
+							break;
 						}
 					}
 				}

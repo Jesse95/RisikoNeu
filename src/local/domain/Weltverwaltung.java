@@ -295,7 +295,7 @@ public class Weltverwaltung{
 	public ArrayList<Land> besitztLaender(Spieler spieler) {
 		ArrayList<Land> laender = new ArrayList<Land>();
 		
-		for(Land land : this.getLaenderListe()) {
+		for(Land land : laenderListe) {
 			if(spieler.getName().equals(land.getBesitzer().getName())) {
 					laender.add(land);
 				}

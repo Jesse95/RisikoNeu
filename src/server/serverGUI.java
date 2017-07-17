@@ -243,20 +243,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	public void nextTurn() throws RemoteException{
 		kriegsVw.nextTurn();
 		GameControlEvent.phasen phaseEvent = null;
-
-//		switch(kriegsVw.getTurn()){
-//		case STARTPHASE:
-//			phaseEvent = GameControlEvent.phasen.ANGRIFF;
-//			break;
-//		case VERSCHIEBEN:
-//			phaseEvent = GameControlEvent.phasen.VERTEILEN;
-//			break;
-//		case ANGRIFF:
-//			phaseEvent = GameControlEvent.phasen.VERSCHIEBEN;
-//			break;
-//		case VERTEILEN:
-//			phaseEvent = GameControlEvent.phasen.ANGRIFF;
-//			break;
+		
 		switch(kriegsVw.getTurn()){
 		case STARTPHASE:
 			phaseEvent = GameControlEvent.phasen.VERTEILEN;
@@ -394,8 +381,8 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		kriegsVw.spielLaden(datei);
 	}
 
-	public Einheitenkarten einheitenKarteZiehen(Spieler spieler) {
-		return einheitenVw.karteNehmen(kriegsVw.spielerServerVerbindung(spieler));	
+	public void einheitenKarteZiehen(Spieler spieler) {
+		einheitenVw.karteNehmen(kriegsVw.spielerServerVerbindung(spieler));	
 	}
 
 	public boolean missionIstAbgeschlossen(Mission mission){
@@ -444,7 +431,8 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	public void spielerBereit() throws RemoteException {
 		bereitZaehler++;
 		if(bereitZaehler == spielerVw.getSpielerList().size()){
-			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.ALLE_BEREIT));
+			setTurn("VERTEILEN");
+			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.VERTEILEN));
 		}
 
 	}
