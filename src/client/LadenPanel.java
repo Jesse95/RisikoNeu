@@ -1,6 +1,8 @@
 package client;
 
 import java.awt.Dimension;
+import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import javax.swing.DefaultListModel;
@@ -16,8 +18,13 @@ import net.miginfocom.swing.MigLayout;
 public class LadenPanel extends JPanel{
 	private DefaultListModel<String> games;
 	private JList<DefaultListModel<String>> gameList;
+	private LadenButtonClicked handler;
+	public interface LadenButtonClicked{
+		public void spielLaden(String dat)  throws RemoteException, IOException;
+	}
 	
-	public LadenPanel() {
+	public LadenPanel(LadenButtonClicked handler) {
+		this.handler = handler;
 		initialize();
 	}
 	
@@ -35,7 +42,15 @@ public class LadenPanel extends JPanel{
 		JButton ladenBtn = new JButton("Spiel laden");
 
 		ladenBtn.addActionListener(load -> {
-			//TODO Laden Funktion in GUI
+				try {
+					handler.spielLaden("spielstand1.txt");
+				} catch (RemoteException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 		});
 		
 		this.add(savedGamesLab,"left,spanx2");

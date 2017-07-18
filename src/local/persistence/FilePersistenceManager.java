@@ -20,7 +20,7 @@ public class FilePersistenceManager {
 	private PrintWriter writer = null;
 	
 	public void lesekanalOeffnen(String datei) throws FileNotFoundException{
-		reader = new BufferedReader(new FileReader(datei));
+		reader = new BufferedReader(new FileReader("./Speicher/" + datei));
 	}
 	
 	public void schreibkanalOeffnen(String datei) throws IOException{
@@ -63,7 +63,7 @@ public class FilePersistenceManager {
 			anzahlSpieler++;
 		}
 		schreibeZeile("");
-		schreibeZeile(anzahlSpieler+"");
+//		schreibeZeile(anzahlSpieler+"");
 		for(Land l : welt){
 			schreibeZeile(l.getName());
 			schreibeZeile(l.getBesitzer().getName());

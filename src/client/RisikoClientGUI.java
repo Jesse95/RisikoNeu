@@ -35,9 +35,11 @@ import javax.swing.JOptionPane;
 import client.BeitretenPanel.BeitretenButtonClicked;
 import client.ButtonPanel.ButtonClickHandler;
 import client.ErstellenPanel.ErstellenButtonClicked;
+import client.LadenPanel.LadenButtonClicked;
 import client.MapPanel.MapClickHandler;
 import client.MissionPanel.KarteClickedHandler;
 import client.StartPanel.StartHandler;
+import local.domain.Kriegsverwaltung;
 import local.domain.exceptions.KannLandNichtBenutzenException;
 import local.domain.exceptions.KeinGegnerException;
 import local.domain.exceptions.KeinNachbarlandException;
@@ -45,19 +47,11 @@ import local.domain.exceptions.LandBereitsBenutztException;
 import local.domain.exceptions.NichtGenugEinheitenException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.persistence.FilePersistenceManager;
-import local.valueobjects.Angriff;
-import local.valueobjects.AngriffRueckgabe;
-import local.valueobjects.GameActionEvent;
-import local.valueobjects.GameControlEvent;
-import local.valueobjects.GameEvent;
-import local.valueobjects.GameEventListener;
-import local.valueobjects.Land;
-import local.valueobjects.ServerRemote;
-import local.valueobjects.Spieler;
+import local.valueobjects.*;
 import net.miginfocom.swing.MigLayout;
 
 
-public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHandler, ButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler, GameEventListener, StartHandler, BeitretenButtonClicked {
+public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHandler, ButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler, GameEventListener, StartHandler, BeitretenButtonClicked, LadenButtonClicked {
 
 	ServerRemote sp;
 	int anzahlSpieler;
@@ -145,7 +139,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.setTitle("Spiel laden");
 		frame.setSize(320, 250);
 		frame.setLocationRelativeTo(null);
-		ladenPanel = new LadenPanel();
+		ladenPanel = new LadenPanel(this);
 		frame.add(ladenPanel);
 		frame.setVisible(true);
 		ladenPanel.speicherstaendeAnzeigen(pm.speicherstaendeLaden());
@@ -153,20 +147,94 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.revalidate();
 	}
 
-		private void spielSpeichern() throws RemoteException {
-			String name = JOptionPane.showInputDialog(frame, "Spiel speichern.");
-			if(name.length() > 0){
+	public void spielLaden(String dat) throws RemoteException, IOException {
+		frame.remove(ladenPanel);
+		//Verbindung mit Server aufbauen
+			String servicename = "GameServer";
+			Registry registry = LocateRegistry.getRegistry("127.0.0.1",4711);
 				try {
-					pm.schreibkanalOeffnen("./Speicher/" + name + ".txt");
-				} catch (IOException e) {
-					consolePanel.textSetzen("Spiel konnte nicht gespeichert werden. " + e.getMessage());
+					sp = (ServerRemote)registry.lookup(servicename);
+				} catch (NotBoundException e1) {
+					e1.printStackTrace();
 				}
-				pm.spielSpeichern(sp.getLaenderListe(), spielerListe, sp.getTurn() + "", sp.getAktiverSpielerNummer(), sp.getMissionsListe());
-				pm.close();
-			}else{
-				consolePanel.textSetzen("Du musst einen Namen eingeben.");
-			}
+			sp.addGameEventListener(this);
+
+		
+		try {
+			//Frame erzeugen
+			frame.setLayout(new MigLayout("debug, wrap2", "[1050][]", "[][][]"));
+			spielfeld = new MapPanel(this, schrift,1050, 550);
+			spielerListPanel = new SpielerPanel(schrift, uberschrift);
+			missionPanel = new MissionPanel(uberschrift, schrift,this);
+			infoPanel = new InfoPanel(sp.getTurn() + "", schrift, uberschrift);
+			buttonPanel = new ButtonPanel(this, uberschrift);
+			statistikPanel = new StatistikPanel(schrift, uberschrift);
+			consolePanel = new ConsolePanel(schrift);
+			frame.setSize(1250, 817);
+			frame.setLocationRelativeTo(null);
+
+			Spielstand spielstand = sp.spielLaden(dat);
+			//Hier muss noch festgestellt werden wer OwnSpieler ist
+			ownSpieler = spielstand.getSpielerListe().get(0);
+			
+			sp.spielaufbauMitSpielstand(spielstand);
+			
+			frame.setTitle("Risiko - Spieler: " + ownSpieler.getName());
+
+			//Menuleiste erstellen
+			menu = new MenuBar();
+			Menu datei = new Menu("Datei");
+			menu.add(datei);
+			MenuItem speichern = new MenuItem("Speichern");
+			MenuItem schliessen = new MenuItem("Schließen");
+			datei.add(speichern);
+			datei.add(schliessen);
+			speichern.addActionListener(save -> {
+				try {
+					spielSpeichern();
+				} catch (RemoteException e) {}
+			});
+			schliessen.addActionListener(close -> System.exit(0));
+			menu.setFont(schrift);
+			frame.setMenuBar(menu);
+
+			//Layout anpassen
+			frame.add(spielfeld, "left,spany 3,grow");
+			frame.add(infoPanel, "left,growx");
+			frame.add(spielerListPanel, "growx");
+			frame.add(statistikPanel, "left,top,growx,spany 2");
+			frame.add(missionPanel, "left,top,split3");
+			frame.add(consolePanel, "left, top");
+			frame.add(buttonPanel, "right,growy");
+			frame.setResizable(false);
+			frame.setVisible(true);
+			frame.pack();
+			
+			sp.setTurn(spielstand.getAktuellePhase());
+			
+			//anzahl setzbare Einheiten?
+			consolePanel.textSetzen("Spiel wurde geladen. Spieler ist dran und befindet sich in der Phase");
+			infoPanel.changePanel(sp.getTurn() + "");
+			
+		} catch (SpielerExistiertBereitsException sebe) {
+			JOptionPane.showMessageDialog(null, sebe.getMessage(), "Name vergeben", JOptionPane.WARNING_MESSAGE);
 		}
+	}
+	
+	private void spielSpeichern() throws RemoteException {
+		String name = JOptionPane.showInputDialog(frame, "Spiel speichern.");
+		if(name.length() > 0){
+			try {
+				pm.schreibkanalOeffnen("./Speicher/" + name + ".txt");
+			} catch (IOException e) {
+				consolePanel.textSetzen("Spiel konnte nicht gespeichert werden. " + e.getMessage());
+			}
+			pm.spielSpeichern(sp.getLaenderListe(), spielerListe, sp.getTurn() + "", sp.getAktiverSpielerNummer(), sp.getMissionsListe());
+			pm.close();
+		}else{
+			consolePanel.textSetzen("Du musst einen Namen eingeben.");
+		}
+	}
 
 	public void hauptspielStarten(String name, int anzahlSpieler) throws RemoteException {
 		this.anzahlSpieler = anzahlSpieler;
@@ -224,7 +292,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			datei.add(schliessen);
 			speichern.addActionListener(save -> {
 				try {
-					//TODO: Speichern anschauen
 					spielSpeichern();
 				} catch (RemoteException e) {}
 			});
@@ -566,7 +633,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	public void handleGameEvent(GameEvent event) throws RemoteException {
 		spielerListe =  sp.getSpielerList();
 		laenderListe = sp.getLaenderListe();
-		
 		try {
 			Thread.sleep(200);
 		} catch (InterruptedException e) {}

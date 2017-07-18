@@ -20,6 +20,7 @@ import local.valueobjects.Kontinent;
 import local.valueobjects.Land;
 import local.valueobjects.Mission;
 import local.valueobjects.Spieler;
+import local.valueobjects.Spielstand;
 
 public class Kriegsverwaltung{
 
@@ -29,7 +30,6 @@ private Missionsverwaltung missionVw;
 private phasen Phase = phasen.STARTPHASE;
 private ArrayList<Land> benutzteLaender = new ArrayList<Land>();
 private FilePersistenceManager pm = new FilePersistenceManager();
-private int startphaseZaehler = 1;
 	
 	/**
 	 * Konstruktor Kriegsverwaltung
@@ -474,13 +474,8 @@ private int startphaseZaehler = 1;
 		pm.close();
 	}
 	
-	/**
-	 * 
-	 * @param datei
-	 * @throws IOException
-	 * @throws SpielerExistiertBereitsException
-	 */
-	public void spielLaden(String datei) throws IOException, SpielerExistiertBereitsException {
+	public Spielstand spielLaden(String datei) throws IOException, SpielerExistiertBereitsException {
+		Spielstand spielstand = new Spielstand();
 		pm.lesekanalOeffnen(datei);
 		String phase = pm.spielstandLaden();
 		String spieler = "";
@@ -490,19 +485,20 @@ private int startphaseZaehler = 1;
 		String kuerzel = "";
 		String karte = "";
 		int einheiten = 0;
-		switch(phase){
-		case "ANGRIFF":
-			Phase = phasen.ANGRIFF;
-		case "Verschieben":
-			Phase = phasen.VERSCHIEBEN;
-		case "VERTEILEN":
-			Phase = phasen.VERTEILEN;
-		}
+//		switch(phase){
+//		case "ANGRIFF":
+//			Phase = phasen.ANGRIFF;
+//		case "Verschieben":
+//			Phase = phasen.VERSCHIEBEN;
+//		case "VERTEILEN":
+//			Phase = phasen.VERTEILEN;
+//		}
+		spielstand.setAktuellePhase(phase);
 		
 		do{
 			spieler = pm.spielstandLaden();
 			if(spieler.length() != 0){
-				spielerVw.neuerSpieler(spieler);
+				spielstand.getSpielerListe().add(new Spieler(spieler));
 			}
 		}while(spieler.length() != 0);
 		
@@ -514,39 +510,40 @@ private int startphaseZaehler = 1;
 				kuerzel = pm.spielstandLaden();
 				int fahneX = Integer.parseInt(pm.spielstandLaden());
 				int fahneY = Integer.parseInt(pm.spielstandLaden());
-				for(Spieler s : spielerVw.getSpielerList()){
+				for(Spieler s : spielstand.getSpielerListe()){
 					if(s.getName().equals(spieler)){
-						weltVw.getLaenderListe().add(new Land(land,s,einheiten,kuerzel, fahneX, fahneY));
+						spielstand.getLaenderListe().add(new Land(land,s,einheiten,kuerzel, fahneX, fahneY));
 					}
 				}
 			}	
 		}while(land.length() != 0);
 		
 		int spielerNummer = Integer.parseInt(pm.spielstandLaden());
-		spielerVw.setAktiverSpieler(spielerNummer);
+		spielstand.setAktiverSpielerNummer(spielerNummer);
 
-		for(Spieler anzSp: spielerVw.getSpielerList()) {
+		spielstand.kontinenteErstellen();
+		
+		for(Spieler anzSp: spielstand.getSpielerListe()) {
 			spieler = pm.spielstandLaden();
 			String istSpielerMission = pm.spielstandLaden();
 			if(istSpielerMission.equals("spieler"))
 			{
 				spieler2 = pm.spielstandLaden();
-				for(Spieler s : spielerVw.getSpielerList()){
+				for(Spieler s : spielstand.getSpielerListe()){
 					if(s.equals(spieler2)){
 						spielerS2 = s;
 					}
 				}
 			}
 			int id = Integer.parseInt(pm.spielstandLaden());
-			for(Spieler s : spielerVw.getSpielerList()){
+			for(Spieler s : spielstand.getSpielerListe()){
 				if(s.getName().equals(spieler)){
-					//TODO kann hier Spielermissionen und Kontinentmissionen nicht laden
-					missionVw.missionLaden(weltVw.getLaenderListe(), weltVw.getKontinentenListe(), spielerVw.getSpielerList(),s,spielerS2,id);
+					spielstand.missionLaden(spielstand.getLaenderListe(), spielstand.getKontinentenListe(), spielstand.getSpielerListe(),s,spielerS2,id);
 				}
 			}
 		}
 
-		for(Spieler s: spielerVw.getSpielerList()) {
+		for(Spieler s: spielstand.getSpielerListe()) {
 			do{
 				karte = pm.spielstandLaden();
 				Einheitenkarten einheitenkarte = new Einheitenkarten(karte);
@@ -554,6 +551,8 @@ private int startphaseZaehler = 1;
 			}while(karte.length() != 0);
 		}
 		pm.close();
+		
+		return spielstand;
 	}
 	
 	/**

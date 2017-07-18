@@ -42,6 +42,7 @@ import local.valueobjects.Land;
 import local.valueobjects.Mission;
 import local.valueobjects.ServerRemote;
 import local.valueobjects.Spieler;
+import local.valueobjects.Spielstand;
 import net.miginfocom.swing.MigLayout;
 
 
@@ -136,6 +137,33 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 			
 			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));
 		}
+	}
+	
+	public void spielaufbauMitSpielstand(Spielstand spielstand) throws RemoteException{
+		serverConsolePanel.textSetzen("Spiel wird geladen");
+		this.anzahlSpieler = spielstand.getSpielerListe().size();
+		
+		for(Spieler s:spielstand.getSpielerListe()) {
+			spielerVw.getSpielerList().add(s);
+		}
+		adminPanel.listenSetzen(spielerVw.getSpielerList(), weltVw.getLaenderListe());
+		frame.repaint();
+		
+		for(Land land : spielstand.getLaenderListe()) {
+			weltVw.getLaenderListe().add(land);
+		}
+		
+		weltVw.laenderverbindungenUndKontinenteErstellen();
+		
+		for(Mission mission : spielstand.getMissionsListe()) {
+			missionVw.getMissionsListe().add(mission);
+		}
+		
+		spielerVw.farbenVerteilen();
+		spielerVw.setAktiverSpieler(spielstand.getAktiverSpielerNummer());
+		
+		listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));
+	
 	}
 
 	public int checkAnfangsEinheiten()	{
@@ -317,8 +345,8 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		kriegsVw.spielSpeichern(datei);
 	}
 
-	public void spielLaden(String datei) throws IOException, SpielerExistiertBereitsException{
-		kriegsVw.spielLaden(datei);
+	public Spielstand spielLaden(String datei) throws IOException, SpielerExistiertBereitsException{
+		return kriegsVw.spielLaden(datei);
 	}
 
 	public void einheitenKarteZiehen(Spieler spieler) {

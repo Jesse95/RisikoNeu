@@ -75,7 +75,7 @@ public interface ServerRemote extends Remote{
 	
 	public void spielSpeichern(String datei) throws IOException, RemoteException;
 	
-	public void spielLaden(String datei) throws IOException, SpielerExistiertBereitsException, RemoteException;
+	public Spielstand spielLaden(String datei) throws IOException, SpielerExistiertBereitsException, RemoteException;
 	
 	public void einheitenKarteZiehen(Spieler spieler)throws RemoteException;
 	
@@ -112,5 +112,7 @@ public interface ServerRemote extends Remote{
 	public void serverStarten() throws RemoteException;
 	
 	public void serverBenachrichtigung(String nachricht) throws RemoteException;
+	
+	public void spielaufbauMitSpielstand(Spielstand spielstand) throws RemoteException;
 
 }
