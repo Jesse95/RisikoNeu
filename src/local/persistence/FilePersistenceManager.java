@@ -120,13 +120,17 @@ public class FilePersistenceManager {
 	}
 	
 	public ArrayList<String> speicherstaendeLaden() {
-		File[] fs = new File("./Bilder/Speicher/").listFiles();
+		File[] fs = new File("./Speicher/").listFiles();
         ArrayList<String> games = new ArrayList<String>();
-        for (File f : fs) {
-            if (f.isFile()) {
-                games.add(f.getName());
-            }
-        }
+        try {
+	        for (File f : fs) {
+	            if (f.isFile()) {
+	                games.add(f.getName());
+	            }
+	        }
+        } catch (Exception e) {
+			System.out.println("Fehler beim Laden der Speicherstände.");
+		}
         return games;
 	}
 	

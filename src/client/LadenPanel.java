@@ -46,6 +46,8 @@ public class LadenPanel extends JPanel{
 	public void speicherstaendeAnzeigen(ArrayList<String> speicherstaende) {
 
 		for(String speicherstand : speicherstaende) {
+			//.txt für die Ausgabe entfernen
+			speicherstand = speicherstand.substring( 0, speicherstand.length() - 4 );
 			games.addElement(speicherstand);
 		}
 		gameList = new JList(games);
