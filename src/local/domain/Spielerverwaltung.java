@@ -91,6 +91,10 @@ public class Spielerverwaltung{
 			s.setFarbe(farben.get(0));
 			farben.remove(0);
 		}
+		System.out.println("Farben wurden verteilt");
+		for(Spieler s : spielerListe){
+			System.out.println("Spieler: " + s.getName() + " Farbe: " + s.getFarbe());
+		}
 	}
 	
 }

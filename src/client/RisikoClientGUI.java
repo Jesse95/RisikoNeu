@@ -705,6 +705,16 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 					statistikPanel.statistikAktualisieren(laenderListe, spielerListe);
 					break;
+				case AKTUALISIEREN:
+					consolePanel.textSetzen("Das Spiel wurde vom Admin geaendert");
+					statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
+					spielfeld.fahnenVerteilen(laenderListe);
+					infoPanel.setInfo(sp.getTurn()+"");
+					aktiverSpieler = gce.getSpieler();
+					if(aktiverSpieler.equals(ownSpieler)){
+						consolePanel.textSetzen("Du bist am Zug");
+					}
+					break;
 				}
 			infoPanel.changePanel(sp.getTurn() + "");
 			missionPanel.kartenAusgeben(ownSpieler, spielerListe);

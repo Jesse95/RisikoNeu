@@ -476,7 +476,7 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 	
 	public Spielstand spielLaden(String datei) throws IOException, SpielerExistiertBereitsException {
 		Spielstand spielstand = new Spielstand();
-		pm.lesekanalOeffnen(datei);
+		pm.ladeLesekanalOeffnen(datei);
 		String phase = pm.spielstandLaden();
 		String spieler = "";
 		String spieler2 = "";

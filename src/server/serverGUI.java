@@ -44,9 +44,10 @@ import local.valueobjects.ServerRemote;
 import local.valueobjects.Spieler;
 import local.valueobjects.Spielstand;
 import net.miginfocom.swing.MigLayout;
+import server.AdminPanel.AdminPanelButtons;
 
 
-public class serverGUI extends UnicastRemoteObject implements ServerRemote{
+public class serverGUI extends UnicastRemoteObject implements ServerRemote, AdminPanelButtons{
 
 	public Spielerverwaltung spielerVw;
 	public Weltverwaltung weltVw;
@@ -73,7 +74,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 	public void initialize( )throws RemoteException{
 		startBtn = new JButton("Server starten");
 		serverConsolePanel = new ConsolePanel();
-		adminPanel = new AdminPanel();
+		adminPanel = new AdminPanel(this);
 		frame = new JFrame();
 		frame.setLayout(new MigLayout("debug, wrap2", "[][]", "[][][]"));
 		
@@ -133,7 +134,11 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 				missionVw.missionenVerteilen(spielerVw.getSpielerList());
 				weltVw.laenderAufteilen(spielerVw.getSpielerList());
 				spielerVw.farbenVerteilen();
-			} catch (IOException e) {}
+				serverConsolePanel.textSetzen("Spiel wurde erstellt");
+				adminPanel.startPanel();
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+			}
 			
 			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));
 		}
@@ -431,6 +436,54 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote{
 		}
 		frame.repaint();
 		frame.revalidate();
+	}
+
+	
+	public void einheitenSetzenBtn(String land, int einheiten) {
+		Land landWahl = weltVw.stringToLand(land);
+		landWahl.setEinheiten(einheiten);
+		spielAktualisieren();
+	}
+	
+	public void spielAktualisieren(){
+		listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.AKTUALISIEREN));
+	}
+
+	public void besitzerSetzenBtn(String land, String spieler) {
+		for(Land l : weltVw.getLaenderListe()){
+			if(l.getName().equals(land)){
+				for(Spieler s : spielerVw.getSpielerList()){
+					if(s.getName().equals(spieler)){
+						l.setBesitzer(s);
+						break;
+					}
+				}
+			}
+		}
+		spielAktualisieren();
+		
+	}
+
+	@Override
+	public void phaseSetzenBtn(String phase) {
+		kriegsVw.setTurn(phase);
+		GameControlEvent.phasen phaseEvent = null;
+		switch(kriegsVw.getTurn()){
+		case STARTPHASE:
+			phaseEvent = GameControlEvent.phasen.VERTEILEN;
+			break;
+		case VERSCHIEBEN:
+			phaseEvent = GameControlEvent.phasen.VERSCHIEBEN;
+			break;
+		case ANGRIFF:
+			phaseEvent = GameControlEvent.phasen.ANGRIFF;
+			break;
+		case VERTEILEN:
+			phaseEvent = GameControlEvent.phasen.VERTEILEN;
+			break;
+		}
+		listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), phaseEvent));
+		
 	}
 
 }

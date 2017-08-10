@@ -20,6 +20,10 @@ public class FilePersistenceManager {
 	private PrintWriter writer = null;
 	
 	public void lesekanalOeffnen(String datei) throws FileNotFoundException{
+		reader = new BufferedReader(new FileReader(datei));
+	}
+	
+	public void ladeLesekanalOeffnen(String datei) throws FileNotFoundException{
 		reader = new BufferedReader(new FileReader("./Speicher/" + datei));
 	}
 	
@@ -131,11 +135,12 @@ public class FilePersistenceManager {
         } catch (Exception e) {
 			System.out.println("Fehler beim Laden der Speicherstände.");
 		}
+        close();
         return games;
 	}
 	
 	public ArrayList<Land> laenderAusDateiLaden()	throws IOException{
-		lesekanalOeffnen("Daten/Welt.txt");
+		lesekanalOeffnen("./Daten/Welt.txt");
 		Land land;
 		ArrayList<Land> laenderListe = new ArrayList<Land>();
 		do{
