@@ -32,7 +32,7 @@ public class LadenPanel extends JPanel{
 		this.setLayout(new MigLayout(" wrap2","[][300]","[][100][]")); 
 	}
 	
-	public void speicherstaendeAnzeigen(ArrayList<String> speicherstaende) {
+	public void aktuelleSpeicherstandAuswahlAnzeigen(ArrayList<String> speicherstaende) {
 		
 		games = new DefaultListModel<>();
 		for(String speicherstand : speicherstaende) {

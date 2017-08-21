@@ -142,7 +142,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		ladenPanel = new LadenPanel(this);
 		frame.add(ladenPanel);
 		frame.setVisible(true);
-		ladenPanel.speicherstaendeAnzeigen(pm.speicherstaendeLaden());
+		ladenPanel.aktuelleSpeicherstandAuswahlAnzeigen(pm.speicherstaendeLaden());
 		frame.repaint();
 		frame.revalidate();
 	}
