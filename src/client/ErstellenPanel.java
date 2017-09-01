@@ -9,7 +9,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import local.domain.exceptions.ServerNichtGestartetException;
 import net.miginfocom.swing.MigLayout;
 
 public class ErstellenPanel extends JPanel {
