@@ -21,6 +21,8 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.RandomAccess;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
@@ -127,9 +129,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		beitretenPanel = new BeitretenPanel(this);
 		frame.add(beitretenPanel);
 		frame.setVisible(true);
-		//Test
-		beitretenPanel.zuSpielAnzeigeHinzufuegen(2, 1, 4711, "TestGame1");
-		beitretenPanel.zuSpielAnzeigeHinzufuegen(5, 3, 4712, "TestGame2");
 		frame.repaint();
 		frame.revalidate();
 	}
@@ -162,7 +161,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		
 		try {
 			//Frame erzeugen
-			frame.setLayout(new MigLayout("debug, wrap2", "[1050][]", "[][][]"));
+			frame.setLayout(new MigLayout("wrap2", "[1050][]", "[][][]"));
 			spielfeld = new MapPanel(this, schrift,1050, 550);
 			spielerListPanel = new SpielerPanel(schrift, uberschrift);
 			missionPanel = new MissionPanel(uberschrift, schrift,this);
@@ -252,8 +251,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 		
 		try {
+			sp.spielerErstellen(name);
 			//Frame erzeugen
-			frame.setLayout(new MigLayout("debug, wrap2", "[1050][]", "[][][]"));
+			frame.setLayout(new MigLayout("wrap2", "[1050][]", "[][][]"));
 			spielfeld = new MapPanel(this, schrift,1050, 550);
 			spielerListPanel = new SpielerPanel(schrift, uberschrift);
 			missionPanel = new MissionPanel(uberschrift, schrift,this);
@@ -263,16 +263,16 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			consolePanel = new ConsolePanel(schrift);
 			frame.setSize(1250, 817);
 			frame.setLocationRelativeTo(null);
+			aktiverSpieler = sp.getAktiverSpieler();
 			
 			//Spieler erstellen und Spielwelt erzeugen
 			if(anzahlSpieler > 0){
-				sp.erstelleErstenSpieler(name, anzahlSpieler);
+				sp.spieleranzahlSetzen(anzahlSpieler);
 				frame.remove(erstellenPanel);
 			}else{
-				sp.erstelleWeiterenSpielerUndSpielaufbau(name);
+				sp.spielaufbauWennSpieleranzahlErreicht();
 				frame.remove(beitretenPanel);
 			}
-			aktiverSpieler = sp.getAktiverSpieler();
 			
 			//Spieler dem Thread zuweisen
 			for(Spieler s:sp.getSpielerList()) {
@@ -320,6 +320,19 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			
 		} catch (SpielerExistiertBereitsException sebe) {
 			JOptionPane.showMessageDialog(null, sebe.getMessage(), "Name vergeben", JOptionPane.WARNING_MESSAGE);
+			if(anzahlSpieler > 0){
+				//zweitesPanelSpielErstellen();
+				frame.setTitle("Spiel erstellen");
+			}else{
+				//zweitesPanelSpielBeitreten();
+				frame.setTitle("Spiel beitreten");
+			}
+			frame.setSize(320, 250);
+			frame.remove(spielfeld);
+			frame.setLocationRelativeTo(null);
+			frame.setVisible(true);
+			frame.repaint();
+			frame.revalidate();
 		}
 	}
 

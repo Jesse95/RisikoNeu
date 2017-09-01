@@ -21,7 +21,7 @@ public interface ServerRemote extends Remote{
 	
 	public void removeGameEventListener(GameEventListener listener) throws RemoteException;
 	
-	public void erstelleErstenSpieler(String name, int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException;
+	public void spieleranzahlSetzen(int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException;
 	
 	public void geladenesSpielStarten(int anzahlSpieler) throws RemoteException;
 
@@ -101,13 +101,13 @@ public interface ServerRemote extends Remote{
 	
 	public int getAktiverSpielerNummer()throws RemoteException;
 	
-	public void spielerErstellen(String spieler)throws RemoteException;
+	public void spielerErstellen(String spieler)throws RemoteException, SpielerExistiertBereitsException;
 	
 	public void landErstellen(ArrayList<String> land)throws RemoteException;
 	
 	public void setAktiverSpielerNummer(int nummer)throws RemoteException;
 
-	public void erstelleWeiterenSpielerUndSpielaufbau(String name)throws RemoteException, SpielerExistiertBereitsException;
+	public void spielaufbauWennSpieleranzahlErreicht()throws RemoteException, SpielerExistiertBereitsException;
 
 	public void serverStarten() throws RemoteException;
 	

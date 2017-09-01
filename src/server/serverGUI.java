@@ -116,13 +116,11 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		initialize();
 	}
 	
-	public void erstelleErstenSpieler(String name,int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException {
-		spielerVw.neuerSpieler(name);
+	public void spieleranzahlSetzen(int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException {
 		this.anzahlSpieler = anzahlSpieler;
 	}
 
-	public void erstelleWeiterenSpielerUndSpielaufbau(String name) throws RemoteException, SpielerExistiertBereitsException {
-		spielerVw.neuerSpieler(name);
+	public void spielaufbauWennSpieleranzahlErreicht() throws RemoteException, SpielerExistiertBereitsException {
 		if(spielerVw.getSpielerList().size() == anzahlSpieler){
 			adminPanel.listenSetzen(spielerVw.getSpielerList(), weltVw.getLaenderListe());
 			frame.repaint();
@@ -398,14 +396,8 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		return spielerVw.getAktiverSpielerNummer();
 	}
 
-	public void spielerErstellen(String spieler) throws RemoteException {
-		try {
-			spielerVw.neuerSpieler(spieler);
-		} catch (SpielerExistiertBereitsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+	public void spielerErstellen(String spieler) throws RemoteException, SpielerExistiertBereitsException {
+		spielerVw.neuerSpieler(spieler);
 	}
 
 	public void landErstellen(ArrayList<String> land) throws RemoteException {
