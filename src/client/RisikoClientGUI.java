@@ -4,8 +4,11 @@
 //TODO Laden eines Spiels
 //TODO Speichern erweitern (Idee: Jeder Spieler bekommt beim ersten Onlinespiel eine eindeutige ID)
 //TODO mit ostafrika kann man Nordafrika nicht angreifen?
-//TODO bei falscher Namenseinagbe kackt er rein
 //TODO Beim Karten eintauschen werden Karten nicht removed
+//TODO Leerzeile zu Beginn in Konsole
+//TODO Server cleanen, wenn Spiel abgebrochen, so dass Server nicht immer neu gestartet werden muss
+//TODO zeigt 0 Einheiten zu Beginn an
+//TODO wenn Spieleranzahl erreicht, darf Beitreten nicht mehr möglich sein
 package client;
 
 import java.awt.Color;
