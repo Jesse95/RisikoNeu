@@ -47,6 +47,7 @@ import local.domain.exceptions.KeinGegnerException;
 import local.domain.exceptions.KeinNachbarlandException;
 import local.domain.exceptions.LandBereitsBenutztException;
 import local.domain.exceptions.NichtGenugEinheitenException;
+import local.domain.exceptions.ServerNichtGestartetException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.persistence.FilePersistenceManager;
 import local.valueobjects.*;
@@ -239,16 +240,14 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		this.anzahlSpieler = anzahlSpieler;
 		
 		//Verbindung mit Server aufbauen
-			String servicename = "GameServer";
-			Registry registry = LocateRegistry.getRegistry("127.0.0.1",4711);
 				try {
+					String servicename = "GameServer";
+					Registry registry = LocateRegistry.getRegistry("127.0.0.1",4711);
 					sp = (ServerRemote)registry.lookup(servicename);
-				} catch (NotBoundException e1) {
-					e1.printStackTrace();
+					sp.addGameEventListener(this);
+					sp.serverBenachrichtigung("Spieler registriert: " + name);
+				} catch (NotBoundException nbe) {
 				}
-			sp.addGameEventListener(this);
-			sp.serverBenachrichtigung("Spieler registriert: " + name);
-
 		
 		try {
 			sp.spielerErstellen(name);
@@ -320,19 +319,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			
 		} catch (SpielerExistiertBereitsException sebe) {
 			JOptionPane.showMessageDialog(null, sebe.getMessage(), "Name vergeben", JOptionPane.WARNING_MESSAGE);
-			if(anzahlSpieler > 0){
-				//zweitesPanelSpielErstellen();
-				frame.setTitle("Spiel erstellen");
-			}else{
-				//zweitesPanelSpielBeitreten();
-				frame.setTitle("Spiel beitreten");
-			}
-			frame.setSize(320, 250);
-			frame.remove(spielfeld);
-			frame.setLocationRelativeTo(null);
-			frame.setVisible(true);
-			frame.repaint();
-			frame.revalidate();
 		}
 	}
 

@@ -7,6 +7,7 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -57,7 +58,7 @@ public class BeitretenPanel extends JPanel{
 			try {
 				handler.hauptspielStarten(nameText.getText(),-1);
 			} catch (RemoteException e) {
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Server nicht gestartet.", "Server Fehler", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 		this.add(nameLab,"right");

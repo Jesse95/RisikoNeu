@@ -5,9 +5,11 @@ import java.rmi.RemoteException;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import local.domain.exceptions.ServerNichtGestartetException;
 import net.miginfocom.swing.MigLayout;
 
 public class ErstellenPanel extends JPanel {
@@ -39,7 +41,7 @@ public class ErstellenPanel extends JPanel {
 			try {
 				handler.hauptspielStarten(nameText.getText(),Integer.parseInt((String)anzahlCBox.getSelectedItem()));
 			} catch (NumberFormatException | RemoteException e) {
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Server nicht gestartet.", "Server Fehler", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 		this.add(nameLab,"right");
