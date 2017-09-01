@@ -96,7 +96,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 		//Spielmenu Fenster erstellen
 		frame.setTitle("Spiel starten");
-		frame.setSize(330, 350);
+		frame.setSize(335, 370);
 		frame.setLocationRelativeTo(null);
 		//frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		startPanel = new StartPanel(this);
