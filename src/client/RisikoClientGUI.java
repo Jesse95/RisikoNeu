@@ -6,7 +6,7 @@
 //TODO mit ostafrika kann man Nordafrika nicht angreifen?
 //TODO Beim Karten eintauschen werden Karten nicht removed
 //TODO Leerzeile zu Beginn in Konsole
-//TODO Server cleanen, wenn Spiel abgebrochen, so dass Server nicht immer neu gestartet werden muss
+//TODO Server cleanen, wenn Spiel abgebrochen, so dass Server nicht immer neu gestartet werden muss (In Bearbeitung)
 //TODO zeigt 0 Einheiten zu Beginn an
 //TODO wenn Spieleranzahl erreicht, darf Beitreten nicht mehr möglich sein
 package client;
@@ -16,6 +16,7 @@ import java.awt.Font;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -50,6 +51,8 @@ import local.domain.exceptions.NichtGenugEinheitenException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.persistence.FilePersistenceManager;
 import local.valueobjects.*;
+
+import java.awt.event.*;
 import net.miginfocom.swing.MigLayout;
 
 
@@ -196,7 +199,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			schliessen.addActionListener(close -> System.exit(0));
 			menu.setFont(schrift);
 			frame.setMenuBar(menu);
-
+		
 			//Layout anpassen
 			frame.add(spielfeld, "left,spany 3,grow");
 			frame.add(infoPanel, "left,growx");
@@ -261,6 +264,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			consolePanel = new ConsolePanel(schrift);
 			frame.setSize(1250, 817);
 			frame.setLocationRelativeTo(null);
+			
 			aktiverSpieler = sp.getAktiverSpieler();
 			
 			//Spieler erstellen und Spielwelt erzeugen
@@ -296,7 +300,17 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			schliessen.addActionListener(close -> System.exit(0));
 			menu.setFont(schrift);
 			frame.setMenuBar(menu);
+			frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+			frame.addWindowListener(new WindowAdapter(){
 
+				public void windowClosing(WindowEvent we){
+					try {
+						sp.spielBeenden(ownSpieler);
+					} catch (RemoteException e) {
+						
+					}
+				}
+			});
 			//Layout anpassen
 			frame.add(spielfeld, "left,spany 3,grow");
 			frame.add(infoPanel, "left,growx");
@@ -713,6 +727,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						consolePanel.textSetzen("Du bist am Zug");
 					}
 					break;
+				case BEENDEN:
+					JOptionPane.showMessageDialog(null, "Das Spiel wurde von " + gce.getSpieler().getName() + " beendet.");
+					
+					frame.dispose();
+					erstesPanelStartmenu();
 				}
 			infoPanel.changePanel(sp.getTurn() + "");
 			missionPanel.kartenAusgeben(ownSpieler, spielerListe);

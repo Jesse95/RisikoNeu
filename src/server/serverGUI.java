@@ -4,6 +4,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -66,6 +67,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	private static ServerRemote server;
 	private JButton startBtn;
 	private AdminPanel adminPanel;
+	private Registry registry;
 	
 	public static void main(String[] args) throws RemoteException{
 		server = new serverGUI();
@@ -108,11 +110,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	
 	public serverGUI( ) throws RemoteException{
 		listeners = new Vector<>();
-		this.spielerVw = new Spielerverwaltung();
-		this.weltVw = new Weltverwaltung();
-		this.missionVw = new Missionsverwaltung();
-		this.einheitenVw = new Einheitenkartenverwaltung();
-		this.kriegsVw = new Kriegsverwaltung(spielerVw, weltVw, missionVw);
+		
 		initialize();
 	}
 	
@@ -199,8 +197,13 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	}
 	
 	public void serverStarten() throws RemoteException{
+		this.spielerVw = new Spielerverwaltung();
+		this.weltVw = new Weltverwaltung();
+		this.missionVw = new Missionsverwaltung();
+		this.einheitenVw = new Einheitenkartenverwaltung();
+		this.kriegsVw = new Kriegsverwaltung(spielerVw, weltVw, missionVw);
 		String serviceName = "GameServer";
-			Registry registry;
+			
 			serverConsolePanel.textSetzen("Server starten....");
 			try{
 				registry = LocateRegistry.createRegistry(4711);
@@ -475,6 +478,20 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 			break;
 		}
 		listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), phaseEvent));
+		
+	}
+
+
+	public void spielBeenden(Spieler spieler) throws RemoteException {
+		listenerBenachrichtigen(new GameControlEvent(spieler,GameControlEvent.phasen.BEENDEN));
+		
+		try {
+			registry.unbind("GameServer");
+			ampelSchalten(false);
+			serverConsolePanel.textSetzen("Der Spieler " + spieler.getName() + " hat das Spiel beendet.");
+		} catch (NotBoundException e) {
+			serverConsolePanel.textSetzen("Server konnte nicht beendet werden " + e.getMessage());
+		}
 		
 	}
 

@@ -114,5 +114,9 @@ public interface ServerRemote extends Remote{
 	public void serverBenachrichtigung(String nachricht) throws RemoteException;
 	
 	public void spielaufbauMitSpielstand(Spielstand spielstand) throws RemoteException;
+	
+	public void spielBeenden(Spieler spieler) throws RemoteException;
+		
+	
 
 }
