@@ -17,7 +17,7 @@ public class ConsolePanel extends JPanel{
 	}
 	
 	public void initialize() {
-		this.setLayout(new MigLayout("wrap1","[300]","[][350]"));
+		this.setLayout(new MigLayout("wrap1","[250]","[][350]"));
 		JLabel header = new JLabel("Benachrichtigung:");
 		consoleText = new JTextArea();
 		JScrollPane consoleScrollBar = new JScrollPane(consoleText);

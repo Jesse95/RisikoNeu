@@ -756,18 +756,5 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	@Override
-	public void mouseHover(Color color) {
-		String landcode = color.getRed() + "" + color.getGreen() + "" + color.getBlue();
-		Land land;
-		try {
-			land = sp.stringToLand(sp.getLandVonFarbcode(landcode));
-			spielfeld.labelsSetzen(land.getName(), land.getEinheiten(), land.getBesitzer().getName());
-		} catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-	}
+	
 }	
