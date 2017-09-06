@@ -824,4 +824,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			}
 		}
 	}
+
+	
 }	

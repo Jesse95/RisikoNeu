@@ -78,8 +78,8 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		serverConsolePanel = new ConsolePanel();
 		adminPanel = new AdminPanel(this);
 		frame = new JFrame();
-		frame.setLayout(new MigLayout("debug, wrap2", "[][]", "[][][]"));
-		
+		frame.setLayout(new MigLayout("debug, wrap2", "[][200]", "[][][]"));
+		frame.setSize(450, 450);
 		
 		try {
 			ampelRot = ImageIO.read(new File("./Bilder/ampel_Rot.png"));
@@ -102,7 +102,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		frame.add(startBtn,"top,growx");
 		frame.add(adminPanel,"top,center");
 		
-		frame.pack();
+		
 		frame.setVisible(true);
 		frame.setLocationRelativeTo(null);
 		
@@ -470,27 +470,15 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 			}
 		}
 		spielAktualisieren();
+		adminPanel.laenderUndBesitzer();
 		
 	}
 
-	@Override
+
 	public void phaseSetzenBtn(String phase) {
 		kriegsVw.setTurn(phase);
-		GameControlEvent.phasen phaseEvent = null;
-		switch(kriegsVw.getTurn()){
-		case STARTPHASE:
-			phaseEvent = GameControlEvent.phasen.VERTEILEN;
-			break;
-		case VERSCHIEBEN:
-			phaseEvent = GameControlEvent.phasen.VERSCHIEBEN;
-			break;
-		case ANGRIFF:
-			phaseEvent = GameControlEvent.phasen.ANGRIFF;
-			break;
-		case VERTEILEN:
-			phaseEvent = GameControlEvent.phasen.VERTEILEN;
-			break;
-		}
+		GameControlEvent.phasen phaseEvent = phaseZuEvent();
+		
 		listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), phaseEvent));
 		
 	}
@@ -505,6 +493,34 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 			serverConsolePanel.textSetzen("Der Spieler " + spieler.getName() + " hat das Spiel beendet.");
 		} catch (NotBoundException e) {
 			serverConsolePanel.textSetzen("Server konnte nicht beendet werden " + e.getMessage());
+		}
+		
+	}
+
+
+	public void aktiverSpielerSetzenBtn(String spieler) {
+		for(Spieler s : spielerVw.getSpielerList()){
+			if(s.getName().equals(spieler)){
+				int spielerNr = spielerVw.getSpielerList().indexOf(s);
+				spielerVw.setAktiverSpieler(spielerNr);
+			}
+		}
+		listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), phaseZuEvent()));
+		
+	}
+	
+	public GameControlEvent.phasen phaseZuEvent(){
+		switch(kriegsVw.getTurn()){
+		case STARTPHASE:
+			return GameControlEvent.phasen.VERTEILEN;
+		case VERSCHIEBEN:
+			return GameControlEvent.phasen.VERSCHIEBEN;
+		case ANGRIFF:
+			return GameControlEvent.phasen.ANGRIFF;
+		case VERTEILEN:
+			return GameControlEvent.phasen.VERTEILEN;
+		default:
+			return null;
 		}
 		
 	}

@@ -120,6 +120,7 @@ public class MapPanel extends JLayeredPane {
 				Color color = new Color(farbenInt, true);
 				handler.mausklickAktion(color);
 			}
+		
 		});
 
         landLab = new JLabel("Land");
