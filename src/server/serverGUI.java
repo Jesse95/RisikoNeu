@@ -147,13 +147,12 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		for(Spieler s:spielstand.getSpielerListe()) {
 			spielerVw.getSpielerList().add(s);
 		}
-		adminPanel.listenSetzen(spielerVw.getSpielerList(), weltVw.getLaenderListe());
+		
 		frame.repaint();
 		
 		for(Land land : spielstand.getLaenderListe()) {
 			weltVw.getLaenderListe().add(land);
-		}
-		
+		}		
 		weltVw.laenderverbindungenUndKontinenteErstellen();
 		
 		for(Mission mission : spielstand.getMissionsListe()) {
@@ -162,8 +161,23 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		
 		spielerVw.farbenVerteilen();
 		spielerVw.setAktiverSpieler(spielstand.getAktiverSpielerNummer());
-		
-		listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));
+		GameControlEvent.phasen phase;
+		if(spielstand.getAktuellePhase().equals("STARTEN")) {
+			phase = GameControlEvent.phasen.STARTEN;
+		} else if(spielstand.getAktuellePhase().equals("VERTEILEN")) {
+			phase = GameControlEvent.phasen.VERTEILEN;
+		} else if(spielstand.getAktuellePhase().equals("VERSCHIEBEN")) {
+			phase = GameControlEvent.phasen.VERSCHIEBEN;
+		} else if(spielstand.getAktuellePhase().equals("STARTPHASE")) {
+			phase = GameControlEvent.phasen.STARTPHASE;
+		} else if(spielstand.getAktuellePhase().equals("ANGRIFF")) {
+			phase = GameControlEvent.phasen.ANGRIFF;
+		} else if(spielstand.getAktuellePhase().equals("AKTUALISIEREN")) {
+			phase = GameControlEvent.phasen.AKTUALISIEREN;
+		} else {
+			phase = GameControlEvent.phasen.BEENDEN;
+		}
+		listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), phase));
 	
 	}
 
@@ -237,14 +251,14 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		}
 	}
 
-	public void geladenesSpielStarten(int anzahlSpieler) throws RemoteException {
-		if(spielerVw.getSpielerList().size() == anzahlSpieler){
-			serverConsolePanel.textSetzen("Spiel wird geladen");
-			spielerVw.farbenVerteilen();
-
-			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));
-		}
-	}
+//	public void geladenesSpielStarten(int anzahlSpieler) throws RemoteException {
+//		if(spielerVw.getSpielerList().size() == anzahlSpieler){
+//			serverConsolePanel.textSetzen("Spiel wird geladen");
+//			spielerVw.farbenVerteilen();
+//
+//			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));
+//		}
+//	}
 
 	public int bekommtEinheiten(Spieler spieler) {
 		return kriegsVw.bekommtEinheiten(spieler);

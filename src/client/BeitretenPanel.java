@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -22,9 +23,11 @@ public class BeitretenPanel extends JPanel{
 	private JLabel nameLab;
 	private JTextField nameText;
 	private JLabel openGamesLab;
+	private JCheckBox geladen;
 	
 	public interface BeitretenButtonClicked{
 		public void hauptspielStarten(String name, int anzahl) throws RemoteException;
+		public void geladenemSpielBeitreten(String name) throws RemoteException;
 	}
 	
 	public BeitretenPanel(BeitretenButtonClicked handler) {
@@ -37,6 +40,8 @@ public class BeitretenPanel extends JPanel{
 		//Objekte erstellen
 		nameLab = new JLabel("Name:");
 		nameText = new JTextField();
+		geladen = new JCheckBox("geladenes Spiel");
+		
 		openGamesLab = new JLabel("Offene Spiele:");
 		//hier funktionsprinzip erklärt https://docs.oracle.com/javase/tutorial/uiswing/components/list.html 
 		games = new DefaultListModel<>();
@@ -56,13 +61,18 @@ public class BeitretenPanel extends JPanel{
 		//Actionlistener
 		startBtn.addActionListener(start -> {
 			try {
-				handler.hauptspielStarten(nameText.getText(),-1);
+				if(!geladen.isSelected()) {
+					handler.hauptspielStarten(nameText.getText(),-1);
+				} else {
+					handler.geladenemSpielBeitreten(nameText.getText());
+				}
 			} catch (RemoteException e) {
 				JOptionPane.showMessageDialog(null, "Server nicht gestartet.", "Server Fehler", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 		this.add(nameLab,"right");
 		this.add(nameText,"left,growx");
+		this.add(geladen,"left,growx");
 		this.add(openGamesLab,"left,spanx2");
 		this.add(listScroller,"growx,growy,spanx2");
 		this.add(startBtn,"center,spanx2");

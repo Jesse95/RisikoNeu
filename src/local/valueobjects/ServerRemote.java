@@ -23,7 +23,7 @@ public interface ServerRemote extends Remote{
 	
 	public void spieleranzahlSetzen(int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException;
 	
-	public void geladenesSpielStarten(int anzahlSpieler) throws RemoteException;
+	//public void geladenesSpielStarten(int anzahlSpieler) throws RemoteException;
 
 	public int bekommtEinheiten(Spieler spieler)throws RemoteException;
 	
