@@ -251,15 +251,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		}
 	}
 
-//	public void geladenesSpielStarten(int anzahlSpieler) throws RemoteException {
-//		if(spielerVw.getSpielerList().size() == anzahlSpieler){
-//			serverConsolePanel.textSetzen("Spiel wird geladen");
-//			spielerVw.farbenVerteilen();
-//
-//			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));
-//		}
-//	}
-
 	public int bekommtEinheiten(Spieler spieler) {
 		return kriegsVw.bekommtEinheiten(spieler);
 	}

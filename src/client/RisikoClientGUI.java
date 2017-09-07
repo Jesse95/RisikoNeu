@@ -5,10 +5,9 @@
 //TODO Speichern erweitern (Idee: Jeder Spieler bekommt beim ersten Onlinespiel eine eindeutige ID)
 //TODO mit ostafrika kann man Nordafrika nicht angreifen?
 //TODO Beim Karten eintauschen werden Karten nicht removed
-//TODO Leerzeile zu Beginn in Konsole
 //TODO Server cleanen, wenn Spiel abgebrochen, so dass Server nicht immer neu gestartet werden muss (In Bearbeitung)
-//TODO zeigt 0 Einheiten zu Beginn an
 //TODO wenn Spieleranzahl erreicht, darf Beitreten nicht mehr möglich sein
+//TODO Warten auf andere Spieler anzeigen bis alle Spieler da
 package client;
 
 import java.awt.Color;
@@ -322,7 +321,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				}
 		
 		try {
+			//Spieler muss erstellt werden, bevor frame gebaut wird, da sonst bei falscher Namenseingabe spackt
 			sp.spielerErstellen(name);
+
 			//Frame erzeugen
 			frame.setLayout(new MigLayout("wrap2", "[1050][]", "[][][]"));
 			spielfeld = new MapPanel(this, schrift,1050, 550);
