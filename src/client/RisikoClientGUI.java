@@ -719,6 +719,8 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				
 				switch (gce.getTurn()) {
 				case STARTEN:
+					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
+					consolePanel.textSetzen("Du kannst nun die ersten Einheiten setzen.");
 					spielfeld.fahnenVerteilen(laenderListe);
 					for (Spieler s : sp.getSpielerList()) {
 						spielerListPanel.setLabel(s);
