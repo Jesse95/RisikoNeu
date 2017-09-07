@@ -786,6 +786,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					for (Spieler s : sp.getSpielerList()) {
 						spielerListPanel.setLabel(s);
 					}
+					buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 					statistikPanel.statistikAktualisieren(laenderListe, spielerListe);
 					break;
