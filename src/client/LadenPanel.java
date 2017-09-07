@@ -20,7 +20,7 @@ public class LadenPanel extends JPanel{
 	private JList<String> gameList;
 	private LadenButtonClicked handler;
 	public interface LadenButtonClicked{
-		public void spielLaden(String dat)  throws RemoteException, IOException;
+		public void hauptspielStarten(String name, int anzahlSpieler, String dateiPfad)  throws RemoteException;
 	}
 	
 	public LadenPanel(LadenButtonClicked handler) {
@@ -53,7 +53,7 @@ public class LadenPanel extends JPanel{
 				try {
 					final String selected = gameList.getSelectedValue();
 					System.out.println(selected);
-					handler.spielLaden(selected + ".txt");
+					handler.hauptspielStarten("", -1,selected + ".txt");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

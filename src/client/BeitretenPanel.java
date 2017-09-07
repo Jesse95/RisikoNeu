@@ -26,8 +26,7 @@ public class BeitretenPanel extends JPanel{
 	private JCheckBox geladen;
 	
 	public interface BeitretenButtonClicked{
-		public void hauptspielStarten(String name, int anzahl) throws RemoteException;
-		public void geladenemSpielBeitreten(String name) throws RemoteException;
+		public void hauptspielStarten(String name, int anzahl, String dateiPfad) throws RemoteException;
 	}
 	
 	public BeitretenPanel(BeitretenButtonClicked handler) {
@@ -61,11 +60,7 @@ public class BeitretenPanel extends JPanel{
 		//Actionlistener
 		startBtn.addActionListener(start -> {
 			try {
-				if(!geladen.isSelected()) {
-					handler.hauptspielStarten(nameText.getText(),-1);
-				} else {
-					handler.geladenemSpielBeitreten(nameText.getText());
-				}
+					handler.hauptspielStarten(nameText.getText(),-1,null);
 			} catch (RemoteException e) {
 				JOptionPane.showMessageDialog(null, "Server nicht gestartet.", "Server Fehler", JOptionPane.WARNING_MESSAGE);
 			}

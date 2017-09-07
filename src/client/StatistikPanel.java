@@ -68,6 +68,7 @@ public class StatistikPanel extends JPanel{
 	}
 	
 	public void statistikAktualisieren(ArrayList<Land>laenderListe, ArrayList<Spieler>spielerListe) {
+		System.out.println("StatistikPanel");
 		 statistikPanelAktualisieren(laenderListe, spielerListe);
 		for(int laenderAnzahl : laenderVonSpieler) {
 			laenderVonSpielerLabel.add(new JLabel(laenderAnzahl + ""));

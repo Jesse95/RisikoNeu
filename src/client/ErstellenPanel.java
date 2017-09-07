@@ -14,7 +14,7 @@ import net.miginfocom.swing.MigLayout;
 public class ErstellenPanel extends JPanel {
 	private ErstellenButtonClicked handler = null;
 	public interface ErstellenButtonClicked{
-		public void hauptspielStarten(String name, int anzahl) throws RemoteException;
+		public void hauptspielStarten(String name, int anzahl, String dateiPfad) throws RemoteException;
 	}
 	
 	public ErstellenPanel(ErstellenButtonClicked handler) {
@@ -38,7 +38,7 @@ public class ErstellenPanel extends JPanel {
 		//Actionlistener
 		startBtn.addActionListener(start -> {
 			try {
-				handler.hauptspielStarten(nameText.getText(),Integer.parseInt((String)anzahlCBox.getSelectedItem()));
+				handler.hauptspielStarten(nameText.getText(),Integer.parseInt((String)anzahlCBox.getSelectedItem()),null);
 			} catch (NumberFormatException | RemoteException e) {
 				JOptionPane.showMessageDialog(null, "Server nicht gestartet.", "Server Fehler", JOptionPane.WARNING_MESSAGE);
 			}

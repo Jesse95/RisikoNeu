@@ -31,12 +31,12 @@ public class ConsolePanel extends JPanel{
 	}
 	
 	public void textSetzen(String text) {
-		if(consoleText.equals("")) {
+//		if(consoleText.equals("")) {
 			consoleText.setText(consoleText.getText() + "\n" + text);
-		} else {
-			consoleText.setText(text);
-
-		}
+//		} else {
+//			consoleText.setText(text);
+//
+//		}
 		
 	}
 }

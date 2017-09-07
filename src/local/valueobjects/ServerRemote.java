@@ -14,6 +14,7 @@ import local.domain.exceptions.LandBereitsBenutztException;
 import local.domain.exceptions.LandExistiertNichtException;
 import local.domain.exceptions.NichtGenugEinheitenException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
+import local.domain.exceptions.SpielerGibtEsNichtException;
 
 public interface ServerRemote extends Remote{
 	
@@ -99,7 +100,7 @@ public interface ServerRemote extends Remote{
 	
 	public int getAktiverSpielerNummer()throws RemoteException;
 	
-	public void spielerErstellen(String spieler)throws RemoteException, SpielerExistiertBereitsException;
+	public void spielerErstellen(String spieler)throws RemoteException, SpielerExistiertBereitsException, SpielerGibtEsNichtException;
 	
 	public void landErstellen(ArrayList<String> land)throws RemoteException;
 	
@@ -114,6 +115,8 @@ public interface ServerRemote extends Remote{
 	public void spielaufbauMitSpielstand(Spielstand spielstand) throws RemoteException;
 	
 	public void spielBeenden(Spieler spieler) throws RemoteException;
+	
+	public void beiGeladenemSpielNaechstenListener() throws RemoteException;
 		
 	
 

@@ -70,7 +70,7 @@ public class ButtonPanel extends JPanel{
 		verschiebenNA.addActionListener(verschiebenNA -> handler.verschiebenNachAngriffButtonClicked(Integer.parseInt(anzahlEinheitenVerschieben.getText())));
 		nextTurn.setEnabled(false);
 		//TODO hier muss Anzahl der Einheiten am Anfang rein
-		startphase(3);
+//		startphase(3);
 	}
 	
 	public void angreifenAktiv(String angriffsLand,String verteidigungsLand) {
@@ -112,6 +112,7 @@ public class ButtonPanel extends JPanel{
 	
 	public void verteilenAktiv(int einheiten) {		
 		removeAll();
+		System.out.println("verteilen in buttonpanel");
 		this.add(anzahlEinheitenVerteilen,"center");
 		anzahlEinheitenVerteilen.setText(einheiten + "");
 		this.add(nextTurn,"left,grow");
@@ -148,6 +149,7 @@ public class ButtonPanel extends JPanel{
 	
 	public void startphase(int einheiten) {
 		removeAll();
+		System.out.println("startphase in buttonpanel");
 		this.add(anzahlEinheitenVerteilen,"center");
 		anzahlEinheitenVerteilen.setText(0 + "");
 		this.add(nextTurn,"left,grow");

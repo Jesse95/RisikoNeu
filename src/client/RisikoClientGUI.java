@@ -52,6 +52,7 @@ import local.domain.exceptions.KeinNachbarlandException;
 import local.domain.exceptions.LandBereitsBenutztException;
 import local.domain.exceptions.NichtGenugEinheitenException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
+import local.domain.exceptions.SpielerGibtEsNichtException;
 import local.persistence.FilePersistenceManager;
 import local.valueobjects.*;
 import local.valueobjects.GameControlEvent.phasen;
@@ -162,149 +163,83 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.revalidate();
 	}
 
-	public void spielLaden(String dat) throws RemoteException, IOException {
-		frame.remove(ladenPanel);
-		//Verbindung mit Server aufbauen
-
-		try {
-			String servicename = "GameServer";
-			Registry registry = LocateRegistry.getRegistry("127.0.0.1",4711);
-			sp = (ServerRemote)registry.lookup(servicename);
-			sp.addGameEventListener(this);		
-			} catch (NotBoundException nbe) {}
-		
-		try {
-			Spielstand spielstand = sp.spielLaden(dat);
-			this.anzahlSpieler = spielstand.getSpielerListe().size();
-
-			//Frame erzeugen
-			frame.setLayout(new MigLayout("wrap2", "[1050][]", "[][][]"));
-			spielfeld = new MapPanel(this, schrift,1050, 550);
-			spielerListPanel = new SpielerPanel(schrift, uberschrift);
-			missionPanel = new MissionPanel(uberschrift, schrift,this);
-			infoPanel = new InfoPanel(spielstand.getAktuellePhase() + "", schrift, uberschrift);
-			buttonPanel = new ButtonPanel(this, uberschrift);
-			statistikPanel = new StatistikPanel(schrift, uberschrift);
-			consolePanel = new ConsolePanel(schrift);
-			frame.setSize(1250, 817);
-			frame.setLocationRelativeTo(null);
-
-			
-			//Hier muss noch festgestellt werden wer OwnSpieler ist
-//			Spieler muss im Laden Panel eingeben welche Spieler er war zum zuordnen
-			ownSpieler = spielstand.getSpielerListe().get(0);
-			
-			sp.spielaufbauMitSpielstand(spielstand);
-			
-			frame.setTitle("Risiko - Spieler: " + ownSpieler.getName());
-
-			//Menuleiste erstellen
-			menu = new MenuBar();
-			Menu datei = new Menu("Datei");
-			menu.add(datei);
-			MenuItem speichern = new MenuItem("Speichern");
-			MenuItem schliessen = new MenuItem("Schließen");
-			datei.add(speichern);
-			datei.add(schliessen);
-			speichern.addActionListener(save -> {
-				try {
-					spielSpeichern();
-				} catch (RemoteException e) {}
-			});
-			schliessen.addActionListener(close -> System.exit(0));
-			menu.setFont(schrift);
-			frame.setMenuBar(menu);
-		
-			//Layout anpassen
-			frame.add(spielfeld, "left,spany 3,grow");
-			frame.add(infoPanel, "left,growx");
-			frame.add(spielerListPanel, "growx");
-			frame.add(statistikPanel, "left,top,growx,spany 2");
-			frame.add(missionPanel, "left,top,split3");
-			frame.add(consolePanel, "left, top");
-			frame.add(buttonPanel, "right,growy");
-			frame.setResizable(false);
-			frame.setVisible(true);
-			frame.pack();
-			
-			sp.setTurn(spielstand.getAktuellePhase());
-			
-			//anzahl setzbare Einheiten?
-			consolePanel.textSetzen("Spiel wurde geladen. " + spielstand.getSpielerListe().get(spielstand.getAktiverSpielerNummer()).getName() + " ist dran und befindet sich in der Phase" + spielstand.getAktuellePhase());
-			infoPanel.changePanel(sp.getTurn() + "");
-			
-		} catch (SpielerExistiertBereitsException sebe) {
-			JOptionPane.showMessageDialog(null, sebe.getMessage(), "Name vergeben", JOptionPane.WARNING_MESSAGE);
-		}
-	}
-	
-	public void geladenemSpielBeitreten(String name) throws RemoteException {
-		frame.remove(beitretenPanel);
-		//Verbindung mit Server aufbauen
-		try {
-			String servicename = "GameServer";
-			Registry registry = LocateRegistry.getRegistry("127.0.0.1",4711);
-			sp = (ServerRemote)registry.lookup(servicename);
-			sp.addGameEventListener(this);		
-			} catch (NotBoundException nbe) {}
-		
-		//Frame erzeugen
-		frame.setLayout(new MigLayout("wrap2", "[1050][]", "[][][]"));
-		spielfeld = new MapPanel(this, schrift,1050, 550);
-		spielerListPanel = new SpielerPanel(schrift, uberschrift);
-		missionPanel = new MissionPanel(uberschrift, schrift,this);
-		infoPanel = new InfoPanel("geheim", schrift, uberschrift);
-		buttonPanel = new ButtonPanel(this, uberschrift);
-		statistikPanel = new StatistikPanel(schrift, uberschrift);
-		consolePanel = new ConsolePanel(schrift);
-		frame.setSize(1250, 817);
-		frame.setLocationRelativeTo(null);
-
-		for(Spieler s: sp.getSpielerList()) {
-			if(s.getName().equals(name)) {
-				ownSpieler = s;
-			}
-		}
-		
-		
+//	public void spielLaden(String dat) throws RemoteException, IOException {
+//		frame.remove(ladenPanel);
+//		Spielstand spielstand = sp.spielLaden(dat);
+//		//Verbindung mit Server aufbauen
+//
+//		try {
+//			String servicename = "GameServer";
+//			Registry registry = LocateRegistry.getRegistry("127.0.0.1",4711);
+//			sp = (ServerRemote)registry.lookup(servicename);
+//			sp.addGameEventListener(this);		
+//			} catch (NotBoundException nbe) {}
+//		
+//		try {
+//			Spielstand spielstand = sp.spielLaden(dat);
+//			this.anzahlSpieler = spielstand.getSpielerListe().size();
+//
+//			//Frame erzeugen
+//			frame.setLayout(new MigLayout("wrap2", "[1050][]", "[][][]"));
+//			spielfeld = new MapPanel(this, schrift,1050, 550);
+//			spielerListPanel = new SpielerPanel(schrift, uberschrift);
+//			missionPanel = new MissionPanel(uberschrift, schrift,this);
+//			infoPanel = new InfoPanel(spielstand.getAktuellePhase() + "", schrift, uberschrift);
+//			buttonPanel = new ButtonPanel(this, uberschrift);
+//			statistikPanel = new StatistikPanel(schrift, uberschrift);
+//			consolePanel = new ConsolePanel(schrift);
+//			frame.setSize(1250, 817);
+//			frame.setLocationRelativeTo(null);
+//
+//			
+//			//Hier muss noch festgestellt werden wer OwnSpieler ist
+////			Spieler muss im Laden Panel eingeben welche Spieler er war zum zuordnen
+//			ownSpieler = spielstand.getSpielerListe().get(0);
+//			
 //			sp.spielaufbauMitSpielstand(spielstand);
-		
-		frame.setTitle("Risiko - Spieler: " + ownSpieler.getName());
-
-		//Menuleiste erstellen
-		menu = new MenuBar();
-		Menu datei = new Menu("Datei");
-		menu.add(datei);
-		MenuItem speichern = new MenuItem("Speichern");
-		MenuItem schliessen = new MenuItem("Schließen");
-		datei.add(speichern);
-		datei.add(schliessen);
-		speichern.addActionListener(save -> {
-			try {
-				spielSpeichern();
-			} catch (RemoteException e) {}
-		});
-		schliessen.addActionListener(close -> System.exit(0));
-		menu.setFont(schrift);
-		frame.setMenuBar(menu);
-
-		//Layout anpassen
-		frame.add(spielfeld, "left,spany 3,grow");
-		frame.add(infoPanel, "left,growx");
-		frame.add(spielerListPanel, "growx");
-		frame.add(statistikPanel, "left,top,growx,spany 2");
-		frame.add(missionPanel, "left,top,split3");
-		frame.add(consolePanel, "left, top");
-		frame.add(buttonPanel, "right,growy");
-		frame.setResizable(false);
-		frame.setVisible(true);
-		frame.pack();
-		
-		//anzahl setzbare Einheiten?
-		consolePanel.textSetzen("Spiel wurde geladen. " + sp.getAktiverSpieler().getName() + " ist dran und befindet sich in der Phase" + "geheim");
-		infoPanel.changePanel(sp.getTurn() + "");
-	}
-	
+//			
+//			frame.setTitle("Risiko - Spieler: " + ownSpieler.getName());
+//
+//			//Menuleiste erstellen
+//			menu = new MenuBar();
+//			Menu datei = new Menu("Datei");
+//			menu.add(datei);
+//			MenuItem speichern = new MenuItem("Speichern");
+//			MenuItem schliessen = new MenuItem("Schließen");
+//			datei.add(speichern);
+//			datei.add(schliessen);
+//			speichern.addActionListener(save -> {
+//				try {
+//					spielSpeichern();
+//				} catch (RemoteException e) {}
+//			});
+//			schliessen.addActionListener(close -> System.exit(0));
+//			menu.setFont(schrift);
+//			frame.setMenuBar(menu);
+//		
+//			//Layout anpassen
+//			frame.add(spielfeld, "left,spany 3,grow");
+//			frame.add(infoPanel, "left,growx");
+//			frame.add(spielerListPanel, "growx");
+//			frame.add(statistikPanel, "left,top,growx,spany 2");
+//			frame.add(missionPanel, "left,top,split3");
+//			frame.add(consolePanel, "left, top");
+//			frame.add(buttonPanel, "right,growy");
+//			frame.setResizable(false);
+//			frame.setVisible(true);
+//			frame.pack();
+//			
+//			sp.setTurn(spielstand.getAktuellePhase());
+//			
+//			//anzahl setzbare Einheiten?
+//			consolePanel.textSetzen("Spiel wurde geladen. " + spielstand.getSpielerListe().get(spielstand.getAktiverSpielerNummer()).getName() + " ist dran und befindet sich in der Phase" + spielstand.getAktuellePhase());
+//			infoPanel.changePanel(sp.getTurn() + "");
+//			
+//		} catch (SpielerExistiertBereitsException sebe) {
+//			JOptionPane.showMessageDialog(null, sebe.getMessage(), "Name vergeben", JOptionPane.WARNING_MESSAGE);
+//		}
+//	}
+//	
 	private void spielSpeichern() throws RemoteException {
 		String name = JOptionPane.showInputDialog(frame, "Spiel speichern.");
 		if(name.length() > 0){
@@ -320,23 +255,33 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	public void hauptspielStarten(String name, int anzahlSpieler) throws RemoteException {
-		this.anzahlSpieler = anzahlSpieler;
-		
-		//Verbindung mit Server aufbauen
-				try {
-					String servicename = "GameServer";
-					Registry registry = LocateRegistry.getRegistry("127.0.0.1",4711);
-					sp = (ServerRemote)registry.lookup(servicename);
-					sp.addGameEventListener(this);
-					sp.serverBenachrichtigung("Spieler registriert: " + name);
-				} catch (NotBoundException nbe) {
-				}
+	public void hauptspielStarten(String name, int anzahlSpieler, String dateiPfad) throws RemoteException {
+		boolean geladenesSpiel = false;
+		if(dateiPfad != null) {
+			geladenesSpiel = true;
+		}
+		serverVerbindungHerstellen(name);
+			//Falls Spiel geladen wird	
+		Spielstand spielstand = null;
+		if(geladenesSpiel) {
+			
+			try {
+				spielstand = sp.spielLaden(dateiPfad);
+				name = spielstand.getSpielerListe().get(0).getName();
+			} catch (IOException | SpielerExistiertBereitsException e) {
+				e.printStackTrace();
+			}
+		}
+		if(geladenesSpiel) {
+			sp.spielaufbauMitSpielstand(spielstand);
+			frame.remove(ladenPanel);
+		}
+			this.anzahlSpieler = anzahlSpieler;
 		
 		try {
 			//Spieler muss erstellt werden, bevor frame gebaut wird, da sonst bei falscher Namenseingabe spackt
 			sp.spielerErstellen(name);
-
+			
 			//Frame erzeugen
 			frame.setLayout(new MigLayout("wrap2", "[1050][]", "[][][]"));
 			spielfeld = new MapPanel(this, schrift,1050, 550);
@@ -356,8 +301,10 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				sp.spieleranzahlSetzen(anzahlSpieler);
 				frame.remove(erstellenPanel);
 			}else{
-				sp.spielaufbauWennSpieleranzahlErreicht();
-				frame.remove(beitretenPanel);
+				 if(!geladenesSpiel) {
+					sp.spielaufbauWennSpieleranzahlErreicht();
+					frame.remove(beitretenPanel);
+				}
 			}
 			
 			//Spieler dem Thread zuweisen
@@ -368,6 +315,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				}
 			}
 			
+
 			//Menuleiste erstellen
 			menu = new MenuBar();
 			Menu datei = new Menu("Datei");
@@ -407,16 +355,34 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			frame.setVisible(true);
 			frame.pack();
 			
-			//Spiel beginnen
-			sp.setTurn("STARTPHASE");
-			anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
-			//Funktion mit allgemeinener Aktulaisierung spielfeldAktualisieren(String message)
-			consolePanel.textSetzen("Du kannst nun die ersten Einheiten setzen.");
-			infoPanel.changePanel(sp.getTurn() + "");
+//			if(!geladenesSpiel){
+//				//Spiel beginnen
+//				sp.setTurn("STARTPHASE");
+//				
+//				//hier geladenen inhalte anzeigen
+//				anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
+//				//Funktion mit allgemeinener Aktulaisierung spielfeldAktualisieren(String message)
+//				consolePanel.textSetzen("Du kannst nun die ersten Einheiten setzen.");
+//			}
+//			infoPanel.changePanel(sp.getTurn() + "");
 			
 		} catch (SpielerExistiertBereitsException sebe) {
 			JOptionPane.showMessageDialog(null, sebe.getMessage(), "Name vergeben", JOptionPane.WARNING_MESSAGE);
+		} catch (SpielerGibtEsNichtException sgene) {
+			JOptionPane.showMessageDialog(null, sgene.getMessage(), "Gibts nicht", JOptionPane.WARNING_MESSAGE);
 		}
+	}
+
+	private void serverVerbindungHerstellen(String name) throws RemoteException {
+		try {
+			String servicename = "GameServer";
+			Registry registry = LocateRegistry.getRegistry("127.0.0.1",4711);
+			sp = (ServerRemote)registry.lookup(servicename);
+			sp.addGameEventListener(this);
+			sp.serverBenachrichtigung("Spieler registriert: " + name);
+		} catch (NotBoundException nbe) {
+		}
+		
 	}
 
 	public void aufloesungAendern(int breite, int hoehe) {
@@ -752,14 +718,27 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			}
 				
 				switch (gce.getTurn()) {
+				case STARTEN:
+					spielfeld.fahnenVerteilen(laenderListe);
+					for (Spieler s : sp.getSpielerList()) {
+						spielerListPanel.setLabel(s);
+					}
+					System.out.println("startencase");
+					sp.beiGeladenemSpielNaechstenListener();
+
+					buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
+					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
+					statistikPanel.statistikAktualisieren(laenderListe, spielerListe);
+					break;
 				case STARTPHASE:
 					buttonPanel.phaseDisable();
 					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
-					buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
+					buttonPanel.startphase(anzahlSetzbareEinheiten);
 					consolePanel.textSetzen(ownSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
 					break;
 				case ANGRIFF:
 					missionPanel.klickDisablen();
+					System.out.println("angriffcase");
 					if(istAktiverSpieler) {
 						buttonPanel.phaseEnable();
 						consolePanel.textSetzen(ownSpieler.getName() + " du kannst nun angreifen.");
@@ -771,6 +750,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					break;
 				case VERTEILEN:
 					missionPanel.klickEnablen();
+					System.out.println("verteilencase");
 					if(istAktiverSpieler) {
 						buttonPanel.phaseDisable();
 						anzahlSetzbareEinheiten = sp.bekommtEinheiten(ownSpieler);
@@ -795,15 +775,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						consolePanel.textSetzen(aktiverSpieler.getName() + " darf nun Einheiten verschieben.");
 					}
 					break;
-				case STARTEN:
-					spielfeld.fahnenVerteilen(laenderListe);
-					for (Spieler s : sp.getSpielerList()) {
-						spielerListPanel.setLabel(s);
-					}
-					buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
-					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
-					statistikPanel.statistikAktualisieren(laenderListe, spielerListe);
-					break;
 				case AKTUALISIEREN:
 					consolePanel.textSetzen("Das Spiel wurde vom Admin geaendert");
 					statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
@@ -816,9 +787,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					break;
 				case BEENDEN:
 					JOptionPane.showMessageDialog(null, "Das Spiel wurde von " + gce.getSpieler().getName() + " beendet.");
-					
 					frame.dispose();
 					erstesPanelStartmenu();
+					break;
 				}
 			infoPanel.changePanel(sp.getTurn() + "");
 			missionPanel.kartenAusgeben(ownSpieler, spielerListe);

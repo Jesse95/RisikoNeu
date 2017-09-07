@@ -40,7 +40,7 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 		this.spielerVw = spielerVw;
 		this.weltVw = weltVw;
 		this.missionVw = missionVw;
-		Phase = phasen.VERTEILEN;
+//		Phase = phasen.VERTEILEN;
 	}
 
 	/**

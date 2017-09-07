@@ -2,8 +2,10 @@ package server;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -33,6 +35,7 @@ import local.domain.exceptions.LandBereitsBenutztException;
 import local.domain.exceptions.LandExistiertNichtException;
 import local.domain.exceptions.NichtGenugEinheitenException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
+import local.domain.exceptions.SpielerGibtEsNichtException;
 import local.valueobjects.Angriff;
 import local.valueobjects.AngriffRueckgabe;
 import local.valueobjects.GameActionEvent;
@@ -68,6 +71,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	private JButton startBtn;
 	private AdminPanel adminPanel;
 	private Registry registry;
+	private boolean spielGeladen = false;
 	
 	public static void main(String[] args) throws RemoteException{
 		server = new serverGUI();
@@ -129,30 +133,50 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	}
 
 	public void spielaufbauWennSpieleranzahlErreicht() throws RemoteException, SpielerExistiertBereitsException {
-		if(spielerVw.getSpielerList().size() == anzahlSpieler){
-			adminPanel.listenSetzen(spielerVw.getSpielerList(), weltVw.getLaenderListe());
-			frame.repaint();
-			serverConsolePanel.textSetzen("Spiel wird erstellt");
-			try {
-				weltVw.laenderErstellen();
-				weltVw.laenderverbindungenUndKontinenteErstellen();
-				missionVw.missionsListeErstellen(weltVw.getLaenderListe(), weltVw.getKontinentenListe(), spielerVw.getSpielerList());
-				missionVw.missionenVerteilen(spielerVw.getSpielerList());
-				weltVw.laenderAufteilen(spielerVw.getSpielerList());
-				spielerVw.farbenVerteilen();
-				serverConsolePanel.textSetzen("Spiel wurde erstellt");
-				adminPanel.startPanel();
-			} catch (IOException e) {
-				System.out.println(e.getMessage());
+		if(!spielGeladen){
+			if(spielerVw.getSpielerList().size() == anzahlSpieler){
+
+				adminPanel.listenSetzen(spielerVw.getSpielerList(), weltVw.getLaenderListe());
+				frame.repaint();
+				serverConsolePanel.textSetzen("Spiel wird erstellt");
+				try {
+					weltVw.laenderErstellen();
+					weltVw.laenderverbindungenUndKontinenteErstellen();
+					missionVw.missionsListeErstellen(weltVw.getLaenderListe(), weltVw.getKontinentenListe(), spielerVw.getSpielerList());
+					missionVw.missionenVerteilen(spielerVw.getSpielerList());
+					weltVw.laenderAufteilen(spielerVw.getSpielerList());
+					spielerVw.farbenVerteilen();
+					serverConsolePanel.textSetzen("Spiel wurde erstellt");
+					adminPanel.startPanel();
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+
+				listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));
+
 			}
+		}else{
 			
-			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));
+			anzahlSpieler++;
+			System.out.println("2. aufruf Anzahl Spieler " + anzahlSpieler);
+			if(spielerVw.getSpielerList().size() == anzahlSpieler){
+				listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));	
+			}
+		}
+	}
+	
+	public void beiGeladenemSpielNaechstenListener() throws RemoteException {
+		if(spielGeladen) {
+			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), phaseZuEvent()));
 		}
 	}
 	
 	public void spielaufbauMitSpielstand(Spielstand spielstand) throws RemoteException{
+		System.out.println("Vorher " + anzahlSpieler);
+		anzahlSpieler++;
+		System.out.println("Der andere " + anzahlSpieler);
 		serverConsolePanel.textSetzen("Spiel wird geladen");
-		this.anzahlSpieler = spielstand.getSpielerListe().size();
+		//this.anzahlSpieler = spielstand.getSpielerListe().size();
 		
 		for(Spieler s:spielstand.getSpielerListe()) {
 			spielerVw.getSpielerList().add(s);
@@ -171,24 +195,11 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		
 		spielerVw.farbenVerteilen();
 		spielerVw.setAktiverSpieler(spielstand.getAktiverSpielerNummer());
-		GameControlEvent.phasen phase;
-		if(spielstand.getAktuellePhase().equals("STARTEN")) {
-			phase = GameControlEvent.phasen.STARTEN;
-		} else if(spielstand.getAktuellePhase().equals("VERTEILEN")) {
-			phase = GameControlEvent.phasen.VERTEILEN;
-		} else if(spielstand.getAktuellePhase().equals("VERSCHIEBEN")) {
-			phase = GameControlEvent.phasen.VERSCHIEBEN;
-		} else if(spielstand.getAktuellePhase().equals("STARTPHASE")) {
-			phase = GameControlEvent.phasen.STARTPHASE;
-		} else if(spielstand.getAktuellePhase().equals("ANGRIFF")) {
-			phase = GameControlEvent.phasen.ANGRIFF;
-		} else if(spielstand.getAktuellePhase().equals("AKTUALISIEREN")) {
-			phase = GameControlEvent.phasen.AKTUALISIEREN;
-		} else {
-			phase = GameControlEvent.phasen.BEENDEN;
-		}
-		listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), phase));
-	
+
+		
+		
+		kriegsVw.setTurn(spielstand.getAktuellePhase());
+
 	}
 
 	public int checkAnfangsEinheiten()	{
@@ -367,6 +378,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	}
 
 	public Spielstand spielLaden(String datei) throws IOException, SpielerExistiertBereitsException{
+		spielGeladen  = true;
 		return kriegsVw.spielLaden(datei);
 	}
 
@@ -403,10 +415,12 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	}
 
 	public void spielerBereit() throws RemoteException {
+		if(!spielGeladen) {
 		bereitZaehler++;
-		if(bereitZaehler == spielerVw.getSpielerList().size()){
-			setTurn("VERTEILEN");
-			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.VERTEILEN));
+			if(bereitZaehler == spielerVw.getSpielerList().size()){
+				setTurn("VERTEILEN");
+				listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.VERTEILEN));
+			}
 		}
 	}
 
@@ -414,8 +428,25 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		return spielerVw.getAktiverSpielerNummer();
 	}
 
-	public void spielerErstellen(String spieler) throws RemoteException, SpielerExistiertBereitsException {
-		spielerVw.neuerSpieler(spieler);
+	public void spielerErstellen(String spieler) throws RemoteException, SpielerExistiertBereitsException, SpielerGibtEsNichtException {
+		System.out.println("1");
+		if(spielGeladen) {
+			boolean spielerInListe = false;
+			System.out.println("2");
+			for(Spieler s : getSpielerList()) {
+				System.out.println(s.getName());
+
+				if(s.getName().equals(spieler)) {
+					spielerInListe = true;
+				}
+			}
+			System.out.println("3");
+			if(!spielerInListe) {
+				throw new SpielerGibtEsNichtException();
+			}
+		} else {
+			spielerVw.neuerSpieler(spieler);
+		}
 	}
 
 	public void landErstellen(ArrayList<String> land) throws RemoteException {
