@@ -51,6 +51,7 @@ import local.domain.exceptions.NichtGenugEinheitenException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.persistence.FilePersistenceManager;
 import local.valueobjects.*;
+import local.valueobjects.GameControlEvent.phasen;
 
 import java.awt.event.*;
 import net.miginfocom.swing.MigLayout;
@@ -725,7 +726,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			missionPanel.kartenAusgeben(ownSpieler, spielerListe);
 //			infoPanel.changePanel(sp.getTurn() + "");
 			//Rahmen auf aktiven Spieler
-			spielerListPanel.setAktiverSpielerBorder(spielerListe.indexOf(aktiverSpieler));
+			if((gce.getTurn() != phasen.STARTEN) &&  (gce.getTurn() != phasen.STARTPHASE)) {
+				spielerListPanel.setAktiverSpielerBorder(spielerListe.indexOf(aktiverSpieler));
+			}
 			
 			boolean istAktiverSpieler;
 			if(aktiverSpieler.getName().equals(ownSpieler.getName())) {
