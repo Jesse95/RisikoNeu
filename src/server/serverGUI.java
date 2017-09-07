@@ -78,8 +78,18 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		serverConsolePanel = new ConsolePanel();
 		adminPanel = new AdminPanel(this);
 		frame = new JFrame();
+		
+		//Läd und setzt Icon
+		Image im = null;
+	    try {
+	    im = ImageIO.read(new File("./Bilder/server.png"));
+	    } catch (IOException ex) {
+	    }
+	    frame.setIconImage(im);
+	    
 		frame.setLayout(new MigLayout("debug, wrap2", "[][200]", "[][][]"));
 		frame.setSize(450, 450);
+		frame.setTitle("Server");
 		
 		try {
 			ampelRot = ImageIO.read(new File("./Bilder/ampel_Rot.png"));

@@ -12,12 +12,15 @@ package client;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
+import java.awt.Toolkit;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -25,6 +28,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -97,6 +101,15 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private void erstesPanelStartmenu() {
 		//Schriften für alle Panel
 		frame = new JFrame();
+		
+		//Läd und setzt Icon
+	    Image im = null;
+	    try {
+	    im = ImageIO.read(new File("./Bilder/land.png"));
+	    } catch (IOException ex) {
+	    }
+	    frame.setIconImage(im);
+	    
 		uberschrift = new Font(Font.SERIF, Font.BOLD, 25);
 		schrift = new Font(Font.SANS_SERIF, Font.PLAIN, 17);
 
