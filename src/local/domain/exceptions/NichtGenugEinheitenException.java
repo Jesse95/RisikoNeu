@@ -1,7 +1,7 @@
 package local.domain.exceptions;
 
 public class NichtGenugEinheitenException extends Exception{
-	public NichtGenugEinheitenException(int einheiten) {
-		super("Mit " + einheiten + " Eiheiten, kannst du diese Aktion nicht ausführen.");
+	public NichtGenugEinheitenException() {
+		super("Du hast leider nur eine Einheit und kannst diese AKtion daher nicht ausführen.");
 	}
 }

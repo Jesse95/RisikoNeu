@@ -365,11 +365,11 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 	 * @return boolean
 	 * @throws NichtGenugEinheitenException
 	 */
-	public boolean checkEinheiten(Land land, int einheiten) throws NichtGenugEinheitenException{
+	public boolean checkEinheiten(Land land) throws NichtGenugEinheitenException{
 		int landEinheiten = land.getEinheiten();
 		
-		if(landEinheiten < 2 || landEinheiten <= einheiten){
-			throw new NichtGenugEinheitenException(einheiten);
+		if(landEinheiten < 2){
+			throw new NichtGenugEinheitenException();
 		}else{
 			return true;
 		}
@@ -437,11 +437,12 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 	 * @return boolean
 	 * @throws KannEinheitenNichtVerschiebenException
 	 */
-	public boolean checkEinheitenVerteilen(int einheiten,int veinheiten, Spieler spieler) throws KannEinheitenNichtVerschiebenException{
-		if(einheiten > veinheiten){
-			throw new KannEinheitenNichtVerschiebenException(true);
-		}else if(einheiten < 1){
-			throw new KannEinheitenNichtVerschiebenException(false);
+	public boolean checkEinheitenAnzahlVerteilbar(Land land, int einheiten) throws KannEinheitenNichtVerschiebenException{
+		int landEinheiten = land.getEinheiten();
+		System.out.println("lE" + landEinheiten);
+		System.out.println("e" + einheiten);
+		if((landEinheiten - einheiten) < 1 || einheiten < 1){
+			throw new KannEinheitenNichtVerschiebenException();
 		}else{
 			return true;
 		}

@@ -7,11 +7,8 @@
 //TODO Beim Karten eintauschen werden Karten nicht removed
 //TODO Server cleanen, wenn Spiel abgebrochen, so dass Server nicht immer neu gestartet werden muss (In Bearbeitung)
 //TODO wenn Spieleranzahl erreicht, darf Beitreten nicht mehr möglich sein
-//TODO Warten auf andere Spieler anzeigen bis alle Spieler da
 //TODO mit zwei joker eintauischen
 //TODO man kann bei angriff 0 einheiten verschieben
-//TODO würfel löschen nach angriff
-//TODO Land unten links in asien nicht klcikbar
 //TODO einheitenverteilung anzahl bug
 
 package client;
@@ -52,6 +49,7 @@ import client.LadenPanel.LadenButtonClicked;
 import client.MapPanel.MapClickHandler;
 import client.MissionPanel.KarteClickedHandler;
 import client.StartPanel.StartHandler;
+import local.domain.exceptions.KannEinheitenNichtVerschiebenException;
 import local.domain.exceptions.KannLandNichtBenutzenException;
 import local.domain.exceptions.KeinGegnerException;
 import local.domain.exceptions.KeinNachbarlandException;
@@ -326,7 +324,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 	private void landAnklicken(String landcode)throws RemoteException {
 		Land land = sp.stringToLand(sp.getLandVonFarbcode(landcode));
-
 		if (land != null) {
 			spielfeld.labelsSetzen(land.getName(), land.getEinheiten(), land.getBesitzer().getName());
 			
@@ -381,7 +378,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			//Land wählen mit dem angegriffen werden soll
 			try {
 				sp.landWaehlen(land, aktiverSpieler);
-				sp.checkEinheiten(land, 1);
+				sp.checkObMehrAlsZweiEinheiten(land);
 				land1 = land;
 				buttonPanel.angreifenAktiv(land1.getName(), "verteidigendes land");
 				consolePanel.textSetzen("Wähle nun ein Land was du angreifen möchtest.");
@@ -415,7 +412,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			try {
 				sp.landWaehlen(land, aktiverSpieler);
 				sp.benutzeLaender(land);
-				sp.checkEinheiten(land, 1);
+				sp.checkObMehrAlsZweiEinheiten(land);
 				land1 = land;
 				buttonPanel.verschiebenAktiv(land1.getName(), "zweites Land");
 			} catch (KannLandNichtBenutzenException lene) {
@@ -438,7 +435,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			} catch (KeinNachbarlandException kne) {
 				try {
 					sp.landWaehlen(land, aktiverSpieler);
-					sp.checkEinheiten(land, 1);
+					sp.checkObMehrAlsZweiEinheiten(land);
 					land1 = land;
 				} catch (KannLandNichtBenutzenException lene) {
 					consolePanel.textSetzen(lene.getMessage());
@@ -577,7 +574,8 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 	public void verschiebenButtonClicked(int einheiten) {
 		try {
-			sp.checkEinheiten(land1, einheiten);
+			//land hat mindetens 2 einheiten und mindestens $einheiten einheiten aber maximal so viele wie auf demland sind -1
+			sp.checkEinheitenAnzahlVerteilbar(land1, einheiten);
 			sp.einheitenPositionieren(-einheiten, land1);
 			sp.einheitenPositionieren(einheiten, land2);
 			spielfeld.labelsSetzen("", land1.getEinheiten(), "");
@@ -587,21 +585,24 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			land2 = null;
 			buttonPanel.verschiebenAktiv("erstes Land", "zweites Land");
 			buttonPanel.verschiebenDisabled();
-		} catch (NichtGenugEinheitenException ngee) {
-			consolePanel.textSetzen(ngee.getMessage());
-		} catch (RemoteException e) {}
+		} catch (KannEinheitenNichtVerschiebenException | RemoteException kenve) {
+			consolePanel.textSetzen(kenve.getMessage());
+		}
 	}
 
 	public void verschiebenNachAngriffButtonClicked(int einheiten) {
 		try {
-			sp.checkEinheiten(land1, einheiten);
+			//TODO hier muss vorher die länder anzahl aktualisierst werden, da sie immer ein zu viel hat!
+			sp.checkEinheitenAnzahlVerteilbar(land1, einheiten);
 			sp.eroberungBesetzen(land1, land2, einheiten);
 			land1 = null;
 			land2 = null;
 			buttonPanel.angreifenAktiv("erstes Land", "zweites Land");
-		} catch (NichtGenugEinheitenException ngee) {
-			consolePanel.textSetzen(ngee.getMessage());
-		} catch (RemoteException e) {}
+		} catch (KannEinheitenNichtVerschiebenException kenve) {
+			consolePanel.textSetzen(kenve.getMessage());
+		} catch (RemoteException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void schussSound(){

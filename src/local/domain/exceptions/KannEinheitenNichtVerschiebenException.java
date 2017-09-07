@@ -2,7 +2,7 @@ package local.domain.exceptions;
 
 public class KannEinheitenNichtVerschiebenException extends Exception{
 
-	public KannEinheitenNichtVerschiebenException(boolean zuViele) {
-		super("Du kannst nicht " + (zuViele? "so viele " : " so wenige " + "Einheiten verschieben"));
+	public KannEinheitenNichtVerschiebenException() {
+		super("Du kannst diese Anzahl an Einheiten nicht verschieben");
 	}
 }

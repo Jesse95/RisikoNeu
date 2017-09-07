@@ -46,7 +46,7 @@ public interface ServerRemote extends Remote{
 	
 	public boolean landWaehlen(Land land, Spieler spieler) throws KannLandNichtBenutzenException, RemoteException;
 	
-	public boolean checkEinheiten(Land land, int einheiten) throws NichtGenugEinheitenException, RemoteException;
+	public boolean checkObMehrAlsZweiEinheiten(Land land) throws NichtGenugEinheitenException, RemoteException;
 	
 	public ArrayList<Land> eigeneAngriffsLaender(Spieler spieler)throws RemoteException;
 	
@@ -64,7 +64,7 @@ public interface ServerRemote extends Remote{
 	
 	public ArrayList<Land> eigeneVerschiebeLaender(Spieler spieler)throws RemoteException;
 	
-	public boolean checkEinheitenVerteilen(int einheiten,int veinheiten, Spieler spieler) throws KannEinheitenNichtVerschiebenException, RemoteException;
+	public boolean checkEinheitenAnzahlVerteilbar(Land land, int einheiten) throws KannEinheitenNichtVerschiebenException, RemoteException;
 	
 	public String einheitenAusgabe(Land erstesLand, Land zweitesLand)throws RemoteException;
 	

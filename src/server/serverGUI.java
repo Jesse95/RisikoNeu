@@ -309,7 +309,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 
 	public void eroberungBesetzen(Land aLand, Land vLand, int einheiten)throws RemoteException{
 		kriegsVw.eroberungBesetzen(weltVw.stringToLand(aLand.getName()),weltVw.stringToLand(vLand.getName()), einheiten);
-		String text = "Der Spieler " + spielerVw.getAktiverSpieler() + " hat das Land " + vLand.getName() + " erobert.";
+		String text = "Der Spieler " + spielerVw.getAktiverSpieler().getName() + " hat das Land " + vLand.getName() + " erobert.";
 		listenerBenachrichtigen(new GameActionEvent(text, spielerVw.getAktiverSpieler(), GameActionEvent.GameActionEventType.EROBERT));
 	}
 
@@ -317,8 +317,8 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		return kriegsVw.landWaehlen(land,spieler);
 	}
 
-	public boolean checkEinheiten(Land land, int einheiten) throws NichtGenugEinheitenException{
-		return kriegsVw.checkEinheiten(land,einheiten);
+	public boolean checkObMehrAlsZweiEinheiten(Land land) throws NichtGenugEinheitenException, RemoteException{
+		return kriegsVw.checkEinheiten(land);
 	}
 
 	public ArrayList<Land> eigeneAngriffsLaender(Spieler spieler){
@@ -353,8 +353,8 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		return weltVw.eigeneVerschiebeLaender(spieler, kriegsVw.getBenutzteLaenderListe());
 	}
 
-	public boolean checkEinheitenVerteilen(int einheiten,int veinheiten, Spieler spieler) throws KannEinheitenNichtVerschiebenException{
-		return kriegsVw.checkEinheitenVerteilen(einheiten, veinheiten ,spieler);
+	public boolean checkEinheitenAnzahlVerteilbar(Land land, int einheiten) throws KannEinheitenNichtVerschiebenException{
+		return kriegsVw.checkEinheitenAnzahlVerteilbar(land, einheiten);
 	}
 
 	public String einheitenAusgabe(Land erstesLand, Land zweitesLand){
