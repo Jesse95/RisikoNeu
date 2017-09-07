@@ -248,6 +248,8 @@ public class MapPanel extends JLayeredPane {
 		remove(wR1);
 		remove(wR2);
 		remove(wR3);
+		this.repaint();
+		this.revalidate();
 	}
 	
 	public JLabel getWuerfelLabel(String farbe, int augenzahl){

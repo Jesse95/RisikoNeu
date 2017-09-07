@@ -112,7 +112,6 @@ public class ButtonPanel extends JPanel{
 	
 	public void verteilenAktiv(int einheiten) {		
 		removeAll();
-		System.out.println("verteilen in buttonpanel");
 		this.add(anzahlEinheitenVerteilen,"center");
 		anzahlEinheitenVerteilen.setText(einheiten + "");
 		this.add(nextTurn,"left,grow");
@@ -149,11 +148,8 @@ public class ButtonPanel extends JPanel{
 	
 	public void startphase(int einheiten) {
 		removeAll();
-		System.out.println("startphase in buttonpanel");
 		this.add(anzahlEinheitenVerteilen,"center");
 		anzahlEinheitenVerteilen.setText(0 + "");
-//		this.add(nextTurn,"left,grow");
-//		nextTurn.setEnabled(false);
 		this.repaint();
 	}
 	

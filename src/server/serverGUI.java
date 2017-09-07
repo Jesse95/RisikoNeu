@@ -72,7 +72,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	private AdminPanel adminPanel;
 	private Registry registry;
 	private boolean spielGeladen = false;
-	
+
 	public static void main(String[] args) throws RemoteException{
 		server = new serverGUI();
 	}
@@ -148,17 +148,13 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 					spielerVw.farbenVerteilen();
 					serverConsolePanel.textSetzen("Spiel wurde erstellt");
 					adminPanel.startPanel();
-				} catch (IOException e) {
-					System.out.println(e.getMessage());
-				}
+				} catch (IOException e) {}
 
 				listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));
 
 			}
 		}else{
-			
 			anzahlSpieler++;
-			System.out.println("2. aufruf Anzahl Spieler " + anzahlSpieler);
 			if(spielerVw.getSpielerList().size() == anzahlSpieler){
 				listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));	
 			}
@@ -166,15 +162,11 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	}
 	
 	public void beiGeladenemSpielNaechstenListener() throws RemoteException {
-		if(spielGeladen) {
 			listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), phaseZuEvent()));
-		}
 	}
 	
 	public void spielaufbauMitSpielstand(Spielstand spielstand) throws RemoteException{
-		System.out.println("Vorher " + anzahlSpieler);
 		anzahlSpieler++;
-		System.out.println("Der andere " + anzahlSpieler);
 		serverConsolePanel.textSetzen("Spiel wird geladen");
 		//this.anzahlSpieler = spielstand.getSpielerListe().size();
 		
@@ -429,18 +421,13 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	}
 
 	public void spielerErstellen(String spieler) throws RemoteException, SpielerExistiertBereitsException, SpielerGibtEsNichtException {
-		System.out.println("1");
 		if(spielGeladen) {
 			boolean spielerInListe = false;
-			System.out.println("2");
 			for(Spieler s : getSpielerList()) {
-				System.out.println(s.getName());
-
 				if(s.getName().equals(spieler)) {
 					spielerInListe = true;
 				}
 			}
-			System.out.println("3");
 			if(!spielerInListe) {
 				throw new SpielerGibtEsNichtException();
 			}
@@ -556,5 +543,8 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		}
 		
 	}
-
+	
+	public boolean isSpielGeladen() throws RemoteException{
+		return spielGeladen;
+	}
 }
