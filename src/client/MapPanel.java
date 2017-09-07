@@ -64,6 +64,8 @@ public class MapPanel extends JLayeredPane {
 	private BufferedImage fahneGelbImg;
 	private BufferedImage fahneOrangeImg;
 	private BufferedImage fahneCyanImg;
+	private BufferedImage ladeScreen;
+	private JLabel ladeScreenLab;
 
 	
 	
@@ -102,17 +104,23 @@ public class MapPanel extends JLayeredPane {
 			fahneGelbImg = ImageIO.read(new File("./Bilder/Fahne_Gelb.png"));
 			fahneOrangeImg = ImageIO.read(new File("./Bilder/Fahne_Orange.png"));
 			fahneCyanImg = ImageIO.read(new File("./Bilder/Fahne_Cyan.png"));
-		}catch (IOException e){}
-        try {
 			myPicture = ImageIO.read(new File("./Bilder/weltkarte.jpg"));
 			spielfeld = new JLabel(new ImageIcon(myPicture.getScaledInstance(breite, hoehe, Image.SCALE_FAST)));
 			weltKarteBunt = ImageIO.read(new File("./Bilder/weltkarte_bunt.png"));
 			weltKarteBuntLab = new JLabel(new ImageIcon(weltKarteBunt));
 		    firework = new JLabel(new ImageIcon("./Bilder/firework.gif"));
-        } catch (IOException e) {
-			System.out.println(e.getMessage());
-		}
-        
+			ladeScreen = ImageIO.read(new File("./Bilder/ladeScreen.jpg"));
+			ladeScreenLab = new JLabel(new ImageIcon(ladeScreen.getScaledInstance(breite, hoehe, Image.SCALE_FAST)));
+
+		}catch (IOException e){}
+		 
+		ladeScreenLab.setBounds(0, 0, breite, hoehe);
+        this.add(ladeScreenLab,new Integer(2), 1); 
+        this.setPreferredSize(new Dimension(breite, hoehe));  
+	}
+	
+	public void mapLaden() {
+        this.remove(ladeScreenLab);
         spielfeld.addMouseListener(new MouseAdapter() {
 			
 			public void mouseClicked(MouseEvent e) {
@@ -141,9 +149,8 @@ public class MapPanel extends JLayeredPane {
         this.add(landLab,new Integer(2), 0);
         this.add(einheitenLab,new Integer(2), 0);
         this.add(besitzerLab, new Integer(2), 0);
-        this.setPreferredSize(new Dimension(breite, hoehe));   
+        this.setPreferredSize(new Dimension(breite, hoehe));  
 	}
-	
 	public void fahnenVerteilen(ArrayList<Land> laender) {		
 		for(JLabel lab : fahnenLabs) {
 			this.remove(lab);

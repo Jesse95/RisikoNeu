@@ -23,7 +23,6 @@ public class BeitretenPanel extends JPanel{
 	private JLabel nameLab;
 	private JTextField nameText;
 	private JLabel openGamesLab;
-	private JCheckBox geladen;
 	
 	public interface BeitretenButtonClicked{
 		public void hauptspielStarten(String name, int anzahl, String dateiPfad) throws RemoteException;
@@ -39,7 +38,6 @@ public class BeitretenPanel extends JPanel{
 		//Objekte erstellen
 		nameLab = new JLabel("Name:");
 		nameText = new JTextField();
-		geladen = new JCheckBox("geladenes Spiel");
 		
 		openGamesLab = new JLabel("Offene Spiele:");
 		//hier funktionsprinzip erklärt https://docs.oracle.com/javase/tutorial/uiswing/components/list.html 
@@ -67,7 +65,6 @@ public class BeitretenPanel extends JPanel{
 		});
 		this.add(nameLab,"right");
 		this.add(nameText,"left,growx");
-		this.add(geladen,"left,growx");
 		this.add(openGamesLab,"left,spanx2");
 		this.add(listScroller,"growx,growy,spanx2");
 		this.add(startBtn,"center,spanx2");

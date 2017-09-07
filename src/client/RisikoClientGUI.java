@@ -642,6 +642,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				
 				switch (gce.getTurn()) {
 				case STARTEN:
+					spielfeld.mapLaden();
 					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
 					spielfeld.fahnenVerteilen(laenderListe);
 					for (Spieler s : sp.getSpielerList()) {
@@ -650,13 +651,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					if(!sp.isSpielGeladen()) {
 						consolePanel.textSetzen("Du kannst nun die ersten Einheiten setzen.");
 					} else {
-						//---------------------
 						for(int s = 0; s < sp.getSpielerList().size();s++) {
 							if(sp.getSpielerList().get(s).equals(aktiverSpieler)) {
 								spielerListPanel.setAktiverSpielerBorder(s);
 							}
 						}
-						//--------------------
 						sp.beiGeladenemSpielNaechstenListener();
 					}
 					buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
