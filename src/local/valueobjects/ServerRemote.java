@@ -13,6 +13,7 @@ import local.domain.exceptions.KeinNachbarlandException;
 import local.domain.exceptions.LandBereitsBenutztException;
 import local.domain.exceptions.LandExistiertNichtException;
 import local.domain.exceptions.NichtGenugEinheitenException;
+import local.domain.exceptions.ServerBereitsGestartetException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.domain.exceptions.SpielerGibtEsNichtException;
 import local.domain.exceptions.SpieleranzahlErreichtException;
@@ -109,7 +110,7 @@ public interface ServerRemote extends Remote{
 
 	public void spielaufbauWennSpieleranzahlErreicht()throws RemoteException, SpielerExistiertBereitsException;
 
-	public void serverStarten() throws RemoteException;
+	public void serverStarten() throws RemoteException, ServerBereitsGestartetException;
 	
 	public void serverBenachrichtigung(String nachricht) throws RemoteException;
 	

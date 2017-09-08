@@ -1,8 +1,5 @@
-//TODO Angriffsphase erweitern (Yannik)
 //TODO verschieben nach angriff mit nur einer einheit
 //TODO Javadoc
-//TODO Laden eines Spiels
-//TODO Speichern erweitern (Idee: Jeder Spieler bekommt beim ersten Onlinespiel eine eindeutige ID)
 //TODO mit ostafrika kann man Nordafrika nicht angreifen?
 //TODO Beim Karten eintauschen werden Karten nicht removed
 //TODO Server cleanen, wenn Spiel abgebrochen, so dass Server nicht immer neu gestartet werden muss (In Bearbeitung)
@@ -18,11 +15,10 @@ import java.awt.Image;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
-import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -58,10 +54,16 @@ import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.domain.exceptions.SpielerGibtEsNichtException;
 import local.domain.exceptions.SpieleranzahlErreichtException;
 import local.persistence.FilePersistenceManager;
-import local.valueobjects.*;
-import local.valueobjects.GameControlEvent.phasen;
-
-import java.awt.event.*;
+import local.valueobjects.Angriff;
+import local.valueobjects.AngriffRueckgabe;
+import local.valueobjects.GameActionEvent;
+import local.valueobjects.GameControlEvent;
+import local.valueobjects.GameEvent;
+import local.valueobjects.GameEventListener;
+import local.valueobjects.Land;
+import local.valueobjects.ServerRemote;
+import local.valueobjects.Spieler;
+import local.valueobjects.Spielstand;
 import net.miginfocom.swing.MigLayout;
 
 

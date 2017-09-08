@@ -2,10 +2,8 @@ package server;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -20,6 +18,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 
 import local.domain.Einheitenkartenverwaltung;
 import local.domain.Kriegsverwaltung;
@@ -34,6 +33,7 @@ import local.domain.exceptions.KeinNachbarlandException;
 import local.domain.exceptions.LandBereitsBenutztException;
 import local.domain.exceptions.LandExistiertNichtException;
 import local.domain.exceptions.NichtGenugEinheitenException;
+import local.domain.exceptions.ServerBereitsGestartetException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.domain.exceptions.SpielerGibtEsNichtException;
 import local.domain.exceptions.SpieleranzahlErreichtException;
@@ -108,8 +108,11 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 			try {
 				serverStarten();
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				
+			} catch (ServerBereitsGestartetException sbge) {
+				JOptionPane.showMessageDialog(null, sbge.getMessage(), "Server", JOptionPane.WARNING_MESSAGE);
+				serverConsolePanel.textSetzen("Serverfehler: Bereits gestartet.");
+
 			}
 		});
 		frame.add(serverConsolePanel,"spany 3");
@@ -224,7 +227,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 
 	}
 	
-	public void serverStarten() throws RemoteException{
+	public void serverStarten() throws RemoteException, ServerBereitsGestartetException{
 		this.spielerVw = new Spielerverwaltung();
 		this.weltVw = new Weltverwaltung();
 		this.missionVw = new Missionsverwaltung();
@@ -237,7 +240,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 				registry = LocateRegistry.createRegistry(4711);
 				
 			}catch(RemoteException re){
-				registry = LocateRegistry.createRegistry(4711);
+				throw new ServerBereitsGestartetException();
 			}
 			registry.rebind(serviceName, server);
 			ampelSchalten(true);
