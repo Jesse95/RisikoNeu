@@ -149,7 +149,7 @@ public class ButtonPanel extends JPanel{
 	public void startphase(int einheiten) {
 		removeAll();
 		this.add(anzahlEinheitenVerteilen,"center");
-		anzahlEinheitenVerteilen.setText(0 + "");
+		anzahlEinheitenVerteilen.setText(einheiten + "");
 		this.repaint();
 	}
 	

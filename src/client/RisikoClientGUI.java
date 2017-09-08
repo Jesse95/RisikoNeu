@@ -8,7 +8,6 @@
 //TODO Server cleanen, wenn Spiel abgebrochen, so dass Server nicht immer neu gestartet werden muss (In Bearbeitung)
 //TODO wenn Spieleranzahl erreicht, darf Beitreten nicht mehr möglich sein
 //TODO mit zwei joker eintauischen
-//TODO man kann bei angriff 0 einheiten verschieben
 //TODO einheitenverteilung anzahl bug
 
 package client;
@@ -281,18 +280,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			frame.setResizable(false);
 			frame.setVisible(true);
 			frame.pack();
-			
-//			if(!geladenesSpiel){
-//				//Spiel beginnen
-//				sp.setTurn("STARTPHASE");
-//				
-//				//hier geladenen inhalte anzeigen
-//				anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
-//				//Funktion mit allgemeinener Aktulaisierung spielfeldAktualisieren(String message)
-//				consolePanel.textSetzen("Du kannst nun die ersten Einheiten setzen.");
-//			}
-//			infoPanel.changePanel(sp.getTurn() + "");
-			
 		} catch (SpielerExistiertBereitsException sebe) {
 			JOptionPane.showMessageDialog(null, sebe.getMessage(), "Name vergeben", JOptionPane.WARNING_MESSAGE);
 		} catch (SpielerGibtEsNichtException sgene) {
@@ -574,7 +561,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 	public void verschiebenButtonClicked(int einheiten) {
 		try {
-			//land hat mindetens 2 einheiten und mindestens $einheiten einheiten aber maximal so viele wie auf demland sind -1
 			sp.checkEinheitenAnzahlVerteilbar(land1, einheiten);
 			sp.einheitenPositionieren(-einheiten, land1);
 			sp.einheitenPositionieren(einheiten, land2);
@@ -642,9 +628,8 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			}
 				
 				switch (gce.getTurn()) {
-				case STARTEN:
+				case STARTPHASE:
 					spielfeld.mapLaden();
-					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
 					spielfeld.fahnenVerteilen(laenderListe);
 					for (Spieler s : sp.getSpielerList()) {
 						spielerListPanel.setLabel(s);
@@ -659,15 +644,10 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						}
 						sp.beiGeladenemSpielNaechstenListener();
 					}
-					buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
-					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
-					statistikPanel.statistikAktualisieren(laenderListe, spielerListe);
-					break;
-				case STARTPHASE:
-					buttonPanel.phaseDisable();
 					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
 					buttonPanel.startphase(anzahlSetzbareEinheiten);
-					consolePanel.textSetzen(ownSpieler.getName() + " du kannst nun deine ersten Einheiten setzen. Es sind " + anzahlSetzbareEinheiten);
+					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
+					statistikPanel.statistikAktualisieren(laenderListe, spielerListe);
 					break;
 				case ANGRIFF:
 					missionPanel.klickDisablen();

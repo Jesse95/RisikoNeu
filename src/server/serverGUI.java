@@ -150,13 +150,13 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 					adminPanel.startPanel();
 				} catch (IOException e) {}
 
-				listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));
+				listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTPHASE));
 
 			}
 		}else{
 			anzahlSpieler++;
 			if(spielerVw.getSpielerList().size() == anzahlSpieler){
-				listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTEN));	
+				listenerBenachrichtigen(new GameControlEvent(spielerVw.getAktiverSpieler(), GameControlEvent.phasen.STARTPHASE));	
 			}
 		}
 	}
