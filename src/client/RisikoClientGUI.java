@@ -69,10 +69,9 @@ import net.miginfocom.swing.MigLayout;
 
 public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHandler, ButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler, GameEventListener, StartHandler, BeitretenButtonClicked, LadenButtonClicked {
 
-	ServerRemote sp;
-	int anzahlSpieler;
+	private ServerRemote sp;
 	private SpielerPanel spielerListPanel;
-	public MissionPanel missionPanel;
+	private MissionPanel missionPanel;
 	private MapPanel spielfeld;
 	private InfoPanel infoPanel;
 	private ButtonPanel buttonPanel;
@@ -205,9 +204,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			sp.spielaufbauMitSpielstand(spielstand);
 			frame.remove(ladenPanel);
 		}
-			this.anzahlSpieler = anzahlSpieler;
-		
-		try {
+			try {
 			//Spieler muss erstellt werden, bevor frame gebaut wird, da sonst bei falscher Namenseingabe spackt
 			sp.spielerErstellen(name,anzahlSpieler);
 			

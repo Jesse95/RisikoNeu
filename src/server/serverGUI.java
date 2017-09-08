@@ -70,16 +70,25 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	BufferedImage ampelGruen;
 	private static ServerRemote server;
 	private JButton startBtn;
+	private JButton beendenBtn;
 	private AdminPanel adminPanel;
 	private Registry registry;
 	private boolean spielGeladen = false;
+	private String serviceName;
 
 	public static void main(String[] args) throws RemoteException{
 		server = new serverGUI();
 	}
 	
+	public serverGUI( ) throws RemoteException{
+		listeners = new Vector<>();
+		
+		initialize();
+	}
+
 	public void initialize( )throws RemoteException{
 		startBtn = new JButton("Server starten");
+		beendenBtn = new JButton("Server beenden");
 		serverConsolePanel = new ConsolePanel();
 		adminPanel = new AdminPanel(this);
 		frame = new JFrame();
@@ -112,12 +121,21 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 			} catch (ServerBereitsGestartetException sbge) {
 				JOptionPane.showMessageDialog(null, sbge.getMessage(), "Server", JOptionPane.WARNING_MESSAGE);
 				serverConsolePanel.textSetzen("Serverfehler: Bereits gestartet.");
-
 			}
+		});
+		beendenBtn.addActionListener(beenden -> {
+			try {
+				serverCleanen();
+				serverBeenden();
+			} catch (RemoteException e) {
+			}
+			
+			
 		});
 		frame.add(serverConsolePanel,"spany 3");
 		frame.add(ampel,"top,growx");
 		frame.add(startBtn,"top,growx");
+		frame.add(beendenBtn, "top,growx");
 		frame.add(adminPanel,"top,center");
 		
 		
@@ -126,12 +144,47 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		
 	}
 	
-	public serverGUI( ) throws RemoteException{
-		listeners = new Vector<>();
+	public void serverStarten() throws RemoteException, ServerBereitsGestartetException{
+		this.spielerVw = new Spielerverwaltung();
+		this.weltVw = new Weltverwaltung();
+		this.missionVw = new Missionsverwaltung();
+		this.einheitenVw = new Einheitenkartenverwaltung();
+		this.kriegsVw = new Kriegsverwaltung(spielerVw, weltVw, missionVw);
+		serviceName = "GameServer";
+			
+			serverConsolePanel.textSetzen("Server starten....");
+			try{
+				registry = LocateRegistry.createRegistry(4711);
+				
+			}catch(RemoteException re){
+				throw new ServerBereitsGestartetException();
+			}
+			registry.rebind(serviceName, server);
+			ampelSchalten(true);
+			serverConsolePanel.textSetzen("Server gestartet");
 		
-		initialize();
+			startBtn.setEnabled(false);
 	}
 	
+	public void serverCleanen() throws RemoteException {
+		this.spielerVw = new Spielerverwaltung();
+		this.weltVw = new Weltverwaltung();
+		this.missionVw = new Missionsverwaltung();
+		this.einheitenVw = new Einheitenkartenverwaltung();
+		this.kriegsVw = new Kriegsverwaltung(spielerVw, weltVw, missionVw);
+		serverConsolePanel.textSetzen("Server cleanen...");
+	}
+	
+	public void serverBeenden() throws RemoteException {
+		try {
+			registry.unbind(serviceName);
+			ampelSchalten(false);
+			serverConsolePanel.textSetzen("Server beendet");
+			startBtn.setEnabled(true);
+		} catch (NotBoundException e) {
+		}
+	}
+
 	public void spieleranzahlSetzen(int anzahlSpieler) throws SpielerExistiertBereitsException, RemoteException {
 		this.anzahlSpieler = anzahlSpieler;
 	}
@@ -227,28 +280,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 
 	}
 	
-	public void serverStarten() throws RemoteException, ServerBereitsGestartetException{
-		this.spielerVw = new Spielerverwaltung();
-		this.weltVw = new Weltverwaltung();
-		this.missionVw = new Missionsverwaltung();
-		this.einheitenVw = new Einheitenkartenverwaltung();
-		this.kriegsVw = new Kriegsverwaltung(spielerVw, weltVw, missionVw);
-		String serviceName = "GameServer";
-			
-			serverConsolePanel.textSetzen("Server starten....");
-			try{
-				registry = LocateRegistry.createRegistry(4711);
-				
-			}catch(RemoteException re){
-				throw new ServerBereitsGestartetException();
-			}
-			registry.rebind(serviceName, server);
-			ampelSchalten(true);
-			serverConsolePanel.textSetzen("Server gestartet");
-		
-			startBtn.setEnabled(false);
-	}
-
 	public void removeGameEventListener(GameEventListener listener) throws RemoteException {
 		listeners.remove(listener);
 	}
