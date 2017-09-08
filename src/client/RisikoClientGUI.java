@@ -6,10 +6,9 @@
 //TODO mit ostafrika kann man Nordafrika nicht angreifen?
 //TODO Beim Karten eintauschen werden Karten nicht removed
 //TODO Server cleanen, wenn Spiel abgebrochen, so dass Server nicht immer neu gestartet werden muss (In Bearbeitung)
-//TODO wenn Spieleranzahl erreicht, darf Beitreten nicht mehr möglich sein
-//TODO mit zwei joker eintauischen
-//TODO einheitenverteilung anzahl bug
+//TODO spiel erstellen, wenn schon eins ist speeren, exception gibt es schon
 //TODO gewonnenBildschirm
+//TODO bei verschieben nach angriff haben beide länder einen zu viel
 
 package client;
 
@@ -57,6 +56,7 @@ import local.domain.exceptions.LandBereitsBenutztException;
 import local.domain.exceptions.NichtGenugEinheitenException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.domain.exceptions.SpielerGibtEsNichtException;
+import local.domain.exceptions.SpieleranzahlErreichtException;
 import local.persistence.FilePersistenceManager;
 import local.valueobjects.*;
 import local.valueobjects.GameControlEvent.phasen;
@@ -207,7 +207,8 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		
 		try {
 			//Spieler muss erstellt werden, bevor frame gebaut wird, da sonst bei falscher Namenseingabe spackt
-			sp.spielerErstellen(name);
+			sp.spielerErstellen(name,anzahlSpieler);
+			
 			
 			//Frame erzeugen
 			frame.setLayout(new MigLayout("wrap2", "[1050][]", "[][][]"));
@@ -285,6 +286,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			JOptionPane.showMessageDialog(null, sebe.getMessage(), "Name vergeben", JOptionPane.WARNING_MESSAGE);
 		} catch (SpielerGibtEsNichtException sgene) {
 			JOptionPane.showMessageDialog(null, sgene.getMessage(), "Gibts nicht", JOptionPane.WARNING_MESSAGE);
+		} catch (SpieleranzahlErreichtException see) {
+			JOptionPane.showMessageDialog(null, see.getMessage(), "Belegt", JOptionPane.WARNING_MESSAGE);
+
 		}
 	}
 
@@ -727,7 +731,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				consolePanel.textSetzen(gae.getText());
 			}
 		}
-//		missionPanel.kartenAusgeben(ownSpieler, spielerListe);
 	}
 
 	

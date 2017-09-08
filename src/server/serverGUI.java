@@ -36,6 +36,7 @@ import local.domain.exceptions.LandExistiertNichtException;
 import local.domain.exceptions.NichtGenugEinheitenException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.domain.exceptions.SpielerGibtEsNichtException;
+import local.domain.exceptions.SpieleranzahlErreichtException;
 import local.valueobjects.Angriff;
 import local.valueobjects.AngriffRueckgabe;
 import local.valueobjects.GameActionEvent;
@@ -308,7 +309,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	}
 
 	public void eroberungBesetzen(Land aLand, Land vLand, int einheiten)throws RemoteException{
-		kriegsVw.eroberungBesetzen(weltVw.stringToLand(aLand.getName()),weltVw.stringToLand(vLand.getName()), einheiten);
+		kriegsVw.eroberungBesetzen(aLand,vLand, einheiten);
 		String text = "Der Spieler " + spielerVw.getAktiverSpieler().getName() + " hat das Land " + vLand.getName() + " erobert.";
 		listenerBenachrichtigen(new GameActionEvent(text, spielerVw.getAktiverSpieler(), GameActionEvent.GameActionEventType.EROBERT));
 	}
@@ -420,7 +421,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		return spielerVw.getAktiverSpielerNummer();
 	}
 
-	public void spielerErstellen(String spieler) throws RemoteException, SpielerExistiertBereitsException, SpielerGibtEsNichtException {
+	public void spielerErstellen(String spieler, int anzahlSpieler) throws RemoteException, SpielerExistiertBereitsException, SpielerGibtEsNichtException, SpieleranzahlErreichtException {
 		if(spielGeladen) {
 			boolean spielerInListe = false;
 			for(Spieler s : getSpielerList()) {
@@ -432,7 +433,12 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 				throw new SpielerGibtEsNichtException();
 			}
 		} else {
-			spielerVw.neuerSpieler(spieler);
+			System.out.println(spielerVw.getSpielerList().size() + " - " + anzahlSpieler);
+			if(spielerVw.getSpielerList().size() != this.anzahlSpieler || anzahlSpieler != -1) {
+				spielerVw.neuerSpieler(spieler);
+			} else {
+				throw new SpieleranzahlErreichtException();
+			}
 		}
 	}
 

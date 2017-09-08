@@ -29,8 +29,12 @@ public class ErstellenPanel extends JPanel {
 		JTextField nameText = new JTextField();
 		JLabel ipLab = new JLabel("IP:");
 		JTextField ipText = new JTextField();
+		ipText.setText("127.0.0.1");
+		ipText.setEnabled(false);
 		JLabel portLab = new JLabel("Port:");
 		JTextField portText = new JTextField();
+		portText.setText("4711");
+		portText.setEnabled(false);
 		String[] zahlen = {"2","3","4","5","6"};
 		JLabel anzahlLab = new JLabel("Spieler Anzahl:");
 		JComboBox<String> anzahlCBox = new JComboBox<String>(zahlen);

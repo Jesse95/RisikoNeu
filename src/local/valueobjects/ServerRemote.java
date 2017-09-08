@@ -15,6 +15,7 @@ import local.domain.exceptions.LandExistiertNichtException;
 import local.domain.exceptions.NichtGenugEinheitenException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.domain.exceptions.SpielerGibtEsNichtException;
+import local.domain.exceptions.SpieleranzahlErreichtException;
 
 public interface ServerRemote extends Remote{
 	
@@ -100,7 +101,7 @@ public interface ServerRemote extends Remote{
 	
 	public int getAktiverSpielerNummer()throws RemoteException;
 	
-	public void spielerErstellen(String spieler)throws RemoteException, SpielerExistiertBereitsException, SpielerGibtEsNichtException;
+	public void spielerErstellen(String spieler, int anzanhlSpieler)throws RemoteException, SpielerExistiertBereitsException, SpielerGibtEsNichtException, SpieleranzahlErreichtException;
 	
 	public void landErstellen(ArrayList<String> land)throws RemoteException;
 	

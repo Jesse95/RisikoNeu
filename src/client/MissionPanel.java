@@ -105,7 +105,7 @@ public class MissionPanel extends JPanel {
 				kartenSpeicher2 = karte;
 			}else if(kartenSpeicher3 == null){
 				kartenSpeicher3 = karte;
-				if(kartenSpeicher1 == kartenSpeicher2 && kartenSpeicher1 == kartenSpeicher3 || kartenSpeicher1 != kartenSpeicher2 && kartenSpeicher2 != kartenSpeicher3 && kartenSpeicher1 != kartenSpeicher3  || kartenSpeicher1 == kartenSpeicher2 && kartenSpeicher3 == "Joker" || kartenSpeicher2 == kartenSpeicher3 && kartenSpeicher1 == "Joker" || kartenSpeicher1 == kartenSpeicher3 && kartenSpeicher2 == "Joker"){
+				if(kartenSpeicher1 == kartenSpeicher2 && kartenSpeicher1 == kartenSpeicher3 || kartenSpeicher1 != kartenSpeicher2 && kartenSpeicher2 != kartenSpeicher3 && kartenSpeicher1 != kartenSpeicher3  || kartenSpeicher1 == kartenSpeicher2 && kartenSpeicher3 == "Joker" || kartenSpeicher2 == kartenSpeicher3 && kartenSpeicher1 == "Joker" || kartenSpeicher1 == kartenSpeicher3 && kartenSpeicher2 == "Joker" ||  kartenSpeicher1 == "Joker" && kartenSpeicher2 == "Joker" ||  kartenSpeicher2 == "Joker" && kartenSpeicher3 == "Joker" ||  kartenSpeicher1 == "Joker" && kartenSpeicher3 == "Joker"){
 					ArrayList<String> kartenUebergabe = new ArrayList<String>();
 					kartenUebergabe.add(kartenSpeicher1);
 					kartenUebergabe.add(kartenSpeicher2);

@@ -69,8 +69,6 @@ public class ButtonPanel extends JPanel{
 		verschieben.addActionListener(verschieben -> handler.verschiebenButtonClicked(Integer.parseInt(anzahlEinheitenVerschieben.getText())));
 		verschiebenNA.addActionListener(verschiebenNA -> handler.verschiebenNachAngriffButtonClicked(Integer.parseInt(anzahlEinheitenVerschieben.getText())));
 		nextTurn.setEnabled(false);
-		//TODO hier muss Anzahl der Einheiten am Anfang rein
-//		startphase(3);
 	}
 	
 	public void angreifenAktiv(String angriffsLand,String verteidigungsLand) {

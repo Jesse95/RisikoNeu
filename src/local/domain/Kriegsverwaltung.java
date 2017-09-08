@@ -90,7 +90,6 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 		for(int i = 0;i < anzahl;i++) {
 			ergebnisse.add((int)(Math.random() * 6) + 1);
 		}
-		System.out.println( ergebnisse );
 		Comparator<Integer> comparator = Collections.reverseOrder();
 		Collections.sort(ergebnisse, comparator);
 		System.out.println( ergebnisse );
