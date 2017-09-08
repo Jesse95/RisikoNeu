@@ -421,7 +421,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		return kriegsVw.spielerRaus(spieler);
 	}
 
-	public int kartenEinloesen(Spieler spieler, ArrayList<String> tauschKarten){
+	public int kartenEinloesen(Spieler spieler, ArrayList<String> tauschKarten) throws RemoteException{
 		return einheitenVw.einheitenkartenEinloesen(kriegsVw.spielerServerVerbindung(spieler),tauschKarten);
 	}
 

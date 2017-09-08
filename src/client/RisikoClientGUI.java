@@ -477,7 +477,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				anzahlSetzbareEinheiten += sp.kartenEinloesen(aktiverSpieler, tauschKarten);
 			} catch (RemoteException e) {}
 			
-			missionPanel.kartenAusgeben(aktiverSpieler, spielerListe);
+			missionPanel.kartenAusgeben(ownSpieler, spielerListe);
 			buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
 			consolePanel.textSetzen("Du hast die Karten eingetauscht und kannst nun " + anzahlSetzbareEinheiten + " setzen.");
 		} else {
@@ -668,6 +668,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					break;
 				case VERTEILEN:
 					missionPanel.kartenAusgeben(ownSpieler, spielerListe);
+					statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
 					spielerListPanel.setAktiverSpielerBorder(spielerListe.indexOf(aktiverSpieler));
 					missionPanel.klickEnablen();
 					if(istAktiverSpieler) {
