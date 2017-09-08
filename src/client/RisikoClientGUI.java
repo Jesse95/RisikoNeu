@@ -9,6 +9,7 @@
 //TODO wenn Spieleranzahl erreicht, darf Beitreten nicht mehr möglich sein
 //TODO mit zwei joker eintauischen
 //TODO einheitenverteilung anzahl bug
+//TODO gewonnenBildschirm
 
 package client;
 
@@ -641,6 +642,8 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 							if(sp.getSpielerList().get(s).equals(aktiverSpieler)) {
 								spielerListPanel.setAktiverSpielerBorder(s);
 							}
+					missionPanel.kartenAusgeben(ownSpieler, spielerListe);
+
 						}
 						sp.beiGeladenemSpielNaechstenListener();
 					}
@@ -661,6 +664,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					}
 					break;
 				case VERTEILEN:
+					missionPanel.kartenAusgeben(ownSpieler, spielerListe);
 					spielerListPanel.setAktiverSpielerBorder(spielerListe.indexOf(aktiverSpieler));
 					missionPanel.klickEnablen();
 					if(istAktiverSpieler) {
@@ -723,7 +727,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				consolePanel.textSetzen(gae.getText());
 			}
 		}
-		missionPanel.kartenAusgeben(ownSpieler, spielerListe);
+//		missionPanel.kartenAusgeben(ownSpieler, spielerListe);
 	}
 
 	
