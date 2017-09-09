@@ -1,5 +1,6 @@
 //TODO Javadoc
 //TODO Laden bei SpielerMission
+//TODO Adminpanel Bugfixes
 
 package client;
 
@@ -149,7 +150,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private void zweitesPanelSpielErstellen() {
 		//Spieler erstellen Fenster erstellen
 		frame.setTitle("Spiel erstellen");
-		frame.setSize(280, 200);
+		frame.setSize(280, 240);
 		frame.setLocationRelativeTo(null);
 		//frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		erstellenPanel = new ErstellenPanel(this);
