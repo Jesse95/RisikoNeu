@@ -26,15 +26,15 @@ public class GewonnenPanel extends JPanel{
 
 	public void initialize() {
 		this.setLayout(new MigLayout("wrap1","[]","[][]"));
-		firework = new JLabel(new ImageIcon("./Bilder/firework.gif"));
+		firework = new JLabel(new ImageIcon("./Bilder/pokal.gif"));
 		
-		JLabel gewinner = new JLabel("Spiel vorbei.");
+		JLabel gewinner = new JLabel(spieler.getName() + " hat gewonnen.");
 		gewinner.setFont(uberschrift);
-		gewinner.setForeground(Color.white);
+//		gewinner.setForeground(Color.white);
 		
 		this.add(gewinner, "center");
 		this.add(firework, "center");
-		this.setBackground(Color.BLACK);
+//		this.setBackground(new Color(96,96,96));
 		this.repaint();
 		this.revalidate();
 	}

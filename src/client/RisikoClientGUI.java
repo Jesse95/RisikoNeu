@@ -456,11 +456,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.remove(statistikPanel);
 		frame.remove(consolePanel);
 		frame.remove(buttonPanel);
-		frame.setTitle(aktiverSpieler + " hat gewonnen");
-		frame.setSize(500, 500);
+		frame.remove(menu);
+		frame.setTitle(aktiverSpieler.getName() + " hat gewonnen");
+		frame.setSize(250, 300);
 		frame.setLocationRelativeTo(null);
 		GewonnenPanel gewonnenPanel = new GewonnenPanel(aktiverSpieler, schrift, uberschrift);
-		frame.add(gewonnenPanel);
+		frame.add(gewonnenPanel, "center");
 		frame.setVisible(true);
 		frame.repaint();
 		frame.revalidate();
