@@ -480,7 +480,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 				throw new SpielerGibtEsNichtException();
 			}
 		} else {
-			System.out.println(spielerVw.getSpielerList().size() + " - " + anzahlSpieler);
 			if(spielerVw.getSpielerList().size() != this.anzahlSpieler || anzahlSpieler != -1) {
 				spielerVw.neuerSpieler(spieler);
 			} else {

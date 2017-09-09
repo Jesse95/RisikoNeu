@@ -1,8 +1,7 @@
 package client;
 
 import java.rmi.RemoteException;
-
-import local.domain.exceptions.SpielBereitsErstelltException;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -30,6 +29,8 @@ public class ErstellenPanel extends JPanel {
 		//Objekte erstellen
 		JLabel nameLab = new JLabel("Name:");
 		JTextField nameText = new JTextField();
+		int randomNumber = new Random().nextInt(999) + 111;
+		nameText.setText("Spieler_" + randomNumber);
 		JLabel ipLab = new JLabel("IP:");
 		JTextField ipText = new JTextField();
 		ipText.setText("127.0.0.1");
@@ -49,7 +50,7 @@ public class ErstellenPanel extends JPanel {
 			} catch (NumberFormatException | RemoteException e) {
 				JOptionPane.showMessageDialog(null, "Server nicht gestartet.", "Server Fehler", JOptionPane.WARNING_MESSAGE);
 			} catch (SpielBereitsErstelltException e) {
-				JOptionPane.showMessageDialog(null, "Auf dem Server läuft bereits ein Spiel", "Server Fehler", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Auf dem Server lï¿½uft bereits ein Spiel", "Server Fehler", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 		this.add(nameLab,"right");

@@ -91,7 +91,6 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 		}
 		Comparator<Integer> comparator = Collections.reverseOrder();
 		Collections.sort(ergebnisse, comparator);
-		System.out.println( ergebnisse );
 		//jetzt ist die Stelle 0 die höchste Zahl und die Stelle 1 die zweithöchste
 		return ergebnisse;
 	}
@@ -177,7 +176,7 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 		if(verteidigendesLand.getEinheiten() == 0) {
 			erobert = true;
 			verteidigendesLand.setBesitzer(angreifendesLand.getBesitzer());
-			angreifendesLand.setEinheiten(angreifendesLand.getEinheiten() - 1);
+//			angreifendesLand.setEinheiten(angreifendesLand.getEinheiten() - 1);
 			verteidigendesLand.setEinheiten(0);
 		}
 		
@@ -442,8 +441,6 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 	 */
 	public boolean checkEinheitenAnzahlVerteilbar(Land land, int einheiten) throws KannEinheitenNichtVerschiebenException{
 		int landEinheiten = land.getEinheiten();
-		System.out.println("lE" + landEinheiten);
-		System.out.println("e" + einheiten);
 		if((landEinheiten - einheiten) < 1 || einheiten < 1){
 			throw new KannEinheitenNichtVerschiebenException();
 		}else{

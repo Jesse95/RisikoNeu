@@ -4,6 +4,7 @@
 //TODO Laden bei SpielerMission
 //TODO speichern/Laden mitten in zug
 //TODO servererror wenn nach geladenem spiel normales gestartet wird
+//TODO Optionen im Menü kann raus?
 
 package client;
 
@@ -30,9 +31,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import client.BeitretenPanel.BeitretenButtonClicked;
@@ -54,7 +53,6 @@ import local.domain.exceptions.SpieleranzahlErreichtException;
 import local.persistence.FilePersistenceManager;
 import local.valueobjects.Angriff;
 import local.valueobjects.AngriffRueckgabe;
-import local.valueobjects.Einheitenkarten;
 import local.valueobjects.GameActionEvent;
 import local.valueobjects.GameControlEvent;
 import local.valueobjects.GameEvent;
@@ -94,6 +92,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private ArrayList<Land> laenderListe;
 	private FilePersistenceManager pm = new FilePersistenceManager();
 	private Boolean erobert = false;
+	private Boolean gewonnen = false;
 
 	private RisikoClientGUI()throws RemoteException {
 		erstesPanelStartmenu();
@@ -144,7 +143,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	
 	private void zweitesPanelSpielBeitreten(){
 		frame.setTitle("Spiel beitreten");
-		frame.setSize(320, 250);
+		frame.setSize(320, 130);
 		frame.setLocationRelativeTo(null);
 		//frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		beitretenPanel = new BeitretenPanel(this);
@@ -531,7 +530,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				//Würfel anzeigen lassen
 				spielfeld.wuerfelAnzeigen(angriffRueckgabe.getWuerfelAngreifer(), angriffRueckgabe.getWuerfelVerteidiger());
 				//Angriff auswerten und Ergebnis anzeigen
-				
+
 				if (angriffRueckgabe.isErobert() != true) {
 					if (angriffRueckgabe.hatGewonnen().equals("V")) {
 						consolePanel.textSetzen(land2.getBesitzer().getName() + " hat gewonnen.");
@@ -557,6 +556,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
 					} else {
 						//verschieben einstellungen in button panel öffnen
+						land2.setEinheiten(0);
 						buttonPanel.verschiebenNachAngreifenAktiv(land1.getName(), land2.getName());
 					}
 					schussSound();
@@ -712,14 +712,17 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					}
 					break;
 				case BEENDEN:
-					if(istAktiverSpieler) {
-						spielSpeichernNachEndeFrage();
+					if(!gewonnen) {
+						if(istAktiverSpieler) {
+							spielSpeichernNachEndeFrage();
+						}
+							JOptionPane.showMessageDialog(null, "Das Spiel wurde von " + gce.getSpieler().getName() + " beendet.");
 					}
-					JOptionPane.showMessageDialog(null, "Das Spiel wurde von " + gce.getSpieler().getName() + " beendet.");
 					frame.dispose();
 					erstesPanelStartmenu();
 					break;
 				case GEWONNEN:
+					gewonnen = true;
 					gewonnenPanelAnzeigen();
 					break;
 				}
