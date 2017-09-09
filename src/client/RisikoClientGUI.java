@@ -1,10 +1,8 @@
 //TODO Javadoc
-//TODO mit ostafrika kann man Nordafrika nicht angreifen?
 //TODO spiel erstellen, wenn schon eins ist speeren, exception gibt es schon
 //TODO bei verschieben nach angriff haben beide länder einen zu viel
 //TODO Laden bei SpielerMission
-//TODO Laden mitten in zug
-//TODO Speichern beim schließen
+//TODO speichern/Laden mitten in zug
 //TODO servererror wenn nach geladenem spiel normales gestartet wird
 
 package client;
@@ -95,6 +93,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private ArrayList<Spieler> spielerListe;
 	private ArrayList<Land> laenderListe;
 	private FilePersistenceManager pm = new FilePersistenceManager();
+	private Boolean erobert = false;
 
 	private RisikoClientGUI()throws RemoteException {
 		erstesPanelStartmenu();
@@ -693,8 +692,10 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						buttonPanel.phaseEnable();
 						consolePanel.textSetzen(ownSpieler.getName() + " verschiebe nun deine Einheiten.");
 						buttonPanel.verschiebenAktiv("erstes Land", "zweites Land");
-						//TODO: nur wenn Land erobert
-						sp.einheitenKarteZiehen(ownSpieler);		
+						if(erobert) {
+							sp.einheitenKarteZiehen(ownSpieler);
+							erobert = false;
+						}
 					} else {
 						buttonPanel.removeAll();
 						consolePanel.textSetzen(aktiverSpieler.getName() + " darf nun Einheiten verschieben.");
@@ -736,6 +737,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				spielfeld.fahnenVerteilen(laenderListe);
 				statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
 				consolePanel.textSetzen(gae.getText());
+				if(aktiverSpieler.getName().equals(ownSpieler.getName())) {
+					erobert = true;
+				}
 				break;
 			case ANGRIFF:
 				statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
