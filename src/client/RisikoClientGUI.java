@@ -1,9 +1,8 @@
 //TODO Javadoc
-//TODO spiel erstellen, wenn schon eins ist speeren, exception gibt es schon
-//TODO bei verschieben nach angriff haben beide länder einen zu viel
+//TODO spiel erstellen, wenn schon eins ist sperren, exception gibt es schon
 //TODO Laden bei SpielerMission
 //TODO speichern/Laden mitten in zug
-//TODO servererror wenn nach geladenem spiel normales gestartet wird
+//TODO servererror wenn nach geladenem spiel normales gestartet wird(manchmal? :D)
 //TODO Optionen im Menü kann raus?
 
 package client;
@@ -172,12 +171,10 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		name = JOptionPane.showInputDialog(frame, "Spiel speichern. Gebe einen Namen ein.");
 		if(name.length() > 0){
 			try {
-				pm.schreibkanalOeffnen("./Speicher/" + name + ".txt");
+				sp.spielSpeichern("./Speicher/" + name + ".txt");
 			} catch (IOException e) {
 				consolePanel.textSetzen("Spiel konnte nicht gespeichert werden. " + e.getMessage());
 			}
-			pm.spielSpeichern(sp.getLaenderListe(), spielerListe, sp.getTurn() + "", sp.getAktiverSpielerNummer(), sp.getMissionsListe());
-			pm.close();
 		}else{
 			consolePanel.textSetzen("Du musst einen Namen eingeben.");
 		}

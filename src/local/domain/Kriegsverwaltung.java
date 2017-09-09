@@ -471,7 +471,7 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 	 */
 	public void spielSpeichern(String datei) throws IOException{
 		pm.schreibkanalOeffnen(datei);
-		pm.spielSpeichern(weltVw.getLaenderListe(), spielerVw.getSpielerList(), Phase + "", spielerVw.getAktiverSpielerNummer(), missionVw.getMissionsListe());
+		pm.spielSpeichern(weltVw.getLaenderListe(), spielerVw.getSpielerList(), getTurn() + "", spielerVw.getAktiverSpielerNummer(), missionVw.getMissionsListe());
 		pm.close();
 	}
 	
