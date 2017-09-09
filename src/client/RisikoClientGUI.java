@@ -1,10 +1,10 @@
 //TODO Javadoc
 //TODO mit ostafrika kann man Nordafrika nicht angreifen?
-//TODO Beim Karten eintauschen werden erst am ende des zugs removed	
 //TODO spiel erstellen, wenn schon eins ist speeren, exception gibt es schon
 //TODO gewonnenBildschirm
 //TODO bei verschieben nach angriff haben beide länder einen zu viel
 //TODO Laden bei SpielerMission
+//TODO servererror wenn nach geladenem spiel normales gestartet wird
 
 package client;
 
@@ -55,6 +55,7 @@ import local.domain.exceptions.SpieleranzahlErreichtException;
 import local.persistence.FilePersistenceManager;
 import local.valueobjects.Angriff;
 import local.valueobjects.AngriffRueckgabe;
+import local.valueobjects.Einheitenkarten;
 import local.valueobjects.GameActionEvent;
 import local.valueobjects.GameControlEvent;
 import local.valueobjects.GameEvent;
@@ -93,8 +94,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private ArrayList<Spieler> spielerListe;
 	private ArrayList<Land> laenderListe;
 	private FilePersistenceManager pm = new FilePersistenceManager();
-	private Spieler gewinner;
-
 
 	private RisikoClientGUI()throws RemoteException {
 		erstesPanelStartmenu();
@@ -471,11 +470,10 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		if(erfolgreich) {
 			try {
 				anzahlSetzbareEinheiten += sp.kartenEinloesen(aktiverSpieler, tauschKarten);
+				missionPanel.klickDisablen();
+				buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
+				consolePanel.textSetzen("Du hast die Karten eingetauscht und kannst nun " + anzahlSetzbareEinheiten + " setzen.");
 			} catch (RemoteException e) {}
-			
-			missionPanel.kartenAusgeben(ownSpieler, spielerListe);
-			buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
-			consolePanel.textSetzen("Du hast die Karten eingetauscht und kannst nun " + anzahlSetzbareEinheiten + " setzen.");
 		} else {
 			consolePanel.textSetzen("Die Karten konnten nicht eingetauscht werden.");
 		}
@@ -664,7 +662,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					}
 					break;
 				case VERTEILEN:
-					missionPanel.kartenAusgeben(ownSpieler, spielerListe);
 					statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
 					spielerListPanel.setAktiverSpielerBorder(spielerListe.indexOf(aktiverSpieler));
 					missionPanel.klickEnablen();
@@ -674,6 +671,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst " + anzahlSetzbareEinheiten + " Einheiten setzen.");
 						buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
 					} else {
+						missionPanel.kartenAusgeben(ownSpieler, spielerListe);
 						buttonPanel.removeAll();
 						consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun Einheiten setzen.");
 					}
@@ -709,6 +707,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					break;
 				case GEWONNEN:
 					gewonnenPanelAnzeigen();
+					break;
 				}
 			infoPanel.changePanel(sp.getTurn() + "");
 		}else{

@@ -71,7 +71,7 @@ public class MissionPanel extends JPanel {
 		mission.setPreferredSize(new Dimension(280,140));
 
 		karten = new JPanel();
-		karten.setLayout(new MigLayout("debug, wrap5","[][][][][]","[][][]"));
+		karten.setLayout(new MigLayout("wrap5","[][][][][]","[][][]"));
 
 		try{
 			iconEinheiten = ImageIO.read(new File("./Bilder/soldat.png"));
