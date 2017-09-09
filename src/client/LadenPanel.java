@@ -22,6 +22,7 @@ public class LadenPanel extends JPanel{
 	private LadenButtonClicked handler;
 	public interface LadenButtonClicked{
 		public void hauptspielStarten(String name, int anzahlSpieler, String dateiPfad)  throws RemoteException, SpielBereitsErstelltException;
+		public void zurueckBtn(JPanel panel);
 	}
 	
 	public LadenPanel(LadenButtonClicked handler) {
@@ -49,7 +50,9 @@ public class LadenPanel extends JPanel{
 		listScroller.setPreferredSize(new Dimension(250, 80));
 		JLabel savedGamesLab = new JLabel("Speicherstände:");
 		JButton ladenBtn = new JButton("Spiel laden");
-
+		JButton zurueckBtn = new JButton("Zurueck");
+		
+		zurueckBtn.addActionListener(zurueck -> handler.zurueckBtn(this));
 		ladenBtn.addActionListener(load -> {
 				try {
 					final String selected = gameList.getSelectedValue();
@@ -63,5 +66,6 @@ public class LadenPanel extends JPanel{
 		this.add(savedGamesLab,"left,spanx2");
 		this.add(listScroller,"growx,growy,spanx2");
 		this.add(ladenBtn,"center,spanx2");
+		this.add(zurueckBtn,"center,spanx2");
 	}
 }

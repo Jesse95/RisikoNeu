@@ -95,7 +95,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private Registry registry;
 	
 	private RisikoClientGUI()throws RemoteException {
+		frame = new JFrame();
 		erstesPanelStartmenu();
+		
 	}
 
 	public static void main(String[] args)throws RemoteException{
@@ -105,7 +107,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private void erstesPanelStartmenu() {
 		imSpiel = false;
 		//Schriften für alle Panel
-		frame = new JFrame();
+		
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		frame.addWindowListener(new WindowAdapter(){
 
@@ -321,7 +323,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			frame.add(buttonPanel, "right,growy");
 			frame.setResizable(false);
 			frame.setVisible(true);
-			frame.pack();
 			imSpiel = true;
 		} catch (SpielerExistiertBereitsException sebe) {
 			JOptionPane.showMessageDialog(null, sebe.getMessage(), "Name vergeben", JOptionPane.WARNING_MESSAGE);
@@ -757,7 +758,14 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						}
 							JOptionPane.showMessageDialog(null, "Das Spiel wurde von " + gce.getSpieler().getName() + " beendet.");
 					}
-					frame.dispose();
+					frame.remove(spielfeld);
+					frame.remove(infoPanel);
+					frame.remove(spielerListPanel);
+					frame.remove(statistikPanel);
+					frame.remove(missionPanel);
+					frame.remove(consolePanel);
+					frame.remove(buttonPanel);
+					frame.remove(menu);
 					erstesPanelStartmenu();
 					break;
 				case GEWONNEN:
@@ -791,8 +799,14 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	}
 
 	
-	public void zurueckBtn() {
-		frame.dispose();
+	public void zurueckBtn(JPanel panel) {
+		if(panel instanceof ErstellenPanel){
+			frame.remove(erstellenPanel);
+		}else if(panel instanceof LadenPanel){
+			frame.remove(ladenPanel);
+		}else{
+			frame.remove(beitretenPanel);
+		}
 		erstesPanelStartmenu();
 		
 	}

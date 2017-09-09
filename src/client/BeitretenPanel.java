@@ -19,6 +19,7 @@ public class BeitretenPanel extends JPanel{
 	
 	public interface BeitretenButtonClicked{
 		public void hauptspielStarten(String name, int anzahl, String dateiPfad) throws RemoteException, SpielBereitsErstelltException;
+		public void zurueckBtn(JPanel panel);
 	}
 	
 	public BeitretenPanel(BeitretenButtonClicked handler) {
@@ -36,6 +37,9 @@ public class BeitretenPanel extends JPanel{
 		nameText.setText("Spieler_" + randomNumber);
 		
 		JButton startBtn = new JButton("Spiel beitreten");
+		JButton zurueckBtn = new JButton("Zurueck");
+		
+		zurueckBtn.addActionListener(zurueck -> handler.zurueckBtn(this));
 		//Actionlistener
 		startBtn.addActionListener(start -> {
 			try {
@@ -47,6 +51,7 @@ public class BeitretenPanel extends JPanel{
 		this.add(nameLab,"right");
 		this.add(nameText,"left,growx");
 		this.add(startBtn,"center,spanx2");
+		this.add(zurueckBtn,"center,spanx2");
 		
 	}
 }
