@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
 
+import local.domain.exceptions.SpielBereitsErstelltException;
 import net.miginfocom.swing.MigLayout;
 
 public class LadenPanel extends JPanel{
@@ -20,7 +21,7 @@ public class LadenPanel extends JPanel{
 	private JList<String> gameList;
 	private LadenButtonClicked handler;
 	public interface LadenButtonClicked{
-		public void hauptspielStarten(String name, int anzahlSpieler, String dateiPfad)  throws RemoteException;
+		public void hauptspielStarten(String name, int anzahlSpieler, String dateiPfad)  throws RemoteException, SpielBereitsErstelltException;
 	}
 	
 	public LadenPanel(LadenButtonClicked handler) {
@@ -54,7 +55,7 @@ public class LadenPanel extends JPanel{
 					final String selected = gameList.getSelectedValue();
 					System.out.println(selected);
 					handler.hauptspielStarten("", -1,selected + ".txt");
-				} catch (IOException e) {
+				} catch (IOException | SpielBereitsErstelltException e) {
 					e.printStackTrace();
 				}
 		});

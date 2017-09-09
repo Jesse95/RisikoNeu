@@ -46,6 +46,7 @@ import local.domain.exceptions.KeinGegnerException;
 import local.domain.exceptions.KeinNachbarlandException;
 import local.domain.exceptions.LandBereitsBenutztException;
 import local.domain.exceptions.NichtGenugEinheitenException;
+import local.domain.exceptions.SpielBereitsErstelltException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.domain.exceptions.SpielerGibtEsNichtException;
 import local.domain.exceptions.SpieleranzahlErreichtException;
@@ -188,13 +189,18 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	public void hauptspielStarten(String name, int anzahlSpieler, String dateiPfad) throws RemoteException {
+	public void hauptspielStarten(String name, int anzahlSpieler, String dateiPfad) throws RemoteException, SpielBereitsErstelltException {
 		boolean geladenesSpiel = false;
 		if(dateiPfad != null) {
 			geladenesSpiel = true;
 		}
 		serverVerbindungHerstellen(name);
-			//Falls Spiel geladen wird	
+		if(anzahlSpieler > 1){
+			if(sp.getSpielerList().size() > 0){
+				throw new SpielBereitsErstelltException();
+			}
+		}
+			//Falls Spiel geladen wird
 		Spielstand spielstand = null;
 		if(geladenesSpiel) {
 			
