@@ -3,8 +3,9 @@
 //TODO spiel erstellen, wenn schon eins ist speeren, exception gibt es schon
 //TODO bei verschieben nach angriff haben beide länder einen zu viel
 //TODO Laden bei SpielerMission
+//TODO Laden mitten in zug
+//TODO Speichern beim schließen
 //TODO servererror wenn nach geladenem spiel normales gestartet wird
-//TODO anzahl setzbare einheiten bug
 
 package client;
 
@@ -168,7 +169,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	}
 
 	private void spielSpeichern() throws RemoteException {
-		String name = JOptionPane.showInputDialog(frame, "Spiel speichern.");
+		String name = "";
+		
+		name = JOptionPane.showInputDialog(frame, "Spiel speichern. Gebe einen Namen ein.");
 		if(name.length() > 0){
 			try {
 				pm.schreibkanalOeffnen("./Speicher/" + name + ".txt");
@@ -179,6 +182,13 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			pm.close();
 		}else{
 			consolePanel.textSetzen("Du musst einen Namen eingeben.");
+		}
+	}
+	
+	private void spielSpeichernNachEndeFrage() throws RemoteException {
+		//Rückgabe = 0 ist JA, Rückgabe = 1 ist NEIN, Rückgabe 2 ist CANCEL
+		if(JOptionPane.showConfirmDialog(frame, "Spiel speichern bevor es geschlossen wird?") == 0) {
+			spielSpeichern();
 		}
 	}
 
@@ -701,6 +711,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					}
 					break;
 				case BEENDEN:
+					if(istAktiverSpieler) {
+						spielSpeichernNachEndeFrage();
+					}
 					JOptionPane.showMessageDialog(null, "Das Spiel wurde von " + gce.getSpieler().getName() + " beendet.");
 					frame.dispose();
 					erstesPanelStartmenu();
