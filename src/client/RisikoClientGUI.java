@@ -1,7 +1,6 @@
 //TODO Javadoc
 //TODO mit ostafrika kann man Nordafrika nicht angreifen?
 //TODO spiel erstellen, wenn schon eins ist speeren, exception gibt es schon
-//TODO gewonnenBildschirm
 //TODO bei verschieben nach angriff haben beide länder einen zu viel
 //TODO Laden bei SpielerMission
 //TODO servererror wenn nach geladenem spiel normales gestartet wird
