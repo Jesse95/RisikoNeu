@@ -1,0 +1,41 @@
+package client;
+
+import java.awt.Color;
+import java.awt.Font;
+
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import local.valueobjects.Spieler;
+import net.miginfocom.swing.MigLayout;
+
+public class GewonnenPanel extends JPanel{
+	private JLabel firework = null;
+	private Spieler spieler;
+	private Font schrift;
+	private Font uberschrift;
+
+	public GewonnenPanel(Spieler spieler, Font schrift, Font uberschrift) {
+		this.spieler = spieler;
+		this.schrift = schrift;
+		this.uberschrift = uberschrift;
+		
+		initialize();
+	}
+
+	public void initialize() {
+		this.setLayout(new MigLayout("wrap1","[]","[][]"));
+		firework = new JLabel(new ImageIcon("./Bilder/firework.gif"));
+		
+		JLabel gewinner = new JLabel("Spiel vorbei.");
+		gewinner.setFont(uberschrift);
+		gewinner.setForeground(Color.white);
+		
+		this.add(gewinner, "center");
+		this.add(firework, "center");
+		this.setBackground(Color.BLACK);
+		this.repaint();
+		this.revalidate();
+	}
+}

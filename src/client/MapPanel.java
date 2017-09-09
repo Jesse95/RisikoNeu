@@ -28,7 +28,6 @@ public class MapPanel extends JLayeredPane {
 	
 	private List<JLabel> fahnenLabs = new Vector<JLabel>();
 	private List<JLabel> einheitenLabs = new Vector<JLabel>();	
-	private JLabel firework = null;
 	private JLabel spielfeld = null;
 	private JLabel weltKarteBuntLab = null;
 	private MapClickHandler handler = null;
@@ -75,11 +74,10 @@ public class MapPanel extends JLayeredPane {
 		this.schrift = schrift;
 		this.breite = breite;
 		this.hoehe = hoehe;
-		wuerfelBilderLaden();
 		initialize();
 	}
-	
-	private void wuerfelBilderLaden() {
+
+	public void initialize() {
 		try{
 			wuerfelB1 = ImageIO.read(new File("./Bilder/wuerfel/blau/wuerfelB1.png"));
 			wuerfelB2 = ImageIO.read(new File("./Bilder/wuerfel/blau/wuerfelB2.png"));
@@ -93,11 +91,6 @@ public class MapPanel extends JLayeredPane {
 			wuerfelR4 = ImageIO.read(new File("./Bilder/wuerfel/rot/wuerfelR4.png"));
 			wuerfelR5 = ImageIO.read(new File("./Bilder/wuerfel/rot/wuerfelR5.png"));
 			wuerfelR6 = ImageIO.read(new File("./Bilder/wuerfel/rot/wuerfelR6.png"));
-		}catch (IOException e){}
-	}
-
-	public void initialize() {
-		try{
 			fahneRotImg = ImageIO.read(new File("./Bilder/Fahne_Rot.png"));
 			fahneGruenImg = ImageIO.read(new File("./Bilder/Fahne_Gruen.png"));
 			fahneBlauImg = ImageIO.read(new File("./Bilder/Fahne_Blau.png"));
@@ -108,7 +101,6 @@ public class MapPanel extends JLayeredPane {
 			spielfeld = new JLabel(new ImageIcon(myPicture.getScaledInstance(breite, hoehe, Image.SCALE_FAST)));
 			weltKarteBunt = ImageIO.read(new File("./Bilder/weltkarte_bunt.png"));
 			weltKarteBuntLab = new JLabel(new ImageIcon(weltKarteBunt));
-		    firework = new JLabel(new ImageIcon("./Bilder/firework.gif"));
 			ladeScreen = ImageIO.read(new File("./Bilder/ladeScreen.jpg"));
 			ladeScreenLab = new JLabel(new ImageIcon(ladeScreen.getScaledInstance(breite, hoehe, Image.SCALE_FAST)));
 
@@ -141,7 +133,6 @@ public class MapPanel extends JLayeredPane {
         einheitenLab.setBounds(400, 27, 200, 15);
         besitzerLab.setBounds(400, 52, 200, 15);
         spielfeld.setBounds(0, 0, breite, hoehe);
-        firework.setBounds(0, 0, 1050, 550);
         weltKarteBuntLab.setBounds(0, 0, breite, hoehe);
         weltKarteBuntLab.setVisible(false);
         this.add(spielfeld,new Integer(2), 1); 
@@ -294,10 +285,6 @@ public class MapPanel extends JLayeredPane {
 			return wuerfelLab;
 		}
 
-	public void gewonnen() {
-		this.add(firework,new Integer(2), 0); 
-	}
-	
 	public void aufloesungAendern(int breite, int hoehe) {
 		this.breite = breite;
 		this.hoehe = hoehe;

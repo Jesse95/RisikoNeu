@@ -1,11 +1,10 @@
-//TODO verschieben nach angriff mit nur einer einheit
 //TODO Javadoc
 //TODO mit ostafrika kann man Nordafrika nicht angreifen?
-//TODO Beim Karten eintauschen werden Karten nicht removed
-//TODO Server cleanen, wenn Spiel abgebrochen, so dass Server nicht immer neu gestartet werden muss (Fertig?)
+//TODO Beim Karten eintauschen werden erst am ende des zugs removed	
 //TODO spiel erstellen, wenn schon eins ist speeren, exception gibt es schon
 //TODO gewonnenBildschirm
 //TODO bei verschieben nach angriff haben beide länder einen zu viel
+//TODO Laden bei SpielerMission
 
 package client;
 
@@ -50,7 +49,6 @@ import local.domain.exceptions.KeinGegnerException;
 import local.domain.exceptions.KeinNachbarlandException;
 import local.domain.exceptions.LandBereitsBenutztException;
 import local.domain.exceptions.NichtGenugEinheitenException;
-import local.domain.exceptions.SpielBereitsErstelltException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.domain.exceptions.SpielerGibtEsNichtException;
 import local.domain.exceptions.SpieleranzahlErreichtException;
@@ -83,7 +81,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private BeitretenPanel beitretenPanel;
 	private LadenPanel ladenPanel;
 	private MenuBar menu;
-	private Registry registry;
 	private Font schrift;
 	private Font uberschrift;
 	private Land land1 = null;
@@ -95,7 +92,8 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private AngriffRueckgabe angriffRueckgabe;
 	private ArrayList<Spieler> spielerListe;
 	private ArrayList<Land> laenderListe;
-	private FilePersistenceManager pm = new FilePersistenceManager();;
+	private FilePersistenceManager pm = new FilePersistenceManager();
+	private Spieler gewinner;
 
 
 	private RisikoClientGUI()throws RemoteException {
@@ -185,17 +183,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	public void hauptspielStarten(String name, int anzahlSpieler, String dateiPfad) throws RemoteException/*, SpielBereitsErstelltException*/ {
+	public void hauptspielStarten(String name, int anzahlSpieler, String dateiPfad) throws RemoteException {
 		boolean geladenesSpiel = false;
 		if(dateiPfad != null) {
 			geladenesSpiel = true;
 		}
 		serverVerbindungHerstellen(name);
-//		if(anzahlSpieler > 0){
-//			if(sp.getSpielerList().size() > 0){
-//				throw new SpielBereitsErstelltException();
-//			}
-//		}
 			//Falls Spiel geladen wird	
 		Spielstand spielstand = null;
 		if(geladenesSpiel) {
@@ -215,15 +208,8 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			//Spieler muss erstellt werden, bevor frame gebaut wird, da sonst bei falscher Namenseingabe spackt
 			sp.spielerErstellen(name,anzahlSpieler);
 			
-	
+			
 			//Frame erzeugen
-			spielfeld = null;
-			spielerListPanel = null;
-			missionPanel = null;
-			infoPanel = null;
-			buttonPanel = null;
-			statistikPanel = null;
-			consolePanel = null;
 			frame.setLayout(new MigLayout("wrap2", "[1050][]", "[][][]"));
 			spielfeld = new MapPanel(this, schrift,1050, 550);
 			spielerListPanel = new SpielerPanel(schrift, uberschrift);
@@ -308,12 +294,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private void serverVerbindungHerstellen(String name) throws RemoteException {
 		try {
 			String servicename = "GameServer";
-			registry = LocateRegistry.getRegistry("127.0.0.1",4711);
+			Registry registry = LocateRegistry.getRegistry("127.0.0.1",4711);
 			sp = (ServerRemote)registry.lookup(servicename);
 			sp.addGameEventListener(this);
 			sp.serverBenachrichtigung("Spieler registriert: " + name);
 		} catch (NotBoundException nbe) {
-			throw new RemoteException();
 		}
 		
 	}
@@ -463,8 +448,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	//TODO: Überarbeiten
-	public void gewonnen(){
+	public void gewonnenPanelAnzeigen(){
 		frame.remove(spielfeld);
 		frame.remove(spielerListPanel);
 		frame.remove(missionPanel);
@@ -472,16 +456,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.remove(statistikPanel);
 		frame.remove(consolePanel);
 		frame.remove(buttonPanel);
-		frame.setLayout(new MigLayout("wrap1","[]","[][]"));
-		frame.setForeground(Color.black);
-
-		JLabel gewinner = new JLabel("Spieler" + " hat gewonnen.");
-		gewinner.setFont(uberschrift);
-		gewinner.setForeground(Color.white);
-		JLabel firework = new JLabel(new ImageIcon("./Bilder/firework.gif"));
-		frame.add(gewinner, "center");
-		frame.add(firework, "center");
-		frame.setBackground(Color.BLACK);
+		frame.setTitle(aktiverSpieler + " hat gewonnen");
+		frame.setSize(500, 500);
+		frame.setLocationRelativeTo(null);
+		GewonnenPanel gewonnenPanel = new GewonnenPanel(aktiverSpieler, schrift, uberschrift);
+		frame.add(gewonnenPanel);
+		frame.setVisible(true);
 		frame.repaint();
 		frame.revalidate();
 	}
@@ -527,12 +507,13 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		//Wenn Mission erfüllt, dann gewonnen aufrufen
 		try {
 			if(sp.getSpielerMission(aktiverSpieler).istAbgeschlossen()){
-				gewonnen();
+				sp.zeigeGewinner(aktiverSpieler);
+			} else {
+				sp.nextTurn();
 			}
 		} catch (RemoteException e) {
 			e.printStackTrace();
 		}
-		sp.nextTurn();
 	}
 
 	public void angriffButtonClicked() {
@@ -628,31 +609,24 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 
 	public void handleGameEvent(GameEvent event) throws RemoteException {
-		if(event.getSpieler() == null){
-			frame.dispose();
-			erstesPanelStartmenu();
-			JOptionPane.showMessageDialog(null, "Der Server wurde vom Admin geschlossen.");
-			registry = null;
+		spielerListe =  sp.getSpielerList();
+		laenderListe = sp.getLaenderListe();
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {}
+		
+		if(event instanceof GameControlEvent){
 
-		} else {
-			spielerListe =  sp.getSpielerList();
-			laenderListe = sp.getLaenderListe();
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {}
-
-			if(event instanceof GameControlEvent){
-
-				GameControlEvent gce = (GameControlEvent)event;
-				aktiverSpieler = gce.getSpieler();
-
-				boolean istAktiverSpieler;
-				if(aktiverSpieler.getName().equals(ownSpieler.getName())) {
-					istAktiverSpieler = true;
-				} else {
-					istAktiverSpieler = false;
-				}
-
+			GameControlEvent gce = (GameControlEvent)event;
+			aktiverSpieler = gce.getSpieler();
+			
+			boolean istAktiverSpieler;
+			if(aktiverSpieler.getName().equals(ownSpieler.getName())) {
+				istAktiverSpieler = true;
+			} else {
+				istAktiverSpieler = false;
+			}
+				
 				switch (gce.getTurn()) {
 				case STARTPHASE:
 					spielfeld.mapLaden();
@@ -667,7 +641,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 							if(sp.getSpielerList().get(s).equals(aktiverSpieler)) {
 								spielerListPanel.setAktiverSpielerBorder(s);
 							}
-							missionPanel.kartenAusgeben(ownSpieler, spielerListe);
+					missionPanel.kartenAusgeben(ownSpieler, spielerListe);
 
 						}
 						sp.beiGeladenemSpielNaechstenListener();
@@ -728,35 +702,34 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					}
 					break;
 				case BEENDEN:
-
 					JOptionPane.showMessageDialog(null, "Das Spiel wurde von " + gce.getSpieler().getName() + " beendet.");
 					frame.dispose();
 					erstesPanelStartmenu();
-
 					break;
+				case GEWONNEN:
+					gewonnenPanelAnzeigen();
 				}
-				infoPanel.changePanel(sp.getTurn() + "");
-			}else{
-				GameActionEvent gae = (GameActionEvent)event;
-				aktiverSpieler = gae.getSpieler();
-				spielfeld.fahneEinheit(laenderListe);
-
-				switch(gae.getType()){
-				case VERTEILEN:
-					statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
-					break;
-				case EROBERT:
-					spielfeld.fahnenVerteilen(laenderListe);
-					statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
-					consolePanel.textSetzen(gae.getText());
-					break;
-				case ANGRIFF:
-					statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
-					consolePanel.textSetzen(gae.getText());
-				}
+			infoPanel.changePanel(sp.getTurn() + "");
+		}else{
+			GameActionEvent gae = (GameActionEvent)event;
+			aktiverSpieler = gae.getSpieler();
+			spielfeld.fahneEinheit(laenderListe);
+			
+			switch(gae.getType()){
+			case VERTEILEN:
+				statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
+				break;
+			case EROBERT:
+				spielfeld.fahnenVerteilen(laenderListe);
+				statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
+				consolePanel.textSetzen(gae.getText());
+				break;
+			case ANGRIFF:
+				statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
+				consolePanel.textSetzen(gae.getText());
 			}
 		}
 	}
 
-
+	
 }	

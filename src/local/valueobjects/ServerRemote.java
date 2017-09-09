@@ -121,6 +121,8 @@ public interface ServerRemote extends Remote{
 	public void beiGeladenemSpielNaechstenListener() throws RemoteException;
 	
 	public boolean isSpielGeladen() throws RemoteException;
+
+	public void zeigeGewinner(Spieler gewinner) throws RemoteException;
 		
 	
 

@@ -595,4 +595,9 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	public boolean isSpielGeladen() throws RemoteException{
 		return spielGeladen;
 	}
+
+
+	public void zeigeGewinner(Spieler gewinner) throws RemoteException {
+		listenerBenachrichtigen(new GameControlEvent(gewinner, GameControlEvent.phasen.GEWONNEN));		
+	}
 }
