@@ -50,7 +50,7 @@ public class ErstellenPanel extends JPanel {
 			} catch (NumberFormatException | RemoteException e) {
 				JOptionPane.showMessageDialog(null, "Server nicht gestartet.", "Server Fehler", JOptionPane.WARNING_MESSAGE);
 			} catch (SpielBereitsErstelltException e) {
-				JOptionPane.showMessageDialog(null, "Auf dem Server l�uft bereits ein Spiel", "Server Fehler", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(null, "Auf dem Server laeuft bereits ein Spiel", "Server Fehler", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 		this.add(nameLab,"right");

@@ -1,6 +1,8 @@
 package server;
 
 import java.awt.Image;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -103,7 +105,14 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		frame.setLayout(new MigLayout("debug, wrap2", "[][200]", "[][][]"));
 		frame.setSize(450, 450);
 		frame.setTitle("Server");
-		
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter(){
+
+			public void windowClosing(WindowEvent we){
+				listenerBenachrichtigen(new GameControlEvent(null,GameControlEvent.phasen.BEENDEN));
+				System.exit(0);
+			}
+		});
 		try {
 			ampelRot = ImageIO.read(new File("./Bilder/ampel_Rot.png"));
 			ampelGruen = ImageIO.read(new File("./Bilder/ampel_Gruen.png"));
@@ -171,6 +180,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		listeners.clear();
 		bereitZaehler = 0;
 		anzahlSpieler = 0;
+		spielGeladen = false;
 		this.spielerVw = null;
 		this.weltVw = null;
 		this.missionVw = null;
@@ -188,10 +198,12 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	public void serverBeenden() throws RemoteException {
 		listenerBenachrichtigen(new GameControlEvent(null,GameControlEvent.phasen.BEENDEN));
 		ampelSchalten(false);
-		try {
-			registry.unbind("GameServer");
-		} catch (NotBoundException e) {
-			e.printStackTrace();
+		if(serverGestartet){
+			try {
+				registry.unbind("GameServer");
+			} catch (NotBoundException e) {
+				e.printStackTrace();
+			}
 		}
 		serverConsolePanel.textSetzen("Server beendet");
 		serverCleanen();

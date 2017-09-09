@@ -9,6 +9,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import local.domain.exceptions.SpielBereitsErstelltException;
 import net.miginfocom.swing.MigLayout;
 
 public class BeitretenPanel extends JPanel{
@@ -17,7 +18,7 @@ public class BeitretenPanel extends JPanel{
 	private JTextField nameText;
 	
 	public interface BeitretenButtonClicked{
-		public void hauptspielStarten(String name, int anzahl, String dateiPfad) throws RemoteException;
+		public void hauptspielStarten(String name, int anzahl, String dateiPfad) throws RemoteException, SpielBereitsErstelltException;
 	}
 	
 	public BeitretenPanel(BeitretenButtonClicked handler) {
@@ -39,7 +40,7 @@ public class BeitretenPanel extends JPanel{
 		startBtn.addActionListener(start -> {
 			try {
 					handler.hauptspielStarten(nameText.getText(),-1,null);
-			} catch (RemoteException e) {
+			} catch (RemoteException | SpielBereitsErstelltException e) {
 				JOptionPane.showMessageDialog(null, "Server nicht gestartet.", "Server Fehler", JOptionPane.WARNING_MESSAGE);
 			}
 		});
