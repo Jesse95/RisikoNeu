@@ -200,7 +200,6 @@ public class MapPanel extends JLayeredPane {
 		if(lName.length() > 0) {
 			landLab.setText(lName);
 		}
-		//TODO: wieso 9119?? :D
 		if(lEinheiten != 9119) {
 			einheitenLab.setText(lEinheiten + "");
 		}

@@ -75,7 +75,6 @@
 //			}
 //			sp.missionenVerteilen();
 //			sp.laenderAufteilen();
-//			//TODO hier ist von den Spielregeln noch ein Fehler der Anzahl von zu verteilender Einheiten
 //			//verteilen der Einheiten am Anfang für jeden Spieler
 //			for(Spieler spieler : sp.getSpielerList()) {
 //				System.out.println(spieler.getName() + " ist dran und darf nun seine ersten Einheiten verteilen.");
@@ -284,7 +283,6 @@
 //				try {
 //					cui.angriffAusgabeUndErneutAngreifenAbfrage(aLand, vLand, genugEinheiten);
 //				} catch (KeinNachbarlandException e) {
-//					// TODO Auto-generated catch block
 //					e.printStackTrace();
 //				}
 //					
@@ -315,7 +313,7 @@
 //				genugEinheiten = sp.checkEinheiten(angriffsLandString,1);
 //				sp.landZumAngreifen(spieler, sp.stringToLand(angriffsLandString));
 //			}catch(KeinLandZumAngreifenException klzae){
-//				//TODO sagt zwar das kein angreifbares Land da ist, springt aber trotzdem nicht zu mit welchem land möchtest du angreifen zurück
+//				//
 //				System.out.println(klzae.getMessage());
 //			}catch(KannLandNichtBenutzenException lene ){
 //				System.out.println(lene.getMessage());

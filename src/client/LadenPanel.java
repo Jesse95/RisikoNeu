@@ -55,7 +55,6 @@ public class LadenPanel extends JPanel{
 					System.out.println(selected);
 					handler.hauptspielStarten("", -1,selected + ".txt");
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 		});

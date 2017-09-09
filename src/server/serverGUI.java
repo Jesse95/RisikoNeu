@@ -191,7 +191,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		try {
 			registry.unbind("GameServer");
 		} catch (NotBoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		serverConsolePanel.textSetzen("Server beendet");

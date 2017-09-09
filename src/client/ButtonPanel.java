@@ -61,8 +61,6 @@ public class ButtonPanel extends JPanel{
 			try {
 				handler.phaseButtonClicked();
 			} catch (RemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 		});
 		angreifen.addActionListener(angriff -> handler.angriffButtonClicked());
