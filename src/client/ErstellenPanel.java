@@ -2,6 +2,8 @@ package client;
 
 import java.rmi.RemoteException;
 
+import local.domain.exceptions.SpielBereitsErstelltException;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -9,12 +11,13 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import local.domain.exceptions.SpielBereitsErstelltException;
 import net.miginfocom.swing.MigLayout;
 
 public class ErstellenPanel extends JPanel {
 	private ErstellenButtonClicked handler = null;
 	public interface ErstellenButtonClicked{
-		public void hauptspielStarten(String name, int anzahl, String dateiPfad) throws RemoteException;
+		public void hauptspielStarten(String name, int anzahl, String dateiPfad) throws RemoteException, SpielBereitsErstelltException;
 	}
 	
 	public ErstellenPanel(ErstellenButtonClicked handler) {
@@ -45,6 +48,8 @@ public class ErstellenPanel extends JPanel {
 				handler.hauptspielStarten(nameText.getText(),Integer.parseInt((String)anzahlCBox.getSelectedItem()),null);
 			} catch (NumberFormatException | RemoteException e) {
 				JOptionPane.showMessageDialog(null, "Server nicht gestartet.", "Server Fehler", JOptionPane.WARNING_MESSAGE);
+			} catch (SpielBereitsErstelltException e) {
+				JOptionPane.showMessageDialog(null, "Auf dem Server läuft bereits ein Spiel", "Server Fehler", JOptionPane.WARNING_MESSAGE);
 			}
 		});
 		this.add(nameLab,"right");
