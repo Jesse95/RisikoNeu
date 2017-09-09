@@ -471,7 +471,7 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 	 */
 	public void spielSpeichern(String datei) throws IOException{
 		pm.schreibkanalOeffnen(datei);
-		pm.spielSpeichern(weltVw.getLaenderListe(), spielerVw.getSpielerList(), getTurn() + "", spielerVw.getAktiverSpielerNummer(), missionVw.getMissionsListe());
+		pm.spielSpeichern(weltVw.getLaenderListe(), spielerVw.getSpielerList(), getTurn() + "", spielerVw.getAktiverSpielerNummer(), missionVw.getMissionsListe(), bekommtEinheiten(spielerVw.getAktiverSpieler()));
 		pm.close();
 	}
 	
@@ -486,14 +486,7 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 		String kuerzel = "";
 		String karte = "";
 		int einheiten = 0;
-//		switch(phase){
-//		case "ANGRIFF":
-//			Phase = phasen.ANGRIFF;
-//		case "Verschieben":
-//			Phase = phasen.VERSCHIEBEN;
-//		case "VERTEILEN":
-//			Phase = phasen.VERTEILEN;
-//		}
+		
 		spielstand.setAktuellePhase(phase);
 		
 		do{
@@ -550,6 +543,10 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 				Einheitenkarten einheitenkarte = new Einheitenkarten(karte);
 				s.getEinheitenkarten().add(einheitenkarte);
 			}while(karte.length() != 0);
+		}
+		
+		if(phase.equals("VERTEILEN")) {
+			spielstand.setSetzbareEinheitenVerteilen(Integer.parseInt(pm.spielstandLaden()));
 		}
 		pm.close();
 		

@@ -11,6 +11,7 @@ public class Spielstand implements Serializable{
 	private ArrayList<Mission> missionsListe;
 	private ArrayList<Kontinent> kontinentenListe;
 	private int aktiverSpielerNummer;
+	private int setzbareEinheitenVerteilen;
 	
 	
 	public Spielstand() {
@@ -142,5 +143,13 @@ public class Spielstand implements Serializable{
 			nordamerika.add(laenderListe.get(i));
 		}
 		kontinentenListe.add(new Kontinent("Nordamerika",nordamerika));
+	}
+
+	public int getSetzbareEinheitenVerteilen() {
+		return setzbareEinheitenVerteilen;
+	}
+
+	public void setSetzbareEinheitenVerteilen(int setzbareEinheitenVerteilen) {
+		this.setzbareEinheitenVerteilen = setzbareEinheitenVerteilen;
 	}
 }

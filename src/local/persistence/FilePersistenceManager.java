@@ -1,5 +1,6 @@
 package local.persistence;
 
+import java.awt.List;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -59,7 +60,7 @@ public class FilePersistenceManager {
 		
 	}
 
-	public boolean spielSpeichern(ArrayList<Land> welt, ArrayList<Spieler> spielerListe, String phase, int aktiverSpieler, ArrayList<Mission> missionsListe){
+	public boolean spielSpeichern(ArrayList<Land> welt, ArrayList<Spieler> spielerListe, String phase, int aktiverSpieler, ArrayList<Mission> missionsListe, int setzbareEinheitenVerteilen){
 		schreibeZeile(phase);
 		int anzahlSpieler = 0;
 		for(Spieler s : spielerListe){
@@ -67,7 +68,6 @@ public class FilePersistenceManager {
 			anzahlSpieler++;
 		}
 		schreibeZeile("");
-//		schreibeZeile(anzahlSpieler+"");
 		for(Land l : welt){
 			schreibeZeile(l.getName());
 			schreibeZeile(l.getBesitzer().getName());
@@ -94,13 +94,16 @@ public class FilePersistenceManager {
 			}
 		}
 		
-//		schreibeZeile("");
-		
 		for(Spieler s: spielerListe) {
 			for(Einheitenkarten k:s.getEinheitenkarten()){
 				schreibeZeile(k.getKartenwert());
 			}
 			schreibeZeile("");
+		}
+		
+		//Speicherung für innerhalb der Phase
+		if(phase.equals("VERTEILEN")) {
+			schreibeZeile(setzbareEinheitenVerteilen + "");
 		}
 		
 		return true;
