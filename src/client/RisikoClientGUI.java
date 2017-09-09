@@ -15,6 +15,7 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -46,6 +47,7 @@ import local.domain.exceptions.KeinGegnerException;
 import local.domain.exceptions.KeinNachbarlandException;
 import local.domain.exceptions.LandBereitsBenutztException;
 import local.domain.exceptions.NichtGenugEinheitenException;
+import local.domain.exceptions.SpielBereitsErstelltException;
 import local.domain.exceptions.SpielerExistiertBereitsException;
 import local.domain.exceptions.SpielerGibtEsNichtException;
 import local.domain.exceptions.SpieleranzahlErreichtException;
@@ -92,8 +94,10 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private FilePersistenceManager pm = new FilePersistenceManager();
 	private Boolean erobert = false;
 	private Boolean gewonnen = false;
+	private boolean imSpiel = false;
 	private boolean einheitenGeladen = false;
-
+	private Registry registry;
+	
 	private RisikoClientGUI()throws RemoteException {
 		erstesPanelStartmenu();
 	}
@@ -103,17 +107,33 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	}
 
 	private void erstesPanelStartmenu() {
+		imSpiel = false;
 		//Schriften für alle Panel
 		frame = new JFrame();
-		
+		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		frame.addWindowListener(new WindowAdapter(){
+
+			public void windowClosing(WindowEvent we){
+				if(imSpiel){
+					try {
+						sp.spielBeenden(ownSpieler);
+					} catch (RemoteException e) {
+
+					}
+				}else{
+					System.exit(0);
+				}
+			}
+		});
+
 		//Läd und setzt Icon
-	    Image im = null;
-	    try {
-	    im = ImageIO.read(new File("./Bilder/land.png"));
-	    } catch (IOException ex) {
-	    }
-	    frame.setIconImage(im);
-	    
+		Image im = null;
+		try {
+			im = ImageIO.read(new File("./Bilder/land.png"));
+		} catch (IOException ex) {
+		}
+		frame.setIconImage(im);
+
 		uberschrift = new Font(Font.SERIF, Font.BOLD, 25);
 		schrift = new Font(Font.SANS_SERIF, Font.PLAIN, 17);
 
@@ -140,7 +160,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.repaint();
 		frame.revalidate();
 	}
-	
+
 	private void zweitesPanelSpielBeitreten(){
 		frame.setTitle("Spiel beitreten");
 		frame.setSize(320, 130);
@@ -152,7 +172,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.repaint();
 		frame.revalidate();
 	}
-	
+
 	public void zweitesPanelSpielLaden(){
 		frame.remove(startPanel);
 		frame.setTitle("Spiel laden");
@@ -168,7 +188,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 	private void spielSpeichern() throws RemoteException {
 		String name = "";
-		
+
 		name = JOptionPane.showInputDialog(frame, "Spiel speichern. Gebe einen Namen ein.");
 		if(name.length() > 0){
 			try {
@@ -180,7 +200,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			consolePanel.textSetzen("Du musst einen Namen eingeben.");
 		}
 	}
-	
+
 	private void spielSpeichernNachEndeFrage() throws RemoteException {
 		//Rückgabe = 0 ist JA, Rückgabe = 1 ist NEIN, Rückgabe 2 ist CANCEL
 		if(JOptionPane.showConfirmDialog(frame, "Spiel speichern bevor es geschlossen wird?") == 0) {
@@ -188,16 +208,22 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	public void hauptspielStarten(String name, int anzahlSpieler, String dateiPfad) throws RemoteException {
+	public void hauptspielStarten(String name, int anzahlSpieler, String dateiPfad) throws RemoteException, SpielBereitsErstelltException {
 		boolean geladenesSpiel = false;
 		if(dateiPfad != null) {
 			geladenesSpiel = true;
 		}
 		serverVerbindungHerstellen(name);
-			//Falls Spiel geladen wird	
+
+		if(anzahlSpieler > 1){
+			if(sp.getSpielerList().size() > 0){
+				throw new SpielBereitsErstelltException();
+			}
+		}
+
 		Spielstand spielstand = null;
 		if(geladenesSpiel) {
-			
+
 			try {
 				spielstand = sp.spielLaden(dateiPfad);
 				name = spielstand.getSpielerListe().get(0).getName();
@@ -211,11 +237,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			sp.spielaufbauMitSpielstand(spielstand);
 			frame.remove(ladenPanel);
 		}
-			try {
+		try {
 			//Spieler muss erstellt werden, bevor frame gebaut wird, da sonst bei falscher Namenseingabe spackt
 			sp.spielerErstellen(name,anzahlSpieler);
-			
-			
+
+
 			//Frame erzeugen
 			frame.setLayout(new MigLayout("wrap2", "[1050][]", "[][][]"));
 			spielfeld = new MapPanel(this, schrift,1050, 550);
@@ -227,20 +253,20 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			consolePanel = new ConsolePanel(schrift);
 			frame.setSize(1250, 817);
 			frame.setLocationRelativeTo(null);
-			
+
 			aktiverSpieler = sp.getAktiverSpieler();
-			
+
 			//Spieler erstellen und Spielwelt erzeugen
 			if(anzahlSpieler > 0){
 				sp.spieleranzahlSetzen(anzahlSpieler);
 				frame.remove(erstellenPanel);
 			}else{
-				 if(!geladenesSpiel) {
+				if(!geladenesSpiel) {
 					sp.spielaufbauWennSpieleranzahlErreicht();
 					frame.remove(beitretenPanel);
 				}
 			}
-			
+
 			//Spieler dem Thread zuweisen
 			for(Spieler s:sp.getSpielerList()) {
 				if(s.getName().equals(name)){
@@ -248,7 +274,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					frame.setTitle("Risiko - Spieler: " + s.getName());
 				}
 			}
-			
+
 
 			//Menuleiste erstellen
 			menu = new MenuBar();
@@ -266,17 +292,27 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			schliessen.addActionListener(close -> System.exit(0));
 			menu.setFont(schrift);
 			frame.setMenuBar(menu);
-			frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-			frame.addWindowListener(new WindowAdapter(){
 
-				public void windowClosing(WindowEvent we){
-					try {
-						sp.spielBeenden(ownSpieler);
-					} catch (RemoteException e) {
-						
-					}
-				}
-			});
+			//			frame.addWindowListener(new WindowAdapter(){
+			//
+			//				public void windowClosing(WindowEvent we){
+			//					try {
+			//						sp.spielBeenden(ownSpieler);
+			//					} catch (RemoteException e) {
+			//						
+			//					}
+			//				}
+			//			});
+			//			list = new WindowAdapter(){
+			//
+			//				public void windowClosing(WindowEvent we){
+			//					try {
+			//						sp.spielBeenden(ownSpieler);
+			//					} catch (RemoteException e) {
+			//						
+			//					}
+			//				}
+			//			};
 			//Layout anpassen
 			frame.add(spielfeld, "left,spany 3,grow");
 			frame.add(infoPanel, "left,growx");
@@ -288,6 +324,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			frame.setResizable(false);
 			frame.setVisible(true);
 			frame.pack();
+			imSpiel = true;
 		} catch (SpielerExistiertBereitsException sebe) {
 			JOptionPane.showMessageDialog(null, sebe.getMessage(), "Name vergeben", JOptionPane.WARNING_MESSAGE);
 		} catch (SpielerGibtEsNichtException sgene) {
@@ -307,11 +344,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			sp.serverBenachrichtigung("Spieler registriert: " + name);
 		} catch (NotBoundException nbe) {
 		}
-		
+
 	}
 
 	public void aufloesungAendern(int breite, int hoehe) {
-		
+
 		frame.setSize(breite, hoehe);
 		spielfeld.neuMalen(1000, 600);
 		frame.repaint();
@@ -324,7 +361,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		Land land = sp.stringToLand(sp.getLandVonFarbcode(landcode));
 		if (land != null) {
 			spielfeld.labelsSetzen(land.getName(), land.getEinheiten(), land.getBesitzer().getName());
-			
+
 			//Phasen abhängige Aktion beim Klicken eines Landes
 			switch (sp.getTurn()) {
 			case STARTPHASE:
@@ -348,7 +385,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private void verteilenButtonPanelAnzeige(Land land)throws RemoteException {
 		try {
 			sp.landWaehlen(land, ownSpieler);
-			
+
 			if (anzahlSetzbareEinheiten > 0) {
 				missionPanel.klickDisablen();
 				sp.einheitenPositionieren(1, land);
@@ -356,7 +393,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				spielfeld.labelsSetzen("", land.getEinheiten(), "");
 				statistikPanel.statistikPanelAktualisieren(sp.getLaenderListe(), spielerListe);
 				buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
-					
+
 				if(anzahlSetzbareEinheiten == 0){
 					consolePanel.textSetzen("Du hast alle Einheiten gesetzt.");
 					if(sp.getTurn().toString() == "STARTPHASE"){
@@ -443,7 +480,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			}
 		}
 	}
-	
+
 	private void istSpielerRaus()throws RemoteException{
 		//Überprüfung ob ein Spieler verloren hat
 		for(Spieler s : spielerListe){
@@ -473,7 +510,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.repaint();
 		frame.revalidate();
 	}
-	
+
 	public void karteEintauschen(Boolean erfolgreich, ArrayList<String> tauschKarten) {
 		if(erfolgreich) {
 			try {
@@ -524,47 +561,47 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	}
 
 	public void angriffButtonClicked() {
-			try {
-				//Angriff durchführen
-				angriffRueckgabe = sp.befreiungsAktion(new Angriff(land1, land2));
-				//Würfel anzeigen lassen
-				spielfeld.wuerfelAnzeigen(angriffRueckgabe.getWuerfelAngreifer(), angriffRueckgabe.getWuerfelVerteidiger());
-				//Angriff auswerten und Ergebnis anzeigen
+		try {
+			//Angriff durchführen
+			angriffRueckgabe = sp.befreiungsAktion(new Angriff(land1, land2));
+			//Würfel anzeigen lassen
+			spielfeld.wuerfelAnzeigen(angriffRueckgabe.getWuerfelAngreifer(), angriffRueckgabe.getWuerfelVerteidiger());
+			//Angriff auswerten und Ergebnis anzeigen
 
-				if (angriffRueckgabe.isErobert() != true) {
-					if (angriffRueckgabe.hatGewonnen().equals("V")) {
-						consolePanel.textSetzen(land2.getBesitzer().getName() + " hat gewonnen.");
-					} else if (angriffRueckgabe.hatGewonnen().equals("A")) {
-						consolePanel.textSetzen(land1.getBesitzer().getName() + " hat gewonnen.");
-					} else {
-						consolePanel.textSetzen("Ihr habt unentschieden gespielt, beide verlieren eine Einheit.");
-					}
-					spielfeld.fahneEinheit(laenderListe);
+			if (angriffRueckgabe.isErobert() != true) {
+				if (angriffRueckgabe.hatGewonnen().equals("V")) {
+					consolePanel.textSetzen(land2.getBesitzer().getName() + " hat gewonnen.");
+				} else if (angriffRueckgabe.hatGewonnen().equals("A")) {
+					consolePanel.textSetzen(land1.getBesitzer().getName() + " hat gewonnen.");
+				} else {
+					consolePanel.textSetzen("Ihr habt unentschieden gespielt, beide verlieren eine Einheit.");
+				}
+				spielfeld.fahneEinheit(laenderListe);
+				land1 = null;
+				land2 = null;
+				buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
+			} else {
+				spielfeld.fahnenVerteilen(laenderListe);
+				consolePanel.textSetzen(land1.getBesitzer().getName() + " hat das Land erobert.");
+				spielfeld.fahneEinheit(laenderListe);
+				if (land1.getEinheiten() == 2) {
+					//wenn nur zwei Einheiten auf Angriffsland sind
+					consolePanel.textSetzen("Eine Einheit wird auf " + land2.getName() + " gesetzt.");
+					sp.eroberungBesetzen(land1, land2, 1);
 					land1 = null;
 					land2 = null;
 					buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
 				} else {
-					spielfeld.fahnenVerteilen(laenderListe);
-					consolePanel.textSetzen(land1.getBesitzer().getName() + " hat das Land erobert.");
-					spielfeld.fahneEinheit(laenderListe);
-					if (land1.getEinheiten() == 2) {
-						//wenn nur zwei Einheiten auf Angriffsland sind
-						consolePanel.textSetzen("Eine Einheit wird auf " + land2.getName() + " gesetzt.");
-						sp.eroberungBesetzen(land1, land2, 1);
-						land1 = null;
-						land2 = null;
-						buttonPanel.angreifenAktiv("angreifendes Land", "verteidigendes Land");
-					} else {
-						//verschieben einstellungen in button panel öffnen
-						land2.setEinheiten(0);
-						buttonPanel.verschiebenNachAngreifenAktiv(land1.getName(), land2.getName());
-					}
-					schussSound();
+					//verschieben einstellungen in button panel öffnen
+					land2.setEinheiten(0);
+					buttonPanel.verschiebenNachAngreifenAktiv(land1.getName(), land2.getName());
 				}
-			} catch (RemoteException e) {
-			} catch (KeinNachbarlandException e) {
-				consolePanel.textSetzen(e.getMessage());
+				schussSound();
 			}
+		} catch (RemoteException e) {
+		} catch (KeinNachbarlandException e) {
+			consolePanel.textSetzen(e.getMessage());
+		}
 	}
 
 	public void verschiebenButtonClicked(int einheiten) {
@@ -754,5 +791,5 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-	
+
 }	
