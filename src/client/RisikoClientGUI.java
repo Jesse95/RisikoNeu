@@ -2,7 +2,7 @@
 //TODO Javadoc
 //TODO mit ostafrika kann man Nordafrika nicht angreifen?
 //TODO Beim Karten eintauschen werden Karten nicht removed
-//TODO Server cleanen, wenn Spiel abgebrochen, so dass Server nicht immer neu gestartet werden muss (In Bearbeitung)
+//TODO Server cleanen, wenn Spiel abgebrochen, so dass Server nicht immer neu gestartet werden muss (Fertig?)
 //TODO spiel erstellen, wenn schon eins ist speeren, exception gibt es schon
 //TODO gewonnenBildschirm
 //TODO bei verschieben nach angriff haben beide länder einen zu viel

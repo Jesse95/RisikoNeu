@@ -70,7 +70,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	BufferedImage ampelGruen;
 	private static ServerRemote server;
 	private JButton startBtn;
-	private JButton beendenBtn;
 	private AdminPanel adminPanel;
 	private Registry registry;
 	private boolean spielGeladen = false;
@@ -89,7 +88,6 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 
 	public void initialize( )throws RemoteException{
 		startBtn = new JButton("Server starten");
-		beendenBtn = new JButton("Server beenden");
 		serverConsolePanel = new ConsolePanel();
 		adminPanel = new AdminPanel(this);
 		frame = new JFrame();
@@ -136,19 +134,10 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 			}
 		});
 		
-		beendenBtn.addActionListener(beenden -> {
-			try {
-				serverBeenden();
-				
-			} catch (RemoteException e) {
-			}
-			
-			
-		});
+
 		frame.add(serverConsolePanel,"spany 3");
 		frame.add(ampel,"top,growx");
 		frame.add(startBtn,"top,growx");
-		//frame.add(beendenBtn, "top,growx");
 		frame.add(adminPanel,"top,center");
 		
 		
@@ -167,20 +156,11 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 			
 			serverConsolePanel.textSetzen("Server starten....");
 			try{
-				System.out.println("start 1");
 				registry = LocateRegistry.createRegistry(4711);
-				
-				
-				
 			}catch(RemoteException re){
-				System.out.println("start 2");
 				registry = LocateRegistry.getRegistry(4711);
-				
-				//throw new ServerBereitsGestartetException();
 			}
-			System.out.println("start 3");
 			registry.rebind(serviceName, server);
-			System.out.println("start 4");
 			ampelSchalten(true);
 			serverConsolePanel.textSetzen("Server gestartet");
 		
