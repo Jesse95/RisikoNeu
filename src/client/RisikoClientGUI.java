@@ -4,6 +4,7 @@
 //TODO bei verschieben nach angriff haben beide länder einen zu viel
 //TODO Laden bei SpielerMission
 //TODO servererror wenn nach geladenem spiel normales gestartet wird
+//TODO anzahl setzbare einheiten bug
 
 package client;
 

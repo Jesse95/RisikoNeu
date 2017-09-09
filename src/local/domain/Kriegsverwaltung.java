@@ -200,42 +200,48 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 	 * @param spieler
 	 * @return int
 	 */
-	public int bekommtEinheiten(Spieler sp) {
-		Spieler spieler = spielerServerVerbindung(sp);
-		int besitztLaenderVonKontinent = 0;
+	public int bekommtEinheiten(Spieler spieler) {
+		boolean besitztLaenderVonKontinent = true;
 		int einheiten = weltVw.besitztLaender(spieler).size() / 3;
-		
+		System.out.println(spieler.getName() + "kriegt Einheiten durch Länder(" +  weltVw.besitztLaender(spieler).size() + ") - "+ einheiten);
 		if (einheiten < 3) {
 			einheiten = 3;
 		}
+		
 			for (Kontinent k : weltVw.getKontinentenListe()){
+				besitztLaenderVonKontinent = true;
 				for (Land l : k.getLaender()){
 					
-					if(l.getBesitzer().getName().equals(spieler.getName())) {
-						besitztLaenderVonKontinent++;
-					}
-					
-					if (besitztLaenderVonKontinent == k.getLaender().size()){
-						switch(k.getName()) {
-						case "Europa":
-							einheiten += 5;
-							break;
-						case "Asien":
-							einheiten += 7;
-							break;
-						case "Afrika":
-							einheiten += 3;
-							break;
-						case "Suedamerika":
-							einheiten += 2;
-							break;
-						case "Nordamerika":
-							einheiten += 5;
-							break;
-						}
+					if(!l.getBesitzer().getName().equals(spieler.getName())) {
+						besitztLaenderVonKontinent = false;
 					}
 				}
+				if (besitztLaenderVonKontinent){
+					switch(k.getName()) {
+					case "Europa":
+						einheiten += 5;
+						break;
+					case "Asien":
+						einheiten += 7;
+						break;
+					case "Afrika":
+						einheiten += 3;
+						break;
+					case "Suedamerika":
+						einheiten += 2;
+						break;
+					case "Nordamerika":
+						einheiten += 5;
+						break;
+					case "Australien":
+						einheiten += 2;
+						break;
+					}
+				System.out.println(k.getName() + " kommt dazu. Jetzt sinds" + einheiten);
 			}
+			}
+			System.out.println("Ende" + einheiten);
+
 			return einheiten;
 		}
 	
@@ -243,25 +249,24 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 		int einheiten = 0;
 		switch(spielerVw.getSpielerList().size()+1){
 		case 2:
-			einheiten = 35;
+			einheiten = 25;
 			break;
 		case 3:
-			einheiten = 30;
+			einheiten = 20;
 			break;
 		case 4:
-			einheiten = 30;
+			einheiten = 20;
 			break;
 		case 5:
-			einheiten = 25;
+			einheiten = 15;
 			break;
 		case 6:
-			einheiten = 25;
+			einheiten = 15;
 			break;
 		default:
-			einheiten = 9999;
-			System.out.println("default Wert eingetreten(oben + 1 weg)");
+			einheiten = 20;
 		}
-		return 3;	//TODO: hier 25?
+		return 3;	//TODO: return wert ändern
 	}
 	
 	/**

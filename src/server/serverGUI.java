@@ -314,7 +314,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	}
 
 	public int bekommtEinheiten(Spieler spieler) {
-		return kriegsVw.bekommtEinheiten(spieler);
+		return kriegsVw.bekommtEinheiten(kriegsVw.spielerServerVerbindung(spieler));
 	}
 
 	public void nextTurn() throws RemoteException{
