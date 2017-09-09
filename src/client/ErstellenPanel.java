@@ -17,6 +17,7 @@ public class ErstellenPanel extends JPanel {
 	private ErstellenButtonClicked handler = null;
 	public interface ErstellenButtonClicked{
 		public void hauptspielStarten(String name, int anzahl, String dateiPfad) throws RemoteException, SpielBereitsErstelltException;
+		public void zurueckBtn();
 	}
 	
 	public ErstellenPanel(ErstellenButtonClicked handler) {
@@ -42,8 +43,10 @@ public class ErstellenPanel extends JPanel {
 		String[] zahlen = {"2","3","4","5","6"};
 		JLabel anzahlLab = new JLabel("Spieler Anzahl:");
 		JComboBox<String> anzahlCBox = new JComboBox<String>(zahlen);
+		JButton zurueckBtn = new JButton("zurueck");
 		JButton startBtn = new JButton("Spiel starten");
 		//Actionlistener
+		zurueckBtn.addActionListener(zurueck -> handler.zurueckBtn());
 		startBtn.addActionListener(start -> {
 			try {
 				handler.hauptspielStarten(nameText.getText(),Integer.parseInt((String)anzahlCBox.getSelectedItem()),null);
@@ -62,5 +65,6 @@ public class ErstellenPanel extends JPanel {
 		this.add(anzahlLab,"left");
 		this.add(anzahlCBox,"left");
 		this.add(startBtn,"center,spanx2");
+		this.add(zurueckBtn, "center, spanx2");
 	}
 }

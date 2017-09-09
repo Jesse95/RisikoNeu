@@ -15,7 +15,6 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.io.File;
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -33,6 +32,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import client.BeitretenPanel.BeitretenButtonClicked;
 import client.ButtonPanel.ButtonClickHandler;
@@ -789,6 +789,13 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				consolePanel.textSetzen(gae.getText());
 			}
 		}
+	}
+
+	
+	public void zurueckBtn() {
+		frame.dispose();
+		erstesPanelStartmenu();
+		
 	}
 
 
