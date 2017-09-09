@@ -92,6 +92,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private FilePersistenceManager pm = new FilePersistenceManager();
 	private Boolean erobert = false;
 	private Boolean gewonnen = false;
+	private boolean einheitenGeladen = false;
 
 	private RisikoClientGUI()throws RemoteException {
 		erstesPanelStartmenu();
@@ -200,6 +201,8 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			try {
 				spielstand = sp.spielLaden(dateiPfad);
 				name = spielstand.getSpielerListe().get(0).getName();
+				anzahlSetzbareEinheiten = spielstand.getSetzbareEinheitenVerteilen();
+				einheitenGeladen = true;
 			} catch (IOException | SpielerExistiertBereitsException e) {
 				e.printStackTrace();
 			}
@@ -651,7 +654,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						}
 						sp.beiGeladenemSpielNaechstenListener();
 					}
-					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
+					if(!einheitenGeladen) {
+						anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
+					}
 					buttonPanel.startphase(anzahlSetzbareEinheiten);
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 					statistikPanel.statistikAktualisieren(laenderListe, spielerListe);
@@ -673,7 +678,10 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					missionPanel.klickEnablen();
 					if(istAktiverSpieler) {
 						buttonPanel.phaseDisable();
-						anzahlSetzbareEinheiten = sp.bekommtEinheiten(ownSpieler);
+						if(!einheitenGeladen) {
+							anzahlSetzbareEinheiten = sp.bekommtEinheiten(ownSpieler);
+						}
+						einheitenGeladen = false;
 						consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst " + anzahlSetzbareEinheiten + " Einheiten setzen.");
 						buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
 					} else {
