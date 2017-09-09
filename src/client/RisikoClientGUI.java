@@ -1,9 +1,5 @@
 //TODO Javadoc
-//TODO spiel erstellen, wenn schon eins ist sperren, exception gibt es schon
 //TODO Laden bei SpielerMission
-//TODO speichern/Laden mitten in zug
-//TODO servererror wenn nach geladenem spiel normales gestartet wird(manchmal? :D)
-//TODO Optionen im Menü kann raus?
 
 package client;
 
