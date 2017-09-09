@@ -227,8 +227,10 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			try {
 				spielstand = sp.spielLaden(dateiPfad);
 				name = spielstand.getSpielerListe().get(0).getName();
-				anzahlSetzbareEinheiten = spielstand.getSetzbareEinheitenVerteilen();
-				einheitenGeladen = true;
+				if(ownSpieler == aktiverSpieler) {
+					anzahlSetzbareEinheiten = spielstand.getSetzbareEinheitenVerteilen();
+					einheitenGeladen = true;
+				}
 			} catch (IOException | SpielerExistiertBereitsException e) {
 				e.printStackTrace();
 			}
@@ -716,14 +718,15 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						if(anzahlSetzbareEinheiten == 0) {
 							anzahlSetzbareEinheiten = sp.bekommtEinheiten(ownSpieler);
 						}
-						einheitenGeladen = false;
 						consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst " + anzahlSetzbareEinheiten + " Einheiten setzen.");
 						buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
 					} else {
+						anzahlSetzbareEinheiten = 0;
 						missionPanel.kartenAusgeben(ownSpieler, spielerListe);
 						buttonPanel.removeAll();
 						consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun Einheiten setzen.");
 					}
+					einheitenGeladen = false;
 					break;
 				case VERSCHIEBEN:
 					istSpielerRaus();
