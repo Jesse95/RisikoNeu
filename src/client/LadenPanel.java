@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class LadenPanel extends JPanel{
 	}
 	
 	public void initialize() {
-		this.setLayout(new MigLayout(" wrap2","[][300]","[][100][]")); 
+		this.setLayout(new MigLayout(" wrap2","[150][150]","[][120][]")); 
 	}
 	
 	public void aktuelleSpeicherstandAuswahlAnzeigen(ArrayList<String> speicherstaende) {
@@ -47,10 +48,11 @@ public class LadenPanel extends JPanel{
 		gameList.setLayoutOrientation(JList.VERTICAL);
 		gameList.setVisibleRowCount(-1);
 		JScrollPane listScroller = new JScrollPane(gameList);
-		listScroller.setPreferredSize(new Dimension(250, 80));
+//		listScroller.setPreferredSize(new Dimension(250, 100));
 		JLabel savedGamesLab = new JLabel("Speicherstände:");
+		savedGamesLab.setFont(new Font(Font.SERIF, Font.BOLD, 25));
 		JButton ladenBtn = new JButton("Spiel laden");
-		JButton zurueckBtn = new JButton("Zurueck");
+		JButton zurueckBtn = new JButton("Zurück");
 		
 		zurueckBtn.addActionListener(zurueck -> handler.zurueckBtn(this));
 		ladenBtn.addActionListener(load -> {
@@ -65,7 +67,7 @@ public class LadenPanel extends JPanel{
 		
 		this.add(savedGamesLab,"left,spanx2");
 		this.add(listScroller,"growx,growy,spanx2");
-		this.add(ladenBtn,"center,spanx2");
-		this.add(zurueckBtn,"center,spanx2");
+		this.add(ladenBtn,"left, growx");
+		this.add(zurueckBtn,"right, growx");
 	}
 }

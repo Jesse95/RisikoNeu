@@ -92,7 +92,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private Boolean erobert = false;
 	private Boolean gewonnen = false;
 	private boolean imSpiel = false;
-	private boolean einheitenGeladen = false;
 	private Registry registry;
 	
 	private RisikoClientGUI()throws RemoteException {
@@ -150,7 +149,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private void zweitesPanelSpielErstellen() {
 		//Spieler erstellen Fenster erstellen
 		frame.setTitle("Spiel erstellen");
-		frame.setSize(280, 240);
+		frame.setSize(300, 200);
 		frame.setLocationRelativeTo(null);
 		//frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		erstellenPanel = new ErstellenPanel(this);
@@ -162,7 +161,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 	private void zweitesPanelSpielBeitreten(){
 		frame.setTitle("Spiel beitreten");
-		frame.setSize(320, 130);
+		frame.setSize(320, 120);
 		frame.setLocationRelativeTo(null);
 		//frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		beitretenPanel = new BeitretenPanel(this);
@@ -228,7 +227,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				name = spielstand.getSpielerListe().get(0).getName();
 				if(ownSpieler == aktiverSpieler) {
 					anzahlSetzbareEinheiten = spielstand.getSetzbareEinheitenVerteilen();
-					einheitenGeladen = true;
 				}
 			} catch (IOException | SpielerExistiertBereitsException e) {
 				e.printStackTrace();
@@ -724,7 +722,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						buttonPanel.removeAll();
 						consolePanel.textSetzen(aktiverSpieler.getName() + " kann nun Einheiten setzen.");
 					}
-					einheitenGeladen = false;
 					break;
 				case VERSCHIEBEN:
 					istSpielerRaus();

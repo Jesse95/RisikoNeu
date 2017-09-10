@@ -37,7 +37,7 @@ public class BeitretenPanel extends JPanel{
 		nameText.setText("Spieler_" + randomNumber);
 		
 		JButton startBtn = new JButton("Spiel beitreten");
-		JButton zurueckBtn = new JButton("Zurueck");
+		JButton zurueckBtn = new JButton("Zurück");
 		
 		zurueckBtn.addActionListener(zurueck -> handler.zurueckBtn(this));
 		//Actionlistener
@@ -48,10 +48,10 @@ public class BeitretenPanel extends JPanel{
 				JOptionPane.showMessageDialog(null, "Server nicht gestartet.", "Server Fehler", JOptionPane.WARNING_MESSAGE);
 			}
 		});
-		this.add(nameLab,"right");
+		this.add(nameLab,"left");
 		this.add(nameText,"left,growx");
-		this.add(startBtn,"center,spanx2");
-		this.add(zurueckBtn,"center,spanx2");
+		this.add(startBtn,"left,growx");
+		this.add(zurueckBtn,"right,growx");
 		
 	}
 }

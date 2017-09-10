@@ -34,7 +34,7 @@ public class StartPanel extends JPanel{
 		JLabel logo = new JLabel();
 		try {
 			logoImg = ImageIO.read(new File("./Bilder/logo.jpeg"));
-			logo = new JLabel(new ImageIcon(logoImg.getScaledInstance(300, 150, Image.SCALE_FAST)));
+			logo = new JLabel(new ImageIcon(logoImg.getScaledInstance(300, 180, Image.SCALE_FAST)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -42,7 +42,6 @@ public class StartPanel extends JPanel{
 		JButton startBtn = new JButton("Spiel erstellen");
 		JButton ladenBtn = new JButton("Spiel laden");
 		JButton beitretenBtn = new JButton("Spiel beitreten");
-		JButton optionBtn = new JButton("Optionen");
 		JButton beendenBtn = new JButton("Beenden");
 		
 		startBtn.addActionListener(start -> starthandler.SpielerRegistrierungOeffnen(true));
@@ -54,7 +53,6 @@ public class StartPanel extends JPanel{
 		this.add(startBtn,"center,growx");
 		this.add(ladenBtn,"center,growx");
 		this.add(beitretenBtn,"center, growx");
-		this.add(optionBtn,"center,growx");
 		this.add(beendenBtn,"center,growx");
 	}	
 }

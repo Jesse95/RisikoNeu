@@ -43,7 +43,7 @@ public class ErstellenPanel extends JPanel {
 		String[] zahlen = {"2","3","4","5","6"};
 		JLabel anzahlLab = new JLabel("Spieler Anzahl:");
 		JComboBox<String> anzahlCBox = new JComboBox<String>(zahlen);
-		JButton zurueckBtn = new JButton("zurueck");
+		JButton zurueckBtn = new JButton("Zurück");
 		JButton startBtn = new JButton("Spiel starten");
 		//Actionlistener
 		zurueckBtn.addActionListener(zurueck -> handler.zurueckBtn(this));
@@ -56,15 +56,15 @@ public class ErstellenPanel extends JPanel {
 				JOptionPane.showMessageDialog(null, "Auf dem Server laeuft bereits ein Spiel", "Server Fehler", JOptionPane.WARNING_MESSAGE);
 			}
 		});
-		this.add(nameLab,"right");
+		this.add(nameLab,"left");
 		this.add(nameText,"left,growx");
-		this.add(ipLab,"right");
+		this.add(ipLab,"left");
 		this.add(ipText,"left,growx");
-		this.add(portLab,"right");
+		this.add(portLab,"left");
 		this.add(portText,"left,growx");
 		this.add(anzahlLab,"left");
 		this.add(anzahlCBox,"left");
-		this.add(startBtn,"center,spanx2");
-		this.add(zurueckBtn, "center, spanx2");
+		this.add(startBtn,",left,growx");
+		this.add(zurueckBtn, "right,growx");
 	}
 }
