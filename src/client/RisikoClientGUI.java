@@ -1,5 +1,5 @@
 //TODO Javadoc
-//TODO bei Gewonnen wenn einer beendet fehler bei anzeige
+//TODO bei Gewonnen Panel schließen, kleine verschiebung/größenfehler?
 //TODO Adminpanel Bugfixes
 
 package client;
@@ -75,6 +75,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private StartPanel startPanel;
 	private ErstellenPanel erstellenPanel;
 	private BeitretenPanel beitretenPanel;
+	private GewonnenPanel gewonnenPanel;
 	private LadenPanel ladenPanel;
 	private MenuBar menu;
 	private Font schrift;
@@ -502,7 +503,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.setTitle(aktiverSpieler.getName() + " hat gewonnen");
 		frame.setSize(250, 300);
 		frame.setLocationRelativeTo(null);
-		GewonnenPanel gewonnenPanel = new GewonnenPanel(aktiverSpieler, schrift, uberschrift);
+		gewonnenPanel = new GewonnenPanel(aktiverSpieler, schrift, uberschrift);
 		frame.add(gewonnenPanel, "center");
 		frame.setVisible(true);
 		frame.repaint();
@@ -755,6 +756,8 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 							spielSpeichernNachEndeFrage();
 						}
 							JOptionPane.showMessageDialog(null, "Das Spiel wurde von " + gce.getSpieler().getName() + " beendet.");
+					} else {
+						frame.remove(gewonnenPanel);
 					}
 					frame.remove(spielfeld);
 					frame.remove(infoPanel);
