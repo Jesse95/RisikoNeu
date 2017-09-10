@@ -524,7 +524,7 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 			{
 				spieler2 = pm.spielstandLaden();
 				for(Spieler s : spielstand.getSpielerListe()){
-					if(s.equals(spieler2)){
+					if(s.getName().equals(spieler2)){
 						spielerS2 = s;
 					}
 				}

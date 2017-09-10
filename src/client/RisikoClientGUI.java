@@ -1,5 +1,5 @@
 //TODO Javadoc
-//TODO Laden bei SpielerMission
+//TODO bei Gewonnen wenn einer beendet fehler bei anzeige
 //TODO Adminpanel Bugfixes
 
 package client;
