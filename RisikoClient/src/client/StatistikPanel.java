@@ -33,12 +33,20 @@ public class StatistikPanel extends JPanel{
 	private Font schrift;
 	private Font uberschrift;
 	
+	/**
+	 * Konstruktor Statistik Panel
+	 * @param schrift
+	 * @param uberschrift
+	 */
 	public StatistikPanel(Font schrift,Font uberschrift){
 		this.schrift = schrift;
 		this.uberschrift = uberschrift;
 		initialize();
 	}
 	
+	/**
+	 * initialisiert die Statistik
+	 */
 	public void initialize(){
 		this.setLayout(new MigLayout("wrap3","[][][]","[][][][][][][][]"));
 		JLabel header = new JLabel("Statistik:");
@@ -67,8 +75,12 @@ public class StatistikPanel extends JPanel{
 		this.add(icon3,"right");
 	}
 	
+	/**
+	 * erstellt das Statistik Panel und setzt die Daten und Farben für jeden Spieler
+	 * @param laenderListe
+	 * @param spielerListe
+	 */
 	public void statistikAktualisieren(ArrayList<Land>laenderListe, ArrayList<Spieler>spielerListe) {
-		System.out.println("StatistikPanel");
 		 statistikPanelAktualisieren(laenderListe, spielerListe);
 		for(int laenderAnzahl : laenderVonSpieler) {
 			laenderVonSpielerLabel.add(new JLabel(laenderAnzahl + ""));
@@ -109,6 +121,11 @@ public class StatistikPanel extends JPanel{
 		this.revalidate();
 	}
 	
+	/**
+	 * aktualisiert das Statistik Panel
+	 * @param laenderListe
+	 * @param spielerListe
+	 */
 	public void statistikPanelAktualisieren(ArrayList<Land>laenderListe, ArrayList<Spieler>spielerListe){
 		laenderVonSpieler.clear();
 		einheitenVonSpieler.clear();

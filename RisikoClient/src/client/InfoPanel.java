@@ -14,6 +14,12 @@ public class InfoPanel extends JPanel {
 	private Font schrift;
 	private Font uberschrift;
 	
+	/**
+	 * Konstruktor InfoPanel
+	 * @param phase
+	 * @param schrift
+	 * @param uberschrift
+	 */
 	public InfoPanel(String phase, Font schrift,Font uberschrift){
 		this.phaseString = phase;
 		this.schrift = schrift;

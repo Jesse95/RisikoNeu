@@ -16,6 +16,10 @@ import net.miginfocom.swing.MigLayout;
 public class StartPanel extends JPanel{
 	private StartHandler starthandler = null;
 	
+	/**
+	 * Konstruktor StartPanel
+	 * @param handler
+	 */
 	public StartPanel(StartHandler handler){
 		this.starthandler = handler;
 		initialize();
@@ -26,6 +30,9 @@ public class StartPanel extends JPanel{
 		public void SpielerRegistrierungOeffnen(boolean ersterSpieler);
 	}
 	
+	/**
+	 * initialisert das menü zu Beginn
+	 */
 	public void initialize() {
 		this.setLayout(new MigLayout("wrap1","[]","[][][][][][]"));
 

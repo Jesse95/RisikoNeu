@@ -67,9 +67,13 @@ public class MapPanel extends JLayeredPane {
 	private JLabel ladeScreenLab;
 	private boolean mapAktiviert = true;
 
-
-
-
+	/**
+	 * Konstruktor MapPanel
+	 * @param handler
+	 * @param schrift
+	 * @param breite
+	 * @param hoehe
+	 */
 	public MapPanel(MapClickHandler handler,Font schrift,int breite, int hoehe) {
 		this.handler = handler;
 		this.schrift = schrift;
@@ -78,6 +82,9 @@ public class MapPanel extends JLayeredPane {
 		initialize();
 	}
 
+	/**
+	 * Initialisiert Map Panel indem alle Bilder geladen werden und Ladescreen angezeigt wird
+	 */
 	public void initialize() {
 		try{
 			wuerfelB1 = ImageIO.read(new File("./Bilder/wuerfel/blau/wuerfelB1.png"));
@@ -112,6 +119,9 @@ public class MapPanel extends JLayeredPane {
 		this.setPreferredSize(new Dimension(breite, hoehe));  
 	}
 
+	/**
+	 * Läd die Inhalte auf der Map
+	 */
 	public void mapLaden() {
 		this.remove(ladeScreenLab);
 		spielfeld.addMouseListener(new MouseAdapter() {
@@ -145,6 +155,11 @@ public class MapPanel extends JLayeredPane {
 		this.add(besitzerLab, new Integer(2), 0);
 		this.setPreferredSize(new Dimension(breite, hoehe));  
 	}
+	
+	/**
+	 * Fahnen der Spieler auf Map verteilen
+	 * @param laender
+	 */
 	public void fahnenVerteilen(ArrayList<Land> laender) {		
 		for(JLabel lab : fahnenLabs) {
 			this.remove(lab);
@@ -186,6 +201,10 @@ public class MapPanel extends JLayeredPane {
 		}
 	}
 
+	/**
+	 * Einheiten auf Fahne setzen
+	 * @param laender
+	 */
 	public void fahneEinheit(ArrayList<Land> laender) {
 		int a = 0;
 		for(JLabel l : einheitenLabs){
@@ -194,11 +213,20 @@ public class MapPanel extends JLayeredPane {
 		}
 	}
 
+	/**
+	 * Getter Fahnenliste
+	 * @return List<JLabel>
+	 */
 	public List<JLabel> getFahnenList() {
 		return this.fahnenLabs;
 	}
 
-
+	/**
+	 * Setzt Name Einheit und Besitzer sobald man auf ein Land klickt
+	 * @param lName
+	 * @param lEinheiten
+	 * @param lBesitzer
+	 */
 	public void labelsSetzen(String lName, int lEinheiten, String lBesitzer) {
 		if(lName.length() > 0) {
 			landLab.setText(lName);
@@ -211,6 +239,11 @@ public class MapPanel extends JLayeredPane {
 		}
 	}
 
+	/**
+	 * Zeigt Würfel auf Map an
+	 * @param wuerfelAngreifer
+	 * @param wuerfelVerteidiger
+	 */
 	public void wuerfelAnzeigen(List<Integer> wuerfelAngreifer, List<Integer> wuerfelVerteidiger) {
 		wuerfelEntfernen();
 		//rote Angreifer Würfel
@@ -242,6 +275,9 @@ public class MapPanel extends JLayeredPane {
 		}	
 	}
 
+	/**
+	 * entfernt alle Würfel
+	 */
 	public void wuerfelEntfernen() {
 		remove(wB1);
 		remove(wB2);
@@ -252,6 +288,12 @@ public class MapPanel extends JLayeredPane {
 		this.revalidate();
 	}
 
+	/**
+	 * gibt Würfel Labels zurück
+	 * @param farbe
+	 * @param augenzahl
+	 * @return JLabel
+	 */
 	public JLabel getWuerfelLabel(String farbe, int augenzahl){
 		if(farbe.equals("blau")) {
 			switch(augenzahl){
@@ -287,33 +329,10 @@ public class MapPanel extends JLayeredPane {
 		return wuerfelLab;
 	}
 
-	public void aufloesungAendern(int breite, int hoehe) {
-		this.breite = breite;
-		this.hoehe = hoehe;
-		this.repaint();
-		this.revalidate();
-	}
-	public void neuMalen(int breite, int hoehe){
-		this.breite = breite;
-		this.hoehe = hoehe;
-		try {
-			myPicture = ImageIO.read(new File("./Bilder/weltkarte.jpg"));
-
-			spielfeld.setIcon(new ImageIcon(myPicture.getScaledInstance(breite, hoehe, Image.SCALE_FAST)));
-
-			weltKarteBunt = ImageIO.read(new File("./Bilder/weltkarte_bunt.png"));
-			weltKarteBuntLab = new JLabel(new ImageIcon(weltKarteBunt));
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		}
-		spielfeld.setBounds(0, 0, breite, hoehe);
-		spielfeld.repaint();
-		spielfeld.revalidate();
-		this.setSize(breite-30,hoehe);
-		this.repaint();
-		this.revalidate();
-	}
-
+	/**
+	 * speert Karte zum Klicken
+	 * @param aktiviert
+	 */
 	public void mapEnabled(boolean aktiviert){
 		mapAktiviert = aktiviert;
 	}

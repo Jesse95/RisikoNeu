@@ -13,6 +13,14 @@ import net.miginfocom.swing.MigLayout;
 import valueobjects.Land;
 import valueobjects.Spieler;
 
+/**
+ * @author yanni
+ *
+ */
+/**
+ * @author yanni
+ *
+ */
 public class AdminPanel extends JPanel{
 	public interface AdminPanelButtons{
 		public void einheitenSetzenBtn(String land, int einheiten);
@@ -39,11 +47,21 @@ public class AdminPanel extends JPanel{
 	private String[] laenderArray;
 	
 	
+	/**
+	 * Konstruktor:
+	 * Initialize wird aufgerufen
+	 * @param handler
+	 */
 	public AdminPanel(AdminPanelButtons handler) {
 		this.handler = handler;
 		initialize();
 	}
 	
+	
+	/**
+	 * Aussehen wird definiert.
+	 * ActionListener werden den Buttons zugeordnet
+	 */
 	public void initialize() {
 		this.setLayout(new MigLayout("wrap1","[]","[][][][]"));
 		this.setSize(300, 400);
@@ -65,10 +83,20 @@ public class AdminPanel extends JPanel{
 		
 	}
 	
+	/**
+	 * Setzt die Spieler- und Länderlisten
+	 * @param spielerListe
+	 * @param laenderListe
+	 */
 	public void listenSetzen(ArrayList<Spieler> spielerListe, ArrayList<Land> laenderListe) {
 		this.spielerListe = spielerListe;
 		this.laenderListe = laenderListe;
 	}
+	
+	/**
+	 * Löscht alle komponenten im Frame und
+	 * fügt dem Frame die nötigen Komponenten zum Einheiten setzen hinzu
+	 */
 	public void einheitenSetzen(){
 		einheitenZahl = new JTextField("0");
 		laenderUndBesitzer(this.laenderListe);
@@ -81,6 +109,10 @@ public class AdminPanel extends JPanel{
 		this.revalidate();
 	}
 	
+	/**
+	 *Löscht alle komponenten im Frame und
+	 *und fügt die nötgen Komponenten zum Phase setzen hinzu 
+	 */
 	public void phaseSetzen(){
 		removeAll();
 		String[] phasenListe = {"VERTEILEN","ANGRIFF","VERSCHIEBEN"};
@@ -91,6 +123,11 @@ public class AdminPanel extends JPanel{
 		this.repaint();
 		this.revalidate();
 	}
+	
+	/**
+	 *Löscht alle komponenten im Frame und
+	 *und fügt die nötgen Komponenten zum Besitzer setzen hinzu  
+	 */
 	public void besitzerSetzen(){
 		removeAll();
 		laenderUndBesitzer(this.laenderListe);
@@ -108,6 +145,10 @@ public class AdminPanel extends JPanel{
 		this.revalidate();
 	}
 	
+	/**
+	 *Löscht alle komponenten im Frame und
+	 *und fügt die nötgen Komponenten zum aktiven Spieler setzen hinzu   
+	 */
 	public void aktiverSpielerSetzen(){
 		removeAll();
 		String[] spielerArray = new String[spielerListe.size()];
@@ -121,6 +162,10 @@ public class AdminPanel extends JPanel{
 		this.repaint();
 		this.revalidate();
 	}
+	
+	/**
+	 * Entfernt alle Komponenten vom Frame
+	 */
 	public void removeAll(){
 		this.remove(einheitenSetzenMenuBtn);
 		this.remove(besitzerSetzenMenuBtn);
@@ -140,6 +185,10 @@ public class AdminPanel extends JPanel{
 		
 	}
 	
+	/**
+	 *Löscht alle komponenten im Frame und
+	 *und fügt die nötgen Komponenten für das Hauptmenü hinzu   
+	 */
 	public void startPanel(){
 		removeAll();
 		this.add(einheitenSetzenMenuBtn);
@@ -150,17 +199,24 @@ public class AdminPanel extends JPanel{
 		this.revalidate();
 	}
 	
+	/**
+	 * Gibt den ausgewählten Namen vom Länder Dropdownmenü zurück.
+	 * @return String
+	 */
 	private String besitzerSetzenVerarbeiten(){
 		return laenderListe.get(laenderWahl.getSelectedIndex()).getName();
 
 	}
 	
+	/**
+	 * Gibt im Dropdownmenü die Ländernamen und die dazugehörigen Besitzer an
+	 * @param laenderListe
+	 */
 	public void laenderUndBesitzer(ArrayList<Land> laenderListe){
 		laenderArray = new String[laenderListe.size()];
 		for(int i = 0; i < laenderListe.size(); i++){
 			laenderArray[i] = "<html>" + laenderListe.get(i).getName() + " <br> " + laenderListe.get(i).getBesitzer().getName()+ "</html>";
 		}
-//		laenderWahl.add(new JComboBox<String>(laenderArray));
 		laenderWahl = new JComboBox<String>(laenderArray);
 
 	}

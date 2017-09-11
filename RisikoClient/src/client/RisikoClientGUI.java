@@ -1,7 +1,3 @@
-//TODO Javadoc
-//TODO bei Gewonnen Panel schließen, kleine verschiebung/größenfehler?
-//TODO Adminpanel Bugfixes
-
 package client;
 
 import java.awt.Color;
@@ -126,19 +122,27 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 			public void windowClosing(WindowEvent we){
 				if(imSpiel && !gewonnen){
-					try {
-						if(!sp.getTurn().toString().equals("STARTPHASE")){
-							spielSpeichernNachEndeFrage();
-						}else{
-							sp.spielBeenden(ownSpieler);
-							
+	
+						try {
+							if(!sp.getTurn().toString().equals("STARTPHASE")){
+								spielSpeichernNachEndeFrage();
+							}else{
+								sp.spielBeenden(ownSpieler);
+								
 
+							}
+						} catch (RemoteException e) {
+							e.printStackTrace();
 						}
-					} catch (RemoteException e) {
+					
+				}else if(gewonnen){
+						try {
+							sp.spielBeenden(ownSpieler);
+						} catch (RemoteException e) {
+							e.printStackTrace();
+						}
 
-						e.printStackTrace();
-					}
-				}else{
+				} else {
 					System.exit(0);
 				}
 			}
@@ -228,7 +232,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		name = JOptionPane.showInputDialog(frame, "Spiel speichern. Gebe einen Namen ein.");
 		if(name.length() > 0){
 			try {
-				sp.spielSpeichern("./Speicher/" + name + ".txt");
+				sp.spielSpeichern("../RisikoCommon/Speicher/" + name + ".txt");
 			} catch (IOException e) {
 				consolePanel.textSetzen("Spiel konnte nicht gespeichert werden. " + e.getMessage());
 			}
@@ -256,8 +260,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-
-	
+	/**
+	 * erstellt oder läd ein Spiel, erzeugt das Frame mit Spielstand oder komplett neu
+	 */
 	public void hauptspielStarten(String name, int anzahlSpieler, String dateiPfad) throws RemoteException, SpielBereitsErstelltException {
 		boolean geladenesSpiel = false;
 		if(dateiPfad != null) {
@@ -387,22 +392,14 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 	}
 	
+	/**
+	 * registriert Spieler mit GameEventListener
+	 * @param name
+	 * @throws RemoteException
+	 */
 	private void spielerRegistrieren(String name) throws RemoteException {
 		sp.addGameEventListener(this);
 		sp.serverBenachrichtigung("Spieler registriert: " + name);
-	}
-	/**
-	 * @param breite
-	 * @param hoehe
-	 */
-	public void aufloesungAendern(int breite, int hoehe) {
-
-		frame.setSize(breite, hoehe);
-		spielfeld.neuMalen(1000, 600);
-		frame.repaint();
-		frame.revalidate();
-
-		frame.setLocationRelativeTo(null);
 	}
 
 	/** Zeigt nach dem Anklicken eines Landes je nach Phase das entsprechende
@@ -585,7 +582,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.setTitle(aktiverSpieler.getName() + " hat gewonnen");
 		frame.setSize(250, 300);
 		frame.setLocationRelativeTo(null);
-		gewonnenPanel = new GewonnenPanel(aktiverSpieler, schrift, uberschrift);
+		gewonnenPanel = new GewonnenPanel(aktiverSpieler, uberschrift);
 		frame.add(gewonnenPanel, "center");
 		frame.setVisible(true);
 		frame.repaint();
@@ -606,6 +603,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * wertet Farbcode bei jedem Mausklick aus
+	 */
 	public void mausklickAktion(Color color) {
 		try {
 			if(aktiverSpieler.equals(ownSpieler) || sp.getTurn().toString().equals("STARTPHASE")){
@@ -620,6 +620,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		} catch (RemoteException e) {}
 	}
 
+	/**
+	 * startet Spiel Erstellen oder Beitreten Panel
+	 */
 	public void SpielerRegistrierungOeffnen(boolean ersterSpieler) {
 		frame.remove(startPanel);
 		if(ersterSpieler) {
@@ -629,6 +632,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * setzt den nächsten Zug beim Klicken des Nächste Phase Buttons
+	 */
 	public void phaseButtonClicked() throws RemoteException{
 		//Wenn Mission erfüllt, dann gewonnen aufrufen
 		try {
@@ -642,6 +648,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * Button Angriff führt einen Angriff aus, zeigt die Würfel an und wertet die Anzeige aus je nach Wurd Ergebnis
+	 */
 	public void angriffButtonClicked() {
 		try {
 			//Angriff durchführen
@@ -687,6 +696,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * Verschieben Button ermöglicht das Klicken auf erst ein und dann das zweite Land und posotioniert die Einheitzen je nach Eingabe
+	 */
 	public void verschiebenButtonClicked(int einheiten) {
 		try {
 			sp.checkEinheitenAnzahlVerteilbar(land1, einheiten);
@@ -704,9 +716,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * zeigt die Verschieben Aktion an, nachdem erobert wurde
+	 */
 	public void verschiebenNachAngriffButtonClicked(int einheiten) {
 		try {
-			//TODO hier muss vorher die länder anzahl aktualisierst werden, da sie immer ein zu viel hat!
 			sp.checkEinheitenAnzahlVerteilbar(land1, einheiten);
 			sp.eroberungBesetzen(land1, land2, einheiten);
 			land1 = null;
@@ -720,6 +734,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * gibt einen Schuss Sound aus
+	 */
 	public void schussSound(){
 		try{
 			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("Sounds/hit.wav"));
@@ -765,6 +782,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						spielerListPanel.setLabel(s);
 					}
 					if(!sp.isSpielGeladen()) {
+						anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
 						consolePanel.textSetzen("Du kannst nun die ersten Einheiten setzen.");
 					} else {
 						for(int s = 0; s < sp.getSpielerList().size();s++) {
@@ -776,7 +794,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						}
 						sp.beiGeladenemSpielNaechstenListener();
 					}
-					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
 					buttonPanel.startphase(anzahlSetzbareEinheiten);
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 					statistikPanel.statistikAktualisieren(laenderListe, spielerListe);
@@ -844,6 +861,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 							JOptionPane.showMessageDialog(null, "Das Spiel wurde von " + gce.getSpieler().getName() + " beendet.");
 					} else {
 						frame.remove(gewonnenPanel);
+						gewonnen = false;
 					}
 					frame.remove(spielfeld);
 					frame.remove(infoPanel);

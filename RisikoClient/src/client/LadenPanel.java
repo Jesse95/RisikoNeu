@@ -26,11 +26,18 @@ public class LadenPanel extends JPanel{
 		public void zurueckBtn(JPanel panel);
 	}
 	
+	/**
+	 * Konstruktor LadenPanel
+	 * @param handler
+	 */
 	public LadenPanel(LadenButtonClicked handler) {
 		this.handler = handler;
 		initialize();
 	}
 	
+	/**
+	 * Initialisiert LadenPanel
+	 */
 	public void initialize() {
 		this.setLayout(new MigLayout(" wrap2","[150][150]","[][120][]")); 
 		ArrayList<String> speicherstaende = speicherstaendeLaden();
@@ -67,6 +74,10 @@ public class LadenPanel extends JPanel{
 		this.add(zurueckBtn,"right, growx");
 	}
 	
+	/**
+	 * Läd speicherstände aus Speicher Ordner im Common
+	 * @return ArrayList<String>
+	 */
 	public ArrayList<String> speicherstaendeLaden() {
 		File[] fs = new File("../RisikoCommon/Speicher/").listFiles();
         ArrayList<String> games = new ArrayList<String>();
