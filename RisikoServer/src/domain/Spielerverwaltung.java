@@ -28,8 +28,8 @@ public class Spielerverwaltung{
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Getter Aktiver Spieler Nummer
+	 * @return int
 	 */
 	public int getAktiverSpielerNummer(){
 		return spielerNummer;
@@ -68,17 +68,24 @@ public class Spielerverwaltung{
 	}
 	
 	/**
-	 * 
+	 * Setter Aktiver Spieler Nummer
 	 * @param spieler
 	 */
 	public void setAktiverSpieler(int spieler){
 		this.spielerNummer = spieler;
 	}
 	
+	/**
+	 * Setter Spielerliste
+	 * @param liste
+	 */
 	public void setSpielerList(ArrayList<Spieler> liste){
 		this.spielerListe = liste;
 	}
 
+	/**
+	 * Farben werden verteilt
+	 */
 	public void farbenVerteilen(){
 		ArrayList<String> farben = new ArrayList<String>();
 		farben.add("rot");
@@ -90,10 +97,6 @@ public class Spielerverwaltung{
 		for (Spieler s : spielerListe) {
 			s.setFarbe(farben.get(0));
 			farben.remove(0);
-		}
-		System.out.println("Farben wurden verteilt");
-		for(Spieler s : spielerListe){
-			System.out.println("Spieler: " + s.getName() + " Farbe: " + s.getFarbe());
 		}
 	}
 	

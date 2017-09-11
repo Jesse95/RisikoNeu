@@ -11,11 +11,17 @@ public class Einheitenkartenverwaltung{
 	private ArrayList<Einheitenkarten> kartenstapel;
 	private int kartenEingeloest = 1;
 	
-	
+	/**
+	 * Kosntruktor Einheitenkartenverwaltung
+	 */
 	public Einheitenkartenverwaltung() {
 		kartenstapelErstellen();
 	}
 
+	/**
+	 *  erstellt Kartenstapel zum "ziehen"
+	 * @return ArrayList<Einheitenkarten>
+	 */
 	public ArrayList<Einheitenkarten> kartenstapelErstellen() {
 		kartenstapel = new ArrayList<Einheitenkarten>();
 		for(int i = 0;i < 14;i++) {
@@ -30,6 +36,10 @@ public class Einheitenkartenverwaltung{
 		return kartenstapel;
 	}
 	
+	/**
+	 * Spieler zieht eine Karte
+	 * @param spieler
+	 */
 	public void karteNehmen(Spieler spieler) {
 		if(spieler.getEinheitenkarten().size() < 5){
 			spieler.karteNehmen(kartenstapel.get(0));
@@ -37,6 +47,11 @@ public class Einheitenkartenverwaltung{
 		}
 	}
 	
+	/**
+	 * Einheitenkarten werden aus der Hand des Gegeners gelöscht
+	 * @param spieler
+	 * @param benutzteKarten
+	 */
 	private void einheitenKartenVonSpielerEntfernen(Spieler spieler, ArrayList<String> benutzteKarten)
 	{
 		ArrayList<Einheitenkarten> kartenListe = spieler.getEinheitenkarten();
@@ -51,6 +66,12 @@ public class Einheitenkartenverwaltung{
 		}
 	}
 	
+	/**
+	 * einheitenkarten werden eingelöst und zustzliche einheiten zurückgegeben 
+	 * @param spieler
+	 * @param tauschKarten
+	 * @return int
+	 */
 	public int einheitenkartenEinloesen(Spieler spieler,ArrayList<String> tauschKarten) {
 		int einheiten = 0;
 			

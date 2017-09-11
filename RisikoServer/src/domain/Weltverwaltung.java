@@ -19,6 +19,7 @@ public class Weltverwaltung{
 	private FilePersistenceManager pm = new FilePersistenceManager();
 
 	/**
+	 * Konstruktor Weltverwaltung
 	 * @param spielerVw
 	 * @throws IOException 
 	 */
@@ -32,6 +33,9 @@ public class Weltverwaltung{
 		}
 	}
 
+	/**
+	 * laender und verbindungen erstellen
+	 */
 	public void laenderverbindungenUndKontinenteErstellen(){
 		this.verbindungenErstellen();
 		this.kontinenteErstellen();
@@ -170,6 +174,7 @@ public class Weltverwaltung{
 	
 	
 	/**
+	 * Fügt Verbindungen der Länder hinzu
 	 * @param indexLand1
 	 * @param nachbarlaender
 	 */
@@ -181,8 +186,9 @@ public class Weltverwaltung{
 	}
 	
 	/**
+	 * gibt Länderindex zurück
 	 * @param land
-	 * @return
+	 * @return int
 	 */
 	public int indexVonLand(Land land) {
 		for(int i = 0;i < laenderListe.size();i++) {
@@ -194,6 +200,7 @@ public class Weltverwaltung{
 	}
 	
 	/**
+	 * gibt Land von index zurück
 	 * @param index
 	 * @return Land
 	 */
@@ -370,7 +377,7 @@ public class Weltverwaltung{
 	}
 	
 	/**
-	 * 
+	 * get Land von Farbcode
 	 * @param farbe
 	 * @return
 	 */

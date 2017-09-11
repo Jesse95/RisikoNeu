@@ -53,7 +53,7 @@ public class Missionsverwaltung{
 	}
 	
 	/**
-	 * 
+	 * verteilt Missionen an Spieler
 	 * @param spielerListe
 	 */
 	public void missionenVerteilen(ArrayList<Spieler> spielerListe){
@@ -95,9 +95,9 @@ public class Missionsverwaltung{
 	}
 	
 	/**
-	 * 
+	 * gibt Missionen aus
 	 * @param spieler
-	 * @return
+	 * @return String
 	 */
 	public String missionAusgeben(Spieler spieler){
 		String ausgabe = "";
@@ -110,15 +110,15 @@ public class Missionsverwaltung{
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Getter Missionsliste
+	 * @return ArrayList<Mission>
 	 */
 	public ArrayList<Mission> getMissionsListe(){
 		return this.missionsListe;
 	}
 	
 	/**
-	 * 
+	 *  getter Mission von Spieler
 	 * @param spieler
 	 * @return
 	 */

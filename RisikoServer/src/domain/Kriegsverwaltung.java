@@ -98,9 +98,9 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 	}
 	
 	/**
-	 * 
+	 *  führt einen Angriff durch
 	 * @param angriff
-	 * @return
+	 * @return AngriffRueckgabe
 	 * @throws KeinNachbarlandException
 	 */
 	public AngriffRueckgabe befreiungsAktion(Angriff angriff) throws KeinNachbarlandException {
@@ -565,8 +565,7 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * @return Mission
 	 */
 	public Mission getMissionVonSpieler(Spieler spielerA){
 	Spieler spieler = spielerServerVerbindung(spielerA);
