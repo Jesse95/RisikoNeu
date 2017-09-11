@@ -70,6 +70,14 @@ import net.miginfocom.swing.MigLayout;
  * @author Darian
  *
  */
+/**
+ * @author Darian
+ *
+ */
+/**
+ * @author Darian
+ *
+ */
 public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHandler, ButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler, GameEventListener, StartHandler, BeitretenButtonClicked, LadenButtonClicked {
 
 	private ServerRemote sp;
@@ -377,6 +385,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * Stellt Verbindung zwischen GameClient und GameServer her und übermittelt
+	 * anschließend den registrierten Spieler an den Server
+	 * @param name
+	 * @throws RemoteException
+	 */
 	private void serverVerbindungHerstellen(String name) throws RemoteException {
 		try {
 			String servicename = "GameServer";
@@ -389,6 +403,10 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 	}
 
+	/**
+	 * @param breite
+	 * @param hoehe
+	 */
 	public void aufloesungAendern(int breite, int hoehe) {
 
 		frame.setSize(breite, hoehe);
@@ -399,6 +417,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.setLocationRelativeTo(null);
 	}
 
+	/** Zeigt nach dem Anklicken eines Landes je nach Phase das entsprechende
+	 * ButtonPanel an und aktualisiert anschließend die Statistik
+	 * @param landcode
+	 * @throws RemoteException
+	 */
 	private void landAnklicken(String landcode)throws RemoteException {
 		Land land = sp.stringToLand(sp.getLandVonFarbcode(landcode));
 		if (land != null) {
@@ -424,6 +447,14 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	}
 
 
+	/** Wenn setzbare Einheiten vorhanden sind  werden die Einheiten gesetzt.
+	 * Wenn nicht, gibt die Konsole aus, dass alle gesetzt wurden. Wenn in der Startphase
+	 * keine setzbaren Einheiten übrig sind, ist der Spieler bereit und es wird in
+	 * die nächste Phase übergegangen.
+	 * 
+	 * @param land
+	 * @throws RemoteException
+	 */
 	private void verteilenButtonPanelAnzeige(Land land)throws RemoteException {
 		try {
 			sp.landWaehlen(land, ownSpieler);
@@ -450,6 +481,13 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/** Wenn noch kein Land ausgewählt wurde wird das ausgewählte Land überprüft,
+	 * ob es genug setzbare Einheiten besitzt und zum AngreiferLand.
+	 * Wenn bereits ein Land ausgewählt wurde wird überprüft ob es Nachbarländer und
+	 * die Besitzer Gegner sind und anschließend zum angegriffenen Land.
+	 * @param land
+	 * @throws RemoteException
+	 */
 	private void angreifenButtonPanelAnzeige(Land land)throws RemoteException {
 		if (land1 == null) {
 			//Land wählen mit dem angegriffen werden soll
@@ -484,6 +522,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/** Wenn noch kein Land ausgewählt wurde, wird von dem ausgewählten Land aus verschoben.
+	 * Wenn bereits eins ausgewählt wurde, wird auf das ausgewählte Land verschoben.s
+	 * @param land
+	 * @throws RemoteException
+	 */
 	private void verschiebenButtonPanelAnzeige(Land land)throws RemoteException {
 		if (land1 == null) {
 			//Land wählen von dem aus verschoben werden soll
@@ -524,8 +567,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/** Überprüfung ob ein Spieler verloren hat
+	 * @throws RemoteException
+	 */
 	private void istSpielerRaus()throws RemoteException{
-		//Überprüfung ob ein Spieler verloren hat
+		
 		for(Spieler s : spielerListe){
 			if(sp.spielerRaus(s)){
 				consolePanel.textSetzen("Der Spieler " + s.getName() + " hat verloren und ist raus");
@@ -535,6 +581,10 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * Der Spieler der gewonnen hat wird im gewonnenPannel
+	 * angezeigt.
+	 */
 	public void gewonnenPanelAnzeigen(){
 		frame.remove(spielfeld);
 		frame.remove(spielerListPanel);

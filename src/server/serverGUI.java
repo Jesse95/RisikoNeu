@@ -88,6 +88,13 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		initialize();
 	}
 
+	/** Die graphische Oberfläche des Serverfensters wird erstellt.Je nachdem ob
+	 * der Server bereits gestartet oder nicht ist werden die entsprechenden 
+	 *  Buttons und die Ampel
+	 *  mit der passenden Farbe dargestellt.
+	 * 
+	 * @throws RemoteException
+	 */
 	public void initialize( )throws RemoteException{
 		startBtn = new JButton("Server starten");
 		serverConsolePanel = new ConsolePanel();
@@ -176,6 +183,10 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	
 	}
 	
+	/** Alle vorhandenen Daten und Verwaltungen werden auf null und anschließend
+	 * neu gesetzt.
+	 * @throws RemoteException
+	 */
 	public void serverCleanen() throws RemoteException {
 		listeners.clear();
 		bereitZaehler = 0;
@@ -195,6 +206,11 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 		
 	}
 	
+	/**Spieler werden benachrichtigt, dass das Spiel beendet wurde.
+	 * Ampel wird auf rot gesetzt.
+	 * Der Server wird von der Registry getrennt und beendet.
+	 * @throws RemoteException
+	 */
 	public void serverBeenden() throws RemoteException {
 		listenerBenachrichtigen(new GameControlEvent(null,GameControlEvent.phasen.BEENDEN));
 		ampelSchalten(false);

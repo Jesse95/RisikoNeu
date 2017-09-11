@@ -92,6 +92,11 @@ public class ButtonPanel extends JPanel{
 		this.add(verschiebenNA,"left,grow");
 	}
 	
+	/** Während die Verschieben-Phase aktiv ist, ist der 
+	 * Verschieben-Button deaktiviert.Der Nächste-Phase Button ist aktiviert.
+	 * @param erstesLand
+	 * @param zweitesLand
+	 */
 	public void verschiebenAktiv(String erstesLand, String zweitesLand)	{
 		removeAll();
 		this.add(land1,"left,grow");
@@ -106,6 +111,10 @@ public class ButtonPanel extends JPanel{
 		this.repaint();
 	}
 	
+	/** Anzahl der zu verteilenden Einheiten wird angezeigt,
+	 * der Nächste-Phase Button wird in deaktivierter Form angezeigt. 
+	 * @param einheiten
+	 */
 	public void verteilenAktiv(int einheiten) {		
 		removeAll();
 		this.add(anzahlEinheitenVerteilen,"center");
@@ -142,6 +151,10 @@ public class ButtonPanel extends JPanel{
 		anzahlEinheitenVerschieben.setText("");
 	}
 	
+	/** Bei jedem Spieler wird die Anzahl der Einheiten, die er zu 
+	 * verteilen hat, angezeigt.
+	 * @param einheiten
+	 */
 	public void startphase(int einheiten) {
 		removeAll();
 		this.add(anzahlEinheitenVerteilen,"center");
@@ -149,6 +162,9 @@ public class ButtonPanel extends JPanel{
 		this.repaint();
 	}
 	
+	/** Setzt die zu verteilenden Einheiten
+	 * @param einheiten
+	 */
 	public void setEinheitenVerteilenLab(int einheiten) {
 		anzahlEinheitenVerteilen.setText(einheiten + "");
 	}
