@@ -126,19 +126,27 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 			public void windowClosing(WindowEvent we){
 				if(imSpiel && !gewonnen){
-					try {
-						if(!sp.getTurn().toString().equals("STARTPHASE")){
-							spielSpeichernNachEndeFrage();
-						}else{
-							sp.spielBeenden(ownSpieler);
-							
+	
+						try {
+							if(!sp.getTurn().toString().equals("STARTPHASE")){
+								spielSpeichernNachEndeFrage();
+							}else{
+								sp.spielBeenden(ownSpieler);
+								
 
+							}
+						} catch (RemoteException e) {
+							e.printStackTrace();
 						}
-					} catch (RemoteException e) {
+					
+				}else if(gewonnen){
+						try {
+							sp.spielBeenden(ownSpieler);
+						} catch (RemoteException e) {
+							e.printStackTrace();
+						}
 
-						e.printStackTrace();
-					}
-				}else{
+				} else {
 					System.exit(0);
 				}
 			}
@@ -844,6 +852,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 							JOptionPane.showMessageDialog(null, "Das Spiel wurde von " + gce.getSpieler().getName() + " beendet.");
 					} else {
 						frame.remove(gewonnenPanel);
+						gewonnen = false;
 					}
 					frame.remove(spielfeld);
 					frame.remove(infoPanel);
