@@ -12,7 +12,9 @@ public class KontinentenMission extends Mission{
 		super(id, "<html>Erobern Sie die Kontinente : <br><center> " +  kontinente.get(0).getName() + "<br>" + kontinente.get(1).getName() +"</center></html>",spieler,"kontinent");
 		this.kontinente = kontinente;
 	}
-
+    /**
+     * Überprüft ob der Spieler alle Länder der beiden Kontinente erobert hat.
+     */
 	public boolean istAbgeschlossen() {
 		List<Land> laender = new Vector<>();
 		

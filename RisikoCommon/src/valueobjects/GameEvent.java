@@ -10,6 +10,9 @@ public abstract class GameEvent implements Serializable{
 		this.player = player;
 	}
 	
+	/**Gibt den Spieler zurück.
+	 * @return
+	 */
 	public Spieler getSpieler(){
 		return player;
 	}

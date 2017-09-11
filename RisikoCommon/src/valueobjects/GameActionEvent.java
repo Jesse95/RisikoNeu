@@ -12,10 +12,16 @@ public class GameActionEvent extends GameEvent{
 		this.text = text;
 	}
 	
+	/**Gibt die Art des GameActionEvents zurück.
+	 * @return
+	 */
 	public GameActionEventType getType(){
 		return type;
 	}
 	
+	/**Gibt den Text zurück.
+	 * @return
+	 */
 	public String getText(){
 		return text;
 	}

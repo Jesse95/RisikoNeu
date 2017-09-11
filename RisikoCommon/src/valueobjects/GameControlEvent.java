@@ -10,6 +10,9 @@ public class GameControlEvent extends GameEvent{
 		this.phase = phase;
 	}
 	
+	/**Gibt die Phase zurück.
+	 * @return
+	 */
 	public phasen getTurn(){
 		return phase;
 	}
