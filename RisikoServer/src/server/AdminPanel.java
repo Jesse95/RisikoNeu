@@ -36,6 +36,7 @@ public class AdminPanel extends JPanel{
 	private JComboBox<String> phaseWahl = new JComboBox<String>();
 	private JTextField einheitenZahl = new JTextField();
 	private AdminPanelButtons handler = null;
+	private String[] laenderArray;
 	
 	
 	public AdminPanel(AdminPanelButtons handler) {
@@ -52,7 +53,7 @@ public class AdminPanel extends JPanel{
 		phaseSetzenMenuBtn.addActionListener(menuAufrufen -> phaseSetzen());
 		aktiverSpielerSetzenMenuBtn.addActionListener(menuAufrufen -> aktiverSpielerSetzen());
 		zurueckBtn.addActionListener(zurueck -> startPanel());
-		einheitenSetzenBtn.addActionListener(einheitenSetzen -> handler.einheitenSetzenBtn(laenderWahl.getSelectedItem() +"", Integer.parseInt(einheitenZahl.getText())));
+		einheitenSetzenBtn.addActionListener(einheitenSetzen -> handler.einheitenSetzenBtn(besitzerSetzenVerarbeiten(), Integer.parseInt(einheitenZahl.getText())));
 		besitzerSetzenBtn.addActionListener(besitzerSetzen -> handler.besitzerSetzenBtn(besitzerSetzenVerarbeiten(), spielerWahl.getSelectedItem() +""));
 		phaseSetzenBtn.addActionListener(phaseSetzen -> handler.phaseSetzenBtn(phaseWahl.getSelectedItem() + ""));
 		aktiverSpielerSetzenBtn.addActionListener(spielerSetzen -> handler.aktiverSpielerSetzenBtn(spielerWahl.getSelectedItem() + ""));
@@ -70,7 +71,7 @@ public class AdminPanel extends JPanel{
 	}
 	public void einheitenSetzen(){
 		einheitenZahl = new JTextField("0");
-		laenderUndBesitzer();
+		laenderUndBesitzer(this.laenderListe);
 		removeAll();
 		this.add(laenderWahl,"growx");
 		this.add(einheitenZahl,"growx");
@@ -91,13 +92,14 @@ public class AdminPanel extends JPanel{
 		this.revalidate();
 	}
 	public void besitzerSetzen(){
-		laenderUndBesitzer();
+		removeAll();
+		laenderUndBesitzer(this.laenderListe);
 		String[] spielerArray = new String[spielerListe.size()];
 		for(int i = 0; i < spielerListe.size(); i++){
 			spielerArray[i] = spielerListe.get(i).getName();
 		}
 		spielerWahl = new JComboBox<String>(spielerArray);
-		removeAll();
+		
 		this.add(laenderWahl);
 		this.add(spielerWahl);
 		this.add(besitzerSetzenBtn);	
@@ -133,6 +135,9 @@ public class AdminPanel extends JPanel{
 		this.remove(spielerWahl);
 		this.remove(phaseWahl);
 		this.remove(einheitenZahl);
+		
+		this.repaint();
+		
 	}
 	
 	public void startPanel(){
@@ -147,13 +152,16 @@ public class AdminPanel extends JPanel{
 	
 	private String besitzerSetzenVerarbeiten(){
 		return laenderListe.get(laenderWahl.getSelectedIndex()).getName();
+
 	}
 	
-	public void laenderUndBesitzer(){
-		String[] laenderArray = new String[laenderListe.size()];
+	public void laenderUndBesitzer(ArrayList<Land> laenderListe){
+		laenderArray = new String[laenderListe.size()];
 		for(int i = 0; i < laenderListe.size(); i++){
 			laenderArray[i] = "<html>" + laenderListe.get(i).getName() + " <br> " + laenderListe.get(i).getBesitzer().getName()+ "</html>";
 		}
+//		laenderWahl.add(new JComboBox<String>(laenderArray));
 		laenderWahl = new JComboBox<String>(laenderArray);
+
 	}
 }
