@@ -13,6 +13,7 @@ import valueobjects.Einheitenkarten;
 import valueobjects.Land;
 import valueobjects.Mission;
 import valueobjects.Spieler;
+import valueobjects.Spielstand;
 
 public class FilePersistenceManager {
 	private BufferedReader reader = null;
@@ -82,6 +83,83 @@ public class FilePersistenceManager {
 		return new Land(name,null,1,kuerzel,fahneX, fahneY);
 		
 	}
+	public Spielstand spielLaden(String datei) throws IOException {
+		Spielstand spielstand = new Spielstand();
+		ladeLesekanalOeffnen(datei);
+		String phase = liesZeile();
+		String spieler = "";
+		String spieler2 = "";
+		Spieler spielerS2 = null;
+		String land = "";
+		String kuerzel = "";
+		String karte = "";
+		int einheiten = 0;
+		
+		spielstand.setAktuellePhase(phase);
+		
+		do{
+			spieler = liesZeile();
+			if(spieler.length() != 0){
+				spielstand.getSpielerListe().add(new Spieler(spieler));
+			}
+		}while(spieler.length() != 0);
+		
+		do{
+			land = liesZeile();
+			if(land.length() != 0){
+				spieler = liesZeile();
+				einheiten = Integer.parseInt(liesZeile());
+				kuerzel = liesZeile();
+				int fahneX = Integer.parseInt(liesZeile());
+				int fahneY = Integer.parseInt(liesZeile());
+				for(Spieler s : spielstand.getSpielerListe()){
+					if(s.getName().equals(spieler)){
+						spielstand.getLaenderListe().add(new Land(land,s,einheiten,kuerzel, fahneX, fahneY));
+					}
+				}
+			}	
+		}while(land.length() != 0);
+		
+		int spielerNummer = Integer.parseInt(liesZeile());
+		spielstand.setAktiverSpielerNummer(spielerNummer);
+
+		spielstand.kontinenteErstellen();
+		
+		for(Spieler anzSp: spielstand.getSpielerListe()) {
+			spieler = liesZeile();
+			String istSpielerMission = liesZeile();
+			if(istSpielerMission.equals("spieler"))
+			{
+				spieler2 = liesZeile();
+				for(Spieler s : spielstand.getSpielerListe()){
+					if(s.getName().equals(spieler2)){
+						spielerS2 = s;
+					}
+				}
+			}
+			int id = Integer.parseInt(liesZeile());
+			for(Spieler s : spielstand.getSpielerListe()){
+				if(s.getName().equals(spieler)){
+					spielstand.missionLaden(spielstand.getLaenderListe(), spielstand.getKontinentenListe(), spielstand.getSpielerListe(),s,spielerS2,id);
+				}
+			}
+		}
+
+		for(Spieler s: spielstand.getSpielerListe()) {
+			do{
+				karte = liesZeile();
+				Einheitenkarten einheitenkarte = new Einheitenkarten(karte);
+				s.getEinheitenkarten().add(einheitenkarte);
+			}while(karte.length() != 0);
+		}
+		
+		if(phase.equals("VERTEILEN")) {
+			spielstand.setSetzbareEinheitenVerteilen(Integer.parseInt(liesZeile()));
+		}
+		close();
+		
+		return spielstand;
+	}
 
 	/**
 	 * Bekommt alle wichtigen Infos von dem Spiel übergeben, um diese in einer Textdatei zu speichern
@@ -140,15 +218,6 @@ public class FilePersistenceManager {
 		}
 		
 		return true;
-	}
-	
-	/**
-	 * Ruft liesZeile auf
-	 * @return String
-	 * @throws IOException
-	 */
-	public String spielstandLaden() throws IOException{
-		return liesZeile();
 	}
 
 	/**
