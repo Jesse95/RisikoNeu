@@ -62,6 +62,14 @@ import local.valueobjects.Spielstand;
 import net.miginfocom.swing.MigLayout;
 
 
+/**
+ * @author Darian
+ *
+ */
+/**
+ * @author Darian
+ *
+ */
 public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHandler, ButtonClickHandler, ErstellenButtonClicked, KarteClickedHandler, GameEventListener, StartHandler, BeitretenButtonClicked, LadenButtonClicked {
 
 	private ServerRemote sp;
@@ -95,16 +103,31 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private boolean imSpiel = false;
 	private Registry registry;
 	
+	/**
+	 * Konstruktor
+	 * Jframe wird erstellt und das erste Panel (erstesPanelStartmenu) wird aufgerufen
+	 * @throws RemoteException
+	 */
 	private RisikoClientGUI()throws RemoteException {
 		frame = new JFrame();
 		erstesPanelStartmenu();
 		
 	}
-
+	
+	/**
+	 * main Methode erstellt ein Objekt vom Konstruktor
+	 * @param args
+	 * @throws RemoteException
+	 */
 	public static void main(String[] args)throws RemoteException{
 		new RisikoClientGUI();
 	}
-
+	
+	/**
+	 * Erstes Panel (Startmenü)
+	 * Setzt die CloseOperation und fügt das StartPanel in frame ein.
+	 * Buttons: Spiel erstellen, Spiel laden, Spiel beitreten, Beenden
+	 */
 	private void erstesPanelStartmenu() {
 		imSpiel = false;
 		//Schriften für alle Panel
@@ -147,19 +170,23 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.setTitle("Spiel starten");
 		frame.setSize(335, 370);
 		frame.setLocationRelativeTo(null);
-		//frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		startPanel = new StartPanel(this);
 		frame.add(startPanel);
 		frame.setResizable(true);
 		frame.setVisible(true);
 	}
 
+	
+	/**
+	 * Spiel erstellen Panel:
+	 * Das vorherige Panel wird removed und erstellenPanel wird im Frame eingebunden.
+	 * 
+	 */
 	private void zweitesPanelSpielErstellen() {
 		//Spieler erstellen Fenster erstellen
 		frame.setTitle("Spiel erstellen");
 		frame.setSize(300, 200);
 		frame.setLocationRelativeTo(null);
-		//frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		erstellenPanel = new ErstellenPanel(this);
 		frame.add(erstellenPanel);
 		frame.setVisible(true);
@@ -167,11 +194,15 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.revalidate();
 	}
 
+	/**
+	 * Spiel beitreten Panel:
+	 * Das vorherige Panel wird removed und beitretenPanel wird im Frame eingebunden.
+	 * 
+	 */
 	private void zweitesPanelSpielBeitreten(){
 		frame.setTitle("Spiel beitreten");
 		frame.setSize(320, 120);
 		frame.setLocationRelativeTo(null);
-		//frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		beitretenPanel = new BeitretenPanel(this);
 		frame.add(beitretenPanel);
 		frame.setVisible(true);
@@ -179,6 +210,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.revalidate();
 	}
 
+	/**
+	 * Spiel laden Panel:
+	 * Das vorherige Panel wird removed und ladenPanel wird im Frame eingebunden.
+	 * 
+	 */
 	public void zweitesPanelSpielLaden(){
 		frame.remove(startPanel);
 		frame.setTitle("Spiel laden");
@@ -192,6 +228,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.revalidate();
 	}
 
+	/**
+	 * Ein JOptionPane wird angezeigt, indem man einen Namen für den Spielstand eingeben kann.
+	 * Die länge vom angegebenen Namen wird auf eine Länge > 0 geprüft und spielSpeichern wird auf dem Server aufgerufen.
+	 * Dem Namen wird ein .txt hinzugefügt, damit der Server die entsprechende Datei anlegen kann.
+	 * @throws RemoteException
+	 */
 	private void spielSpeichern() throws RemoteException {
 		String name = "";
 
@@ -207,6 +249,14 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * Wenn das Fenster geschlossen wird (X), wird ein JOptionPane angezeigt.
+	 * Je nach Auswahl werden die Methoden 
+	 * Ja/spielSpeichern(),spielBeenden()
+	 * Nein/sp.spielBeenden()
+	 * aufgerufen. Bei Abbruch schließt sich das JOptionPane.
+	 * @throws RemoteException
+	 */
 	private void spielSpeichernNachEndeFrage() throws RemoteException {
 		//Rückgabe = 0 ist JA, Rückgabe = 1 ist NEIN, Rückgabe 2 ist CANCEL
 		int antwort = JOptionPane.showConfirmDialog(frame, "Spiel speichern bevor es geschlossen wird?");
@@ -218,6 +268,8 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+
+	
 	public void hauptspielStarten(String name, int anzahlSpieler, String dateiPfad) throws RemoteException, SpielBereitsErstelltException {
 		boolean geladenesSpiel = false;
 		if(dateiPfad != null) {
@@ -304,26 +356,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			menu.setFont(schrift);
 			frame.setMenuBar(menu);
 
-			//			frame.addWindowListener(new WindowAdapter(){
-			//
-			//				public void windowClosing(WindowEvent we){
-			//					try {
-			//						sp.spielBeenden(ownSpieler);
-			//					} catch (RemoteException e) {
-			//						
-			//					}
-			//				}
-			//			});
-			//			list = new WindowAdapter(){
-			//
-			//				public void windowClosing(WindowEvent we){
-			//					try {
-			//						sp.spielBeenden(ownSpieler);
-			//					} catch (RemoteException e) {
-			//						
-			//					}
-			//				}
-			//			};
 			//Layout anpassen
 			frame.add(spielfeld, "left,spany 3,grow");
 			frame.add(infoPanel, "left,growx");
@@ -607,6 +639,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					//verschieben einstellungen in button panel öffnen
 					land2.setEinheiten(0);
 					buttonPanel.verschiebenNachAngreifenAktiv(land1.getName(), land2.getName());
+					spielfeld.mapEnabled(false);
 				}
 				schussSound();
 			}
@@ -641,6 +674,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 			land1 = null;
 			land2 = null;
 			buttonPanel.angreifenAktiv("erstes Land", "zweites Land");
+			spielfeld.mapEnabled(true);
 		} catch (KannEinheitenNichtVerschiebenException kenve) {
 			consolePanel.textSetzen(kenve.getMessage());
 		} catch (RemoteException e) {
