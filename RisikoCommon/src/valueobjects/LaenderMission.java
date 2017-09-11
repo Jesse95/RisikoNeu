@@ -16,14 +16,23 @@ public class LaenderMission extends Mission{
 		this.laender = laender;
 	}
 
+	/**Gibt die Länder der Ländermission zurück.
+	 * @return
+	 */
 	public List<Land> getLaender() {
 		return laender;
 	}
 
+	/**Setzt die Länder für die Ländermission.
+	 * @param laender
+	 */
 	public void setLaender(ArrayList<Land> laender) {
 		this.laender = laender;
 	}
 
+	/**
+	 * Überprüft ob der Spieler die Anzahl an Ländern besitzt, die er für die Ländermission erreichen muss.
+	 */
 	public boolean istAbgeschlossen() {
 		int counter = 0;
 		for(Land l : laender){

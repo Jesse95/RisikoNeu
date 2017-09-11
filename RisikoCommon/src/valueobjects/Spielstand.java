@@ -22,54 +22,98 @@ public class Spielstand implements Serializable{
 		this.kontinentenListe = new ArrayList<Kontinent>();
 	}
 
+	/**Gibt aktuelle Phase des Spielstands zurück.
+	 * @return
+	 */
 	public String getAktuellePhase() {
 		return aktuellePhase;
 	}
 	
+	/**Setzt aktuelle Phase des Spielstands.
+	 * @param aktuellePhase
+	 */
 	public void setAktuellePhase(String aktuellePhase) {
 		this.aktuellePhase = aktuellePhase;
 	}
 	
+	/**Gibt die Spielerliste des Spielstand zurück.
+	 * @return
+	 */
 	public ArrayList<Spieler> getSpielerListe() {
 		return spielerListe;
 	}
 	
+	/**Setzt die Spielerliste des Spielstands.
+	 * @param spielerListe
+	 */
 	public void setSpielerListe(ArrayList<Spieler> spielerListe) {
 		this.spielerListe = spielerListe;
 	}
 	
+	/**Gibt die Länderliste des Spielstand zurück.
+	 * @return
+	 */
 	public ArrayList<Land> getLaenderListe() {
 		return laenderListe;
 	}
 	
+	/**Setzt die Länderliste des Spielstands.
+	 * @param laenderListe
+	 */
 	public void setLaenderListe(ArrayList<Land> laenderListe) {
 		this.laenderListe = laenderListe;
 	}
 	
+	/**Gibt die Missionsliste des Spielstands zurück.
+	 * @return
+	 */
 	public ArrayList<Mission> getMissionsListe() {
 		return missionsListe;
 	}
 	
+	/**Setzt die Mission des Spielstands.
+	 * @param missionsListe
+	 */
 	public void setMissionsListe(ArrayList<Mission> missionsListe) {
 		this.missionsListe = missionsListe;
 	}
 	
+	/**Gibt die Nummer vom aktiven Spieler des Spielstands zurück.
+	 * @return
+	 */
 	public int getAktiverSpielerNummer() {
 		return aktiverSpielerNummer;
 	}
 	
+	/**Setzt die Nummer des aktiven Spielers im Spielstand.
+	 * @param aktiverSpieler
+	 */
 	public void setAktiverSpielerNummer(int aktiverSpieler) {
 		this.aktiverSpielerNummer = aktiverSpieler;
 	}
 	
+	/**Gibt die Kontinentenliste des Spielstands zurück.
+	 * @return
+	 */
 	public ArrayList<Kontinent> getKontinentenListe() {
 		return kontinentenListe;
 	}
 
+	/**Setzt die Kontinentenliste des Spielstands.
+	 * @param kontinentenListe
+	 */
 	public void setKontinentenListe(ArrayList<Kontinent> kontinentenListe) {
 		this.kontinentenListe = kontinentenListe;
 	}
 
+	/** Lädt die Missionen je nach ID in die Missionsliste.
+	 * @param laenderListe
+	 * @param kontinentenListe
+	 * @param spielerListe
+	 * @param spieler
+	 * @param spieler2
+	 * @param id
+	 */
 	public void missionLaden(ArrayList<Land> laenderListe, ArrayList<Kontinent> kontinentenListe, ArrayList<Spieler> spielerListe, Spieler spieler, Spieler spieler2, int id) {
 		if(id == 1) {
 			//Befreien Sie Nordamerika und Afrika
@@ -109,6 +153,9 @@ public class Spielstand implements Serializable{
 		}
 	}
 	
+	/**
+	 * Kontinente werden in den Spielstand geladen.
+	 */
 	public void kontinenteErstellen() {
 		ArrayList<Land> europa = new ArrayList<Land>();
 		
@@ -145,10 +192,16 @@ public class Spielstand implements Serializable{
 		kontinentenListe.add(new Kontinent("Nordamerika",nordamerika));
 	}
 
+	/**Gibt die setzbaren Einheiten in der Verteilenphase des Spielstands zurück.
+	 * @return
+	 */
 	public int getSetzbareEinheitenVerteilen() {
 		return setzbareEinheitenVerteilen;
 	}
 
+	/**Setzt die setzbaren Einheiten in der Verteilenphase des Spielstands.
+	 * @param setzbareEinheitenVerteilen
+	 */
 	public void setSetzbareEinheitenVerteilen(int setzbareEinheitenVerteilen) {
 		this.setzbareEinheitenVerteilen = setzbareEinheitenVerteilen;
 	}

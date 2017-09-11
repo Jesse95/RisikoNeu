@@ -12,10 +12,16 @@ public class SpielerMission extends Mission implements Serializable{
 		this.spielerliste = spielerliste;
 	}
 	
+	/**
+	 * Setzt die Beschreibung der Mission neu.
+	 */
 	public void resetBeschreibung(){
 		beschreibung = "<html>Erobern Sie alle Länder von<br> " + spieler2.getName() +"</html>";
 	}
 
+	/**
+	 * Überprüft ob der Spieler eliminiert wurde.
+	 */
 	public boolean istAbgeschlossen() {
 		if(spielerliste.contains(spieler2)){
 			return false;

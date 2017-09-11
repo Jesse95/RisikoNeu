@@ -25,46 +25,80 @@ public class Land implements Serializable{
 		this.fahneY = fahneY;
 	}
 
+	/**Gibt den Namen des Landes zurück.
+	 * @return
+	 */
 	public String getName() {
 		return name;
 	}
 
+	/**Setzt den Namen des Landes.
+	 * @param name
+	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	/**Gibt den Besitzer des Landes zurück.
+	 * @return
+	 */
 	public Spieler getBesitzer() {
 		return besitzer;
 	}
 
+	/**Setzt den Besitzer des Landes.
+	 * @param besitzer
+	 */
 	public void setBesitzer(Spieler besitzer) {
 		this.besitzer = besitzer;
 	}
 
+	/**Gibt die Einheiten des Landes zurück.
+	 * @return
+	 */
 	public int getEinheiten() {
 		return einheiten;
 	}
 
+	/**Setzt die Einheiten des Landes.
+	 * @param einheiten
+	 */
 	public void setEinheiten(int einheiten) {
 		this.einheiten = einheiten;
 	}
+	/**Gibt Kürzel des Landes zurück.
+	 * @return
+	 */
 	public String getKuerzel(){
 		return kurzel;
 	}
 	
+	/**Setzt die Fahne des Landes.
+	 * @param x
+	 * @param y
+	 */
 	public void setFahne(int x, int y){
 		this.fahneX = x;
 		this.fahneY = y;
 	}
 	
+	/**Gibt die X-Koordinate der Fahne zurück.
+	 * @return
+	 */
 	public int getFahneX(){
 		return fahneX;
 	}
 	
+	/**Gibt die Y-Koordinate der Fahne zurück.
+	 * @return
+	 */
 	public int getFahneY(){
 		return fahneY;
 	}
 	
+	/**Zeigt auf der Fahne die Anzahl der Einheiten an.
+	 * @return
+	 */
 	public JLabel getEinheitenLab(){
 		einheitenLab.setText(einheiten + "");
 		if(einheiten < 10){
@@ -79,6 +113,9 @@ public class Land implements Serializable{
 		return einheitenLab;
 	}
 	
+	/**Getter der Fahne.
+	 * @return
+	 */
 	public JLabel getFahne(){
 		return this.fahne;
 	}
