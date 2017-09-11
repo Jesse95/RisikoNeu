@@ -10,7 +10,7 @@ import net.miginfocom.swing.MigLayout;
 import valueobjects.Spieler;
 
 public class GewonnenPanel extends JPanel{
-	private JLabel firework = null;
+	private JLabel pokal = null;
 	private Spieler spieler;
 	private Font schrift;
 	private Font uberschrift;
@@ -23,16 +23,19 @@ public class GewonnenPanel extends JPanel{
 		initialize();
 	}
 
+	/**
+	 * Pokal wird dem Panel hinzugefügt und Gewinner wird angezeigt.
+	 */
 	public void initialize() {
 		this.setLayout(new MigLayout("wrap1","[]","[][]"));
-		firework = new JLabel(new ImageIcon("./Bilder/pokal.gif"));
+		pokal = new JLabel(new ImageIcon("./Bilder/pokal.gif"));
 		
 		JLabel gewinner = new JLabel(spieler.getName() + " hat gewonnen.");
 		gewinner.setFont(uberschrift);
 //		gewinner.setForeground(Color.white);
 		
 		this.add(gewinner, "center");
-		this.add(firework, "center");
+		this.add(pokal, "center");
 //		this.setBackground(new Color(96,96,96));
 		this.repaint();
 		this.revalidate();

@@ -18,6 +18,9 @@ public class ConsolePanel extends JPanel{
 		initialize();
 	}
 	
+	/**
+	 * Dem ConsolePanel wird ein entsprechender Header, ein Textfeld und eine Scrollbar eingefügt.
+	 */
 	public void initialize() {
 		this.setLayout(new MigLayout("wrap1","[600]","[][140]"));
 		JLabel header = new JLabel("Benachrichtigung:");
@@ -30,6 +33,9 @@ public class ConsolePanel extends JPanel{
 		this.add(consoleScrollBar,"growx,growy");
 	}
 	
+	/** Übergebener Text erscheint auf der Console
+	 * @param text
+	 */
 	public void textSetzen(String text) {
 //		if(consoleText.equals("")) {
 			consoleText.setText(consoleText.getText() + "\n" + text);

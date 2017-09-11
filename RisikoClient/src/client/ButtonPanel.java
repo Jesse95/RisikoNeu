@@ -37,6 +37,10 @@ public class ButtonPanel extends JPanel{
 		initialize();	
 	}
 	
+	/**
+	 * Erstellt die Angreifen-, Verschieben- und Verteilen-Buttons und fügt
+	 * ihnen ActionListener hinzu
+	 */
 	public void initialize(){
 		this.setLayout(new MigLayout("wrap1","[160]","[][]"));
 		
@@ -69,6 +73,12 @@ public class ButtonPanel extends JPanel{
 		nextTurn.setEnabled(false);
 	}
 	
+	/** Deaktiviert den Angreifen-Button und fügt den Nächste-Phase-Button Hinzu.
+	 * Angriffsland und Verteidigungsland werden je nachdem welche bisher angeklickt worden,
+	 * angezeigt 
+	 * @param angriffsLand
+	 * @param verteidigungsLand
+	 */
 	public void angreifenAktiv(String angriffsLand,String verteidigungsLand) {
 		angreifen.setEnabled(false);
 		removeAll();
@@ -82,6 +92,11 @@ public class ButtonPanel extends JPanel{
 		this.repaint();
 	}
 	
+	/**Dem ButtonPanel wird ein Textfeld als Eingabemöglichkeit zum Verschieben von Einheiten
+	 * erstellt, und ein Verschieben-Buton hinzugefügt
+	 * @param erstesLand
+	 * @param zweitesLand
+	 */
 	public void verschiebenNachAngreifenAktiv(String erstesLand, String zweitesLand) {
 		removeAll();
 		this.add(land1,"left,grow");
@@ -124,29 +139,50 @@ public class ButtonPanel extends JPanel{
 		this.repaint();
 	}
 	
+	/**
+	 * Deaktiviert Phasenwechsel
+	 */
 	public void phaseDisable() {
 		nextTurn.setEnabled(false);
 	}
 	
+	/**
+	 * Aktiviert Phasenwechsel
+	 */
 	public void phaseEnable() {
 		nextTurn.setEnabled(true);
 	}
 	
+	/**
+	 * Aktiviert Angreifen-Button
+	 */
 	public void angriffEnable() {
 		angreifen.setEnabled(true);
 	}
 	
+	/**
+	 * Deaktiviert Angreifen-Button
+	 */
 	public void angriffDisable() {
 		angreifen.setEnabled(false);
 	}
 	
+	/**
+	 * Aktiviert Verschieben-Button
+	 */
 	public void verschiebenEnabled() {
 		verschieben.setEnabled(true);
 	}
 	
+	/**
+	 * Deaktiviert Verschieben-Button
+	 */
 	public void verschiebenDisabled() {
 		verschieben.setEnabled(false);
 	}
+	/**
+	 * Die Textbox zum Verschieben wird resettet
+	 */
 	public void resetTextbox() {
 		anzahlEinheitenVerschieben.setText("");
 	}

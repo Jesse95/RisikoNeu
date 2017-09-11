@@ -27,6 +27,11 @@ public class BeitretenPanel extends JPanel{
 		initialize();
 	}
 	
+	/**
+	 * Im BeitretenPanel wird schon ein Spielername mit einer zufälligen Zahl am Ende ins
+	 * Textfeld geschrieben.Start- und Zurück-Buttons werden erstellt und es werden Ihnen Action-
+	 * Listener hinzugefügt und im Panel eingefügt.
+	 */
 	public void initialize() {
 		this.setLayout(new MigLayout(" wrap2","[][300]","[][]")); 
 		//Objekte erstellen

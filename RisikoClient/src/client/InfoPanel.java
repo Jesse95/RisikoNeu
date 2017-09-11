@@ -21,6 +21,9 @@ public class InfoPanel extends JPanel {
 		initialize();
 	}
 	
+	/**
+	 * Header und darunter ein Label für die derzeitige Phase werden dargestellt.
+	 */
 	public void initialize() {
 		this.setLayout(new MigLayout("wrap1","[]","[][][][]"));
 		JLabel header = new JLabel("Phase:");
@@ -32,10 +35,16 @@ public class InfoPanel extends JPanel {
 
 	}
 	
+	/** Info über die Phase wird gesettet
+	 * @param phase
+	 */
 	public void setInfo(String phase) {
 		phaseLab.setText(phase);
 	}
 	
+	/**Je nach Phase wird das Info-Label angepasst.
+	 * @param phase
+	 */
 	public void changePanel(String phase) {
 		switch(phase){
 		case "VERTEILEN":
