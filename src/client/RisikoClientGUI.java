@@ -113,11 +113,18 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.addWindowListener(new WindowAdapter(){
 
 			public void windowClosing(WindowEvent we){
-				if(imSpiel){
+				if(imSpiel && !gewonnen){
 					try {
-						sp.spielBeenden(ownSpieler);
+						if(!sp.getTurn().toString().equals("STARTPHASE")){
+							spielSpeichernNachEndeFrage();
+						}else{
+							sp.spielBeenden(ownSpieler);
+							
+
+						}
 					} catch (RemoteException e) {
 
+						e.printStackTrace();
 					}
 				}else{
 					System.exit(0);
@@ -202,8 +209,12 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 	private void spielSpeichernNachEndeFrage() throws RemoteException {
 		//Rückgabe = 0 ist JA, Rückgabe = 1 ist NEIN, Rückgabe 2 ist CANCEL
-		if(JOptionPane.showConfirmDialog(frame, "Spiel speichern bevor es geschlossen wird?") == 0) {
+		int antwort = JOptionPane.showConfirmDialog(frame, "Spiel speichern bevor es geschlossen wird?");
+		if( antwort == 0) {
 			spielSpeichern();
+			sp.spielBeenden(ownSpieler);
+		} else if( antwort == 1) {
+			sp.spielBeenden(ownSpieler);
 		}
 	}
 
@@ -518,6 +529,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				missionPanel.klickDisablen();
 				buttonPanel.setEinheitenVerteilenLab(anzahlSetzbareEinheiten);
 				consolePanel.textSetzen("Du hast die Karten eingetauscht und kannst nun " + anzahlSetzbareEinheiten + " setzen.");
+				missionPanel.kartenAusgeben(aktiverSpieler,sp.getSpielerList());
 			} catch (RemoteException e) {}
 		} else {
 			consolePanel.textSetzen("Die Karten konnten nicht eingetauscht werden.");
@@ -710,8 +722,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				case VERTEILEN:
 					statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
 					spielerListPanel.setAktiverSpielerBorder(spielerListe.indexOf(aktiverSpieler));
-					missionPanel.klickEnablen();
+					
 					if(istAktiverSpieler) {
+						missionPanel.klickEnablen();
 						buttonPanel.phaseDisable();
 						if(anzahlSetzbareEinheiten == 0) {
 							anzahlSetzbareEinheiten = sp.bekommtEinheiten(ownSpieler);
@@ -719,6 +732,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						consolePanel.textSetzen(aktiverSpieler.getName() + " du kannst " + anzahlSetzbareEinheiten + " Einheiten setzen.");
 						buttonPanel.verteilenAktiv(anzahlSetzbareEinheiten);
 					} else {
+						missionPanel.klickDisablen();
 						anzahlSetzbareEinheiten = 0;
 						missionPanel.kartenAusgeben(ownSpieler, spielerListe);
 						buttonPanel.removeAll();
@@ -753,9 +767,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 					break;
 				case BEENDEN:
 					if(!gewonnen) {
-						if(istAktiverSpieler) {
-							spielSpeichernNachEndeFrage();
-						}
+
 							JOptionPane.showMessageDialog(null, "Das Spiel wurde von " + gce.getSpieler().getName() + " beendet.");
 					} else {
 						frame.remove(gewonnenPanel);
