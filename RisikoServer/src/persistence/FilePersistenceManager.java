@@ -23,7 +23,7 @@ public class FilePersistenceManager {
 	}
 	
 	public void ladeLesekanalOeffnen(String datei) throws FileNotFoundException{
-		reader = new BufferedReader(new FileReader("./Speicher/" + datei));
+		reader = new BufferedReader(new FileReader("../RisikoCommon/Speicher/" + datei));
 	}
 	
 	public void schreibkanalOeffnen(String datei) throws IOException{

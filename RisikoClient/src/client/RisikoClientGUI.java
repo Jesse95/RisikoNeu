@@ -228,7 +228,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		name = JOptionPane.showInputDialog(frame, "Spiel speichern. Gebe einen Namen ein.");
 		if(name.length() > 0){
 			try {
-				sp.spielSpeichern("./Speicher/" + name + ".txt");
+				sp.spielSpeichern("../RisikoCommon/Speicher/" + name + ".txt");
 			} catch (IOException e) {
 				consolePanel.textSetzen("Spiel konnte nicht gespeichert werden. " + e.getMessage());
 			}
@@ -765,6 +765,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						spielerListPanel.setLabel(s);
 					}
 					if(!sp.isSpielGeladen()) {
+						anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
 						consolePanel.textSetzen("Du kannst nun die ersten Einheiten setzen.");
 					} else {
 						for(int s = 0; s < sp.getSpielerList().size();s++) {
@@ -776,7 +777,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 						}
 						sp.beiGeladenemSpielNaechstenListener();
 					}
-					anzahlSetzbareEinheiten = sp.checkAnfangsEinheiten();
 					buttonPanel.startphase(anzahlSetzbareEinheiten);
 					missionPanel.setMBeschreibung(sp.getMissionVonSpieler(ownSpieler).getBeschreibung());
 					statistikPanel.statistikAktualisieren(laenderListe, spielerListe);
