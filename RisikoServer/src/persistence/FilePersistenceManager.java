@@ -83,6 +83,12 @@ public class FilePersistenceManager {
 		return new Land(name,null,1,kuerzel,fahneX, fahneY);
 		
 	}
+	/**
+	 * läd das Spiel aus einer Datei
+	 * @param datei
+	 * @return Spielstand
+	 * @throws IOException
+	 */
 	public Spielstand spielLaden(String datei) throws IOException {
 		Spielstand spielstand = new Spielstand();
 		ladeLesekanalOeffnen(datei);
