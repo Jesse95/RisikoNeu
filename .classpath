@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<classpath>
-	<classpathentry excluding="local/ui/cui/|local/domain/" kind="src" path="src"/>
-	<classpathentry kind="src" path="src/local/domain"/>
-	<classpathentry kind="src" path="src/local/ui/cui"/>
-	<classpathentry kind="lib" path="MigLayout/miglayout-4.0.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="output" path="bin"/>
-</classpath>
