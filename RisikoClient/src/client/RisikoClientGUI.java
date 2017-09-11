@@ -263,12 +263,17 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		if(dateiPfad != null) {
 			geladenesSpiel = true;
 		}
-		serverVerbindungHerstellen(name);
+		serverVerbindungHerstellen();
 
 		if(anzahlSpieler > 1){
 			if(sp.getSpielerList().size() > 0){
 				throw new SpielBereitsErstelltException();
+				
+			}else{
+				spielerRegistrieren(name);
 			}
+		}else{
+			spielerRegistrieren(name);
 		}
 
 		Spielstand spielstand = null;
@@ -371,18 +376,21 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	 * @param name
 	 * @throws RemoteException
 	 */
-	private void serverVerbindungHerstellen(String name) throws RemoteException {
+	private void serverVerbindungHerstellen() throws RemoteException {
 		try {
 			String servicename = "GameServer";
 			Registry registry = LocateRegistry.getRegistry("127.0.0.1",4711);
 			sp = (ServerRemote)registry.lookup(servicename);
-			sp.addGameEventListener(this);
-			sp.serverBenachrichtigung("Spieler registriert: " + name);
+			
 		} catch (NotBoundException nbe) {
 		}
 
 	}
-
+	
+	private void spielerRegistrieren(String name) throws RemoteException {
+		sp.addGameEventListener(this);
+		sp.serverBenachrichtigung("Spieler registriert: " + name);
+	}
 	/**
 	 * @param breite
 	 * @param hoehe
@@ -730,6 +738,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 
 	public void handleGameEvent(GameEvent event) throws RemoteException {
+		if(event.getSpieler() != null){
 		spielerListe =  sp.getSpielerList();
 		laenderListe = sp.getLaenderListe();
 		try {
@@ -873,6 +882,25 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				statistikPanel.statistikPanelAktualisieren(laenderListe, spielerListe);
 				consolePanel.textSetzen(gae.getText());
 			}
+		}
+			
+		}else {
+			JOptionPane.showMessageDialog(null, "Das Spiel wurde vom Admin beendet.");
+			if(!gewonnen) {
+				frame.remove(spielfeld);
+				frame.remove(infoPanel);
+				frame.remove(spielerListPanel);
+				frame.remove(statistikPanel);
+				frame.remove(missionPanel);
+				frame.remove(consolePanel);
+				frame.remove(buttonPanel);
+				frame.remove(menu);
+
+			} else {
+				frame.remove(gewonnenPanel);
+			}
+
+			erstesPanelStartmenu();
 		}
 	}
 

@@ -212,6 +212,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	 * @throws RemoteException
 	 */
 	public void serverBeenden() throws RemoteException {
+		adminPanel.removeAll();
 		listenerBenachrichtigen(new GameControlEvent(null,GameControlEvent.phasen.BEENDEN));
 		ampelSchalten(false);
 		if(serverGestartet){
@@ -569,7 +570,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 			}
 		}
 		spielAktualisieren();
-		adminPanel.laenderUndBesitzer();
+		adminPanel.besitzerSetzen();
 		
 	}
 
@@ -584,6 +585,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 
 
 	public void spielBeenden(Spieler spieler) throws RemoteException {
+		adminPanel.removeAll();
 		listenerBenachrichtigen(new GameControlEvent(spieler,GameControlEvent.phasen.BEENDEN));
 		serverCleanen();
 		serverConsolePanel.textSetzen("Der Spieler " + spieler.getName() + " hat das Spiel beendet.");
