@@ -300,7 +300,7 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 	}
 	
 	/**
-	 * 
+	 * setzt Turn
 	 * @param phase
 	 */
 	public void setTurn(String phase){
@@ -444,9 +444,9 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 	}
 	
 	/**
-	 * 
+	 * get Länder von Spieler
 	 * @param spieler
-	 * @return
+	 * @return ArrayList<Land>
 	 */
 	public ArrayList<Land> getSpielerLaender(Spieler spielerA){
 		Spieler spieler = spielerServerVerbindung(spielerA);
@@ -460,7 +460,7 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 	}
 	
 	/**
-	 * 
+	 * speichert das Spiel
 	 * @param datei
 	 * @throws IOException
 	 */
@@ -470,12 +470,19 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 		pm.close();
 	}
 	
+	/**
+	 * läd Spielstand
+	 * @param datei
+	 * @return
+	 * @throws IOException
+	 * @throws SpielerExistiertBereitsException
+	 */
 	public Spielstand spielLaden(String datei) throws IOException, SpielerExistiertBereitsException {
 		return pm.spielLaden(datei);
 	}
 	
 	/**
-	 * 
+	 * entfernt einen Spieler
 	 * @param spieler
 	 * @return
 	 */
@@ -491,6 +498,7 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 	}
 	
 	/**
+	 * gibt Mission eines Spieler zurück
 	 * @return Mission
 	 */
 	public Mission getMissionVonSpieler(Spieler spielerA){
@@ -503,6 +511,11 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 	return null;
 	}
 	
+	/**
+	 * vergleicht und setzt land aus client im server
+	 * @param land
+	 * @return Land
+	 */
 	public Land landServerVerbindung (Land land){
 		Land rueckgabe = null;
 		for(Land l :weltVw.getLaenderListe()){
@@ -513,6 +526,11 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 		return rueckgabe;
 	}
 	
+	/**
+	 * vergleicht und setzt Spieler aus client im server
+	 * @param spieler
+	 * @return Spieler
+	 */
 	public Spieler spielerServerVerbindung (Spieler spieler){
 		Spieler rueckgabe = null;
 		for(Spieler s :spielerVw.getSpielerList()){
