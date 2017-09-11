@@ -39,12 +39,20 @@ public class SpielerPanel extends JPanel{
 	private Font schrift;
 	private Font uberschrift;
 	
+	/**
+	 * Konstruktor SpielerPanel
+	 * @param schrift
+	 * @param uberschrift
+	 */
 	public SpielerPanel(Font schrift, Font uberschrift) {
 		this.schrift = schrift;
 		this.uberschrift = uberschrift;
 		initialize();
 	}
 	
+	/**
+	 * initialisert Spieler Panel
+	 */
 	public void initialize() {
 		this.setLayout(new MigLayout("wrap2","[][]","[][][][][][][]"));
 		JLabel header = new JLabel("Spieler:");
@@ -80,6 +88,10 @@ public class SpielerPanel extends JPanel{
 		this.add(spieler6Fahne, "left");
 	}
 	
+	/**
+	 * setzt Spielertexte, Fahnen und Farben
+	 * @param spieler
+	 */
 	public void setLabel(Spieler spieler) {
 		ImageIcon fahne = null;
 		switch(spieler.getFarbe()){
@@ -116,6 +128,10 @@ public class SpielerPanel extends JPanel{
 		}
 	}
 	
+	/**
+	 * setzt einen Rahmen um aktiven Spieler
+	 * @param nummer
+	 */
 	public void setAktiverSpielerBorder(int nummer){
 		Border border = BorderFactory.createLineBorder(Color.ORANGE, 2);
 		removeBorder();
@@ -136,6 +152,9 @@ public class SpielerPanel extends JPanel{
 		}
 	}
 	
+	/**
+	 * löscht alle Rahmen
+	 */
 	private void removeBorder(){
 		spieler1.setBorder(null);
 		spieler2.setBorder(null);

@@ -19,12 +19,18 @@ public class ErstellenPanel extends JPanel {
 		public void hauptspielStarten(String name, int anzahl, String dateiPfad) throws RemoteException, SpielBereitsErstelltException;
 		public void zurueckBtn(JPanel panel);
 	}
-	
+	/**
+	 * Konstruktor zu Erstellung des Erstellen Panels
+	 * @param handler
+	 */
 	public ErstellenPanel(ErstellenButtonClicked handler) {
 		this.handler = handler;
 		initialize();
 	}
 	
+	/**
+	 * Initialisert ErstellenPanel
+	 */
 	public void initialize() {
 		this.setLayout(new MigLayout(" wrap2","[][150]","[][][][][]")); 
 		//Objekte erstellen

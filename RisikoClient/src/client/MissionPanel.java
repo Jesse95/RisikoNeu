@@ -53,6 +53,12 @@ public class MissionPanel extends JPanel {
 	private BufferedImage iconKanone;
 	private BufferedImage iconJoker;
 	
+	/**
+	 * Konstruktor Mission Panel
+	 * @param uberschrift
+	 * @param schrift
+	 * @param handler
+	 */
 	public MissionPanel(Font uberschrift, Font schrift, KarteClickedHandler handler){
 		this.handler = handler;
 		this.schrift = schrift;
@@ -60,6 +66,9 @@ public class MissionPanel extends JPanel {
 		initialize();
 	}
 
+	/**
+	 * Initialisiert MissionsPanel in welchem Missionen und Karten in zwei Tabs angezeigt werden
+	 */
 	public void initialize(){
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP,JTabbedPane.SCROLL_TAB_LAYOUT);
 		tabbedPane.setFont(uberschrift);
@@ -92,10 +101,17 @@ public class MissionPanel extends JPanel {
 		this.add(tabbedPane);
 	}
 
+	/**
+	 * setzt Beschreibungstext bei Missionen
+	 * @param beschreibung
+	 */
 	public void setMBeschreibung(String beschreibung) {
 		mBeschreibung.setText(beschreibung);
 	}
 
+	/**
+	 * ermöglicht dads Klicken dreier Karten hintereinander zum einlösen
+	 */
 	public void kartenTauschen() {	
 		for(String kartenString : kartenWahl){
 			String karte = kartenString;
@@ -128,6 +144,11 @@ public class MissionPanel extends JPanel {
 		}
 	}
 
+	/**
+	 * zeigt aktuellte Karten an/aktualisiert bei neuer Karte
+	 * @param spieler
+	 * @param spielerliste
+	 */
 	public void kartenAusgeben(Spieler spieler, ArrayList<Spieler>spielerliste){
 
 		for(JLabel k : kartenListe){
@@ -267,10 +288,16 @@ public class MissionPanel extends JPanel {
 		karten.repaint();
 	}
 
+	/**
+	 * gibt Klick auf Karten frei
+	 */
 	public void klickEnablen() {
 		klick = true;
 	}
 
+	/**
+	 * speert Klick auf Karten
+	 */
 	public void klickDisablen() {
 		klick = false;
 		for(JLabel l : kartenListe){

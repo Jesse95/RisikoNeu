@@ -256,8 +256,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
-
-	
 	public void hauptspielStarten(String name, int anzahlSpieler, String dateiPfad) throws RemoteException, SpielBereitsErstelltException {
 		boolean geladenesSpiel = false;
 		if(dateiPfad != null) {
@@ -390,19 +388,6 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 	private void spielerRegistrieren(String name) throws RemoteException {
 		sp.addGameEventListener(this);
 		sp.serverBenachrichtigung("Spieler registriert: " + name);
-	}
-	/**
-	 * @param breite
-	 * @param hoehe
-	 */
-	public void aufloesungAendern(int breite, int hoehe) {
-
-		frame.setSize(breite, hoehe);
-		spielfeld.neuMalen(1000, 600);
-		frame.repaint();
-		frame.revalidate();
-
-		frame.setLocationRelativeTo(null);
 	}
 
 	/** Zeigt nach dem Anklicken eines Landes je nach Phase das entsprechende
@@ -585,7 +570,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		frame.setTitle(aktiverSpieler.getName() + " hat gewonnen");
 		frame.setSize(250, 300);
 		frame.setLocationRelativeTo(null);
-		gewonnenPanel = new GewonnenPanel(aktiverSpieler, schrift, uberschrift);
+		gewonnenPanel = new GewonnenPanel(aktiverSpieler, uberschrift);
 		frame.add(gewonnenPanel, "center");
 		frame.setVisible(true);
 		frame.repaint();

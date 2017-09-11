@@ -13,6 +13,10 @@ public class ConsolePanel extends JPanel{
 	private JTextArea consoleText;
 	private Font schrift;
 	
+	/**
+	 * Konstruktor ConsolePanel
+	 * @param schrift
+	 */
 	public ConsolePanel(Font schrift) {
 		this.schrift = schrift;
 		initialize();
@@ -37,12 +41,6 @@ public class ConsolePanel extends JPanel{
 	 * @param text
 	 */
 	public void textSetzen(String text) {
-//		if(consoleText.equals("")) {
-			consoleText.setText(consoleText.getText() + "\n" + text);
-//		} else {
-//			consoleText.setText(text);
-//
-//		}
-		
+			consoleText.setText(consoleText.getText() + "\n" + text);		
 	}
 }

@@ -16,12 +16,15 @@ public class BeitretenPanel extends JPanel{
 	private BeitretenButtonClicked handler = null;
 	private JLabel nameLab;
 	private JTextField nameText;
-	
+
 	public interface BeitretenButtonClicked{
 		public void hauptspielStarten(String name, int anzahl, String dateiPfad) throws RemoteException, SpielBereitsErstelltException;
 		public void zurueckBtn(JPanel panel);
 	}
-	
+	/**
+	 * Konstruktor Beitreten Panel
+	 * @param handler
+	 */
 	public BeitretenPanel(BeitretenButtonClicked handler) {
 		this.handler = handler;
 		initialize();

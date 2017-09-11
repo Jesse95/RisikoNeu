@@ -31,6 +31,11 @@ public class ButtonPanel extends JPanel{
 		public void verschiebenNachAngriffButtonClicked(int einheiten);
 	}
 	
+	/**
+	 * Konstruktor ButtonPanel
+	 * @param handler
+	 * @param font
+	 */
 	public ButtonPanel(ButtonClickHandler handler, Font font){
 		this.handler = handler;
 		this.font = font;
@@ -205,6 +210,9 @@ public class ButtonPanel extends JPanel{
 		anzahlEinheitenVerteilen.setText(einheiten + "");
 	}
 
+	/**
+	 * Löscht alle Objekte im Panel
+	 */
 	public void removeAll()	{
 		this.remove(nextTurn);
 		this.remove(aLand);
