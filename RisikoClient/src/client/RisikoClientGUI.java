@@ -1,7 +1,3 @@
-//TODO Javadoc
-//TODO bei Gewonnen Panel schließen, kleine verschiebung/größenfehler?
-//TODO Adminpanel Bugfixes
-
 package client;
 
 import java.awt.Color;
@@ -264,6 +260,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * erstellt oder läd ein Spiel, erzeugt das Frame mit Spielstand oder komplett neu
+	 */
 	public void hauptspielStarten(String name, int anzahlSpieler, String dateiPfad) throws RemoteException, SpielBereitsErstelltException {
 		boolean geladenesSpiel = false;
 		if(dateiPfad != null) {
@@ -393,6 +392,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 
 	}
 	
+	/**
+	 * registriert Spieler mit GameEventListener
+	 * @param name
+	 * @throws RemoteException
+	 */
 	private void spielerRegistrieren(String name) throws RemoteException {
 		sp.addGameEventListener(this);
 		sp.serverBenachrichtigung("Spieler registriert: " + name);
@@ -599,6 +603,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * wertet Farbcode bei jedem Mausklick aus
+	 */
 	public void mausklickAktion(Color color) {
 		try {
 			if(aktiverSpieler.equals(ownSpieler) || sp.getTurn().toString().equals("STARTPHASE")){
@@ -613,6 +620,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		} catch (RemoteException e) {}
 	}
 
+	/**
+	 * startet Spiel Erstellen oder Beitreten Panel
+	 */
 	public void SpielerRegistrierungOeffnen(boolean ersterSpieler) {
 		frame.remove(startPanel);
 		if(ersterSpieler) {
@@ -622,6 +632,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * setzt den nächsten Zug beim Klicken des Nächste Phase Buttons
+	 */
 	public void phaseButtonClicked() throws RemoteException{
 		//Wenn Mission erfüllt, dann gewonnen aufrufen
 		try {
@@ -635,6 +648,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * Button Angriff führt einen Angriff aus, zeigt die Würfel an und wertet die Anzeige aus je nach Wurd Ergebnis
+	 */
 	public void angriffButtonClicked() {
 		try {
 			//Angriff durchführen
@@ -680,6 +696,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * Verschieben Button ermöglicht das Klicken auf erst ein und dann das zweite Land und posotioniert die Einheitzen je nach Eingabe
+	 */
 	public void verschiebenButtonClicked(int einheiten) {
 		try {
 			sp.checkEinheitenAnzahlVerteilbar(land1, einheiten);
@@ -697,9 +716,11 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * zeigt die Verschieben Aktion an, nachdem erobert wurde
+	 */
 	public void verschiebenNachAngriffButtonClicked(int einheiten) {
 		try {
-			//TODO hier muss vorher die länder anzahl aktualisierst werden, da sie immer ein zu viel hat!
 			sp.checkEinheitenAnzahlVerteilbar(land1, einheiten);
 			sp.eroberungBesetzen(land1, land2, einheiten);
 			land1 = null;
@@ -713,6 +734,9 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 		}
 	}
 
+	/**
+	 * gibt einen Schuss Sound aus
+	 */
 	public void schussSound(){
 		try{
 			AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File("Sounds/hit.wav"));
