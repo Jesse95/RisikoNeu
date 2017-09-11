@@ -12,10 +12,18 @@ import net.miginfocom.swing.MigLayout;
 public class ConsolePanel extends JPanel{
 	private JTextArea consoleText;
 	
+	/**
+	 *Konstruktor
+	 *Initialize wird aufgerufen 
+	 */
 	public ConsolePanel() {
 		initialize();
 	}
 	
+	/**
+	 *Aussehen vom Panel wird definiert.
+	 *Alle erforderlichen Komponenten werden hinzugefügt 
+	 */
 	public void initialize() {
 		this.setLayout(new MigLayout("wrap1","[250]","[][350]"));
 		JLabel header = new JLabel("Benachrichtigung:");
@@ -27,6 +35,10 @@ public class ConsolePanel extends JPanel{
 		this.add(consoleScrollBar,"growx,growy");
 	}
 	
+	/**
+	 * Setzt den Text in der JTextArea
+	 * @param text
+	 */
 	public void textSetzen(String text) {
 		consoleText.setText(consoleText.getText() + "\n" + text);
 	}

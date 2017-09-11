@@ -18,18 +18,37 @@ public class FilePersistenceManager {
 	private BufferedReader reader = null;
 	private PrintWriter writer = null;
 	
+	/**
+	 * Öffnet den "Lesekanal" für den übergebenen Dateipfad zum einlesen der Weltdatei
+	 * @param datei
+	 * @throws FileNotFoundException
+	 */
 	public void lesekanalOeffnen(String datei) throws FileNotFoundException{
 		reader = new BufferedReader(new FileReader(datei));
 	}
 	
+	/**
+	 * Öffnet den "Lesekanal" für den übergebenen Dateipfad zum einlesen der gespeicherten Spielstände
+	 * @param datei
+	 * @throws FileNotFoundException
+	 */
 	public void ladeLesekanalOeffnen(String datei) throws FileNotFoundException{
 		reader = new BufferedReader(new FileReader("../RisikoCommon/Speicher/" + datei));
 	}
 	
+	/**
+	 * Öffnet den "Schreibkanal" für den übergebenen Dateipfad zum speichern der Spielstände
+	 * @param datei
+	 * @throws IOException
+	 */
 	public void schreibkanalOeffnen(String datei) throws IOException{
 		writer = new PrintWriter(new BufferedWriter(new FileWriter(datei)));
 	}
 
+	/**
+	 * Schließt die geöffneten Reader
+	 * @return
+	 */
 	public boolean close(){
 		if(writer != null){
 			writer.close();
@@ -45,6 +64,12 @@ public class FilePersistenceManager {
 		
 		return true;
 	}
+	
+	/**
+	 * Liest alle wichtigen Informationen der gespeicherten Länder ein und gibt diese zurück
+	 * @return Land
+	 * @throws IOException
+	 */
 	public Land ladeLand() throws IOException{
 		String name = liesZeile();
 		if(name == null){
@@ -58,6 +83,16 @@ public class FilePersistenceManager {
 		
 	}
 
+	/**
+	 * Bekommt alle wichtigen Infos von dem Spiel übergeben, um diese in einer Textdatei zu speichern
+	 * @param welt
+	 * @param spielerListe
+	 * @param phase
+	 * @param aktiverSpieler
+	 * @param missionsListe
+	 * @param setzbareEinheitenVerteilen
+	 * @return boolean
+	 */
 	public boolean spielSpeichern(ArrayList<Land> welt, ArrayList<Spieler> spielerListe, String phase, int aktiverSpieler, ArrayList<Mission> missionsListe, int setzbareEinheitenVerteilen){
 		schreibeZeile(phase);
 		int anzahlSpieler = 0;
@@ -107,10 +142,20 @@ public class FilePersistenceManager {
 		return true;
 	}
 	
+	/**
+	 * Ruft liesZeile auf
+	 * @return String
+	 * @throws IOException
+	 */
 	public String spielstandLaden() throws IOException{
 		return liesZeile();
 	}
 
+	/**
+	 * Gibt eine Zeile aus einer Datei zurück
+	 * @return String
+	 * @throws IOException
+	 */
 	private String liesZeile() throws IOException{
 		if(reader != null){
 			return reader.readLine();
@@ -119,11 +164,20 @@ public class FilePersistenceManager {
 		}
 	}
 	
+	/**
+	 * Schreibt eine Zeile in die Datei, von dem übergebenen Dateipfad
+	 * @param daten
+	 */
 	private void schreibeZeile(String daten) {
 		if (writer != null)
 			writer.println(daten);
 	}
 	
+	/**
+	 * Liest alle Länder aus der Welt.txt ein, speichert diese in einer ArrayList und gibt diese dann zurück
+	 * @return ArrayList<Land>
+	 * @throws IOException
+	 */
 	public ArrayList<Land> laenderAusDateiLaden()	throws IOException{
 		lesekanalOeffnen("./Daten/Welt.txt");
 		Land land;
