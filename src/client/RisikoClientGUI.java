@@ -433,6 +433,7 @@ public class RisikoClientGUI extends UnicastRemoteObject implements MapClickHand
 				try {
 					sp.landWaehlen(land,aktiverSpieler);
 					land1 = land;
+					buttonPanel.angreifenAktiv(land1.getName(), "verteidigendes land");
 				} catch (KannLandNichtBenutzenException lene) {
 					consolePanel.textSetzen(e.getMessage());
 				}
