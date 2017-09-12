@@ -109,7 +109,7 @@ public class serverGUI extends UnicastRemoteObject implements ServerRemote, Admi
 	    }
 	    frame.setIconImage(im);
 	    
-		frame.setLayout(new MigLayout("debug, wrap2", "[][200]", "[][][]"));
+		frame.setLayout(new MigLayout("wrap2", "[][200]", "[][][]"));
 		frame.setSize(450, 450);
 		frame.setTitle("Server");
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);

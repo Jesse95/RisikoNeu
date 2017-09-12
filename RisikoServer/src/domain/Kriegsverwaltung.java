@@ -267,7 +267,7 @@ private FilePersistenceManager pm = new FilePersistenceManager();
 		default:
 			einheiten = 20;
 		}
-		return 3;	//TODO: return wert ändern
+		return einheiten;
 	}
 	
 	/**

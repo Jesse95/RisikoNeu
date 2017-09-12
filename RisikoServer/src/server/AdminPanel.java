@@ -103,8 +103,8 @@ public class AdminPanel extends JPanel{
 		removeAll();
 		this.add(laenderWahl,"growx");
 		this.add(einheitenZahl,"growx");
-		this.add(einheitenSetzenBtn);
-		this.add(zurueckBtn);
+		this.add(einheitenSetzenBtn,"growx");
+		this.add(zurueckBtn,"growx");
 		this.repaint();
 		this.revalidate();
 	}
@@ -117,9 +117,9 @@ public class AdminPanel extends JPanel{
 		removeAll();
 		String[] phasenListe = {"VERTEILEN","ANGRIFF","VERSCHIEBEN"};
 		phaseWahl = new JComboBox<String>(phasenListe);
-		this.add(phaseWahl);
-		this.add(phaseSetzenBtn);
-		this.add(zurueckBtn);
+		this.add(phaseWahl,"growx");
+		this.add(phaseSetzenBtn,"growx");
+		this.add(zurueckBtn,"growx");
 		this.repaint();
 		this.revalidate();
 	}
@@ -137,10 +137,10 @@ public class AdminPanel extends JPanel{
 		}
 		spielerWahl = new JComboBox<String>(spielerArray);
 		
-		this.add(laenderWahl);
-		this.add(spielerWahl);
-		this.add(besitzerSetzenBtn);	
-		this.add(zurueckBtn);
+		this.add(laenderWahl,"growx");
+		this.add(spielerWahl,"growx");
+		this.add(besitzerSetzenBtn,"growx");	
+		this.add(zurueckBtn,"growx");
 		this.repaint();
 		this.revalidate();
 	}
@@ -156,9 +156,9 @@ public class AdminPanel extends JPanel{
 			spielerArray[i] = spielerListe.get(i).getName();
 		}
 		spielerWahl = new JComboBox<String>(spielerArray);
-		this.add(spielerWahl);
-		this.add(aktiverSpielerSetzenBtn);
-		this.add(zurueckBtn);
+		this.add(spielerWahl,"growx");
+		this.add(aktiverSpielerSetzenBtn,"growx");
+		this.add(zurueckBtn,"growx");
 		this.repaint();
 		this.revalidate();
 	}
@@ -191,10 +191,10 @@ public class AdminPanel extends JPanel{
 	 */
 	public void startPanel(){
 		removeAll();
-		this.add(einheitenSetzenMenuBtn);
-		this.add(besitzerSetzenMenuBtn);
-		this.add(phaseSetzenMenuBtn);
-		this.add(aktiverSpielerSetzenMenuBtn);
+		this.add(einheitenSetzenMenuBtn,"growx");
+		this.add(besitzerSetzenMenuBtn,"growx");
+		this.add(phaseSetzenMenuBtn,"growx");
+		this.add(aktiverSpielerSetzenMenuBtn,"growx");
 		this.repaint();
 		this.revalidate();
 	}
